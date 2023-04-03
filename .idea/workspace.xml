@@ -5,8 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="ship related classes Created (backbone)">
-      <change afterPath="$PROJECT_DIR$/src/client/game.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/client/move.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/client/game_serwer_connection/GameServerConnection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -109,7 +108,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680540412393</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="ship related classes Created (backbone)">
+      <created>1680560897875</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1680560897875</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
