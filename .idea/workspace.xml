@@ -4,10 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="Board and field related classes Created (backbone)">
-      <change afterPath="$PROJECT_DIR$/src/client/ship/Ship.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/client/board/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/board/Field.java" afterDir="false" />
-    </list>
+    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="ship related classes Created (backbone)" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -101,7 +98,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680539889660</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="ship related classes Created (backbone)">
+      <created>1680540412393</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1680540412393</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,6 +126,7 @@
     <MESSAGE value="Creation of project" />
     <MESSAGE value="Player related classes Created (backbone)" />
     <MESSAGE value="Board and field related classes Created (backbone)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Board and field related classes Created (backbone)" />
+    <MESSAGE value="ship related classes Created (backbone)" />
+    <option name="LAST_COMMIT_MESSAGE" value="ship related classes Created (backbone)" />
   </component>
 </project>
