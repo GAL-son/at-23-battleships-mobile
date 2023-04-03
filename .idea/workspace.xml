@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="Creation of project">
-      <change afterPath="$PROJECT_DIR$/src/client/board/Board.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="Board and field related classes Created (backbone)">
+      <change afterPath="$PROJECT_DIR$/src/client/ship/Ship.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/board/Field.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/board/Field.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -94,7 +94,14 @@
       <option name="project" value="LOCAL" />
       <updated>1680537809770</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Board and field related classes Created (backbone)">
+      <created>1680539889660</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1680539889660</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -114,6 +121,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Creation of project" />
     <MESSAGE value="Player related classes Created (backbone)" />
-    <option name="LAST_COMMIT_MESSAGE" value="Player related classes Created (backbone)" />
+    <MESSAGE value="Board and field related classes Created (backbone)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Board and field related classes Created (backbone)" />
   </component>
 </project>

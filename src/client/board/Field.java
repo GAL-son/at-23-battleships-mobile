@@ -1,4 +1,5 @@
 package client.board;
+import client.ship.Ship;
 
 public class Field {
     private Ship oocupyingShip;
