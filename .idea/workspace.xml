@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="ship related classes Created (backbone)" />
+    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="ship related classes Created (backbone)">
+      <change afterPath="$PROJECT_DIR$/src/client/game.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/client/move.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
