@@ -4,9 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="ship related classes Created (backbone)">
-      <change afterPath="$PROJECT_DIR$/src/client/game_serwer_connection/GameServerConnection.java" afterDir="false" />
+    <list default="true" id="47f24cd0-b731-444b-b70b-d25e17c0c9a3" name="Changes" comment="client-server connection class created">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/move.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/Move.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/client/players/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/client/players/Player.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -72,6 +75,7 @@
       <option name="presentableId" value="Default" />
       <updated>1678280697314</updated>
       <workItem from="1678280697899" duration="842000" />
+      <workItem from="1680996143879" duration="1361000" />
     </task>
     <task id="LOCAL-00001" summary="Creation of project">
       <created>1678282703462</created>
@@ -137,6 +141,7 @@
     <MESSAGE value="Player related classes Created (backbone)" />
     <MESSAGE value="Board and field related classes Created (backbone)" />
     <MESSAGE value="ship related classes Created (backbone)" />
-    <option name="LAST_COMMIT_MESSAGE" value="ship related classes Created (backbone)" />
+    <MESSAGE value="client-server connection class created" />
+    <option name="LAST_COMMIT_MESSAGE" value="client-server connection class created" />
   </component>
 </project>

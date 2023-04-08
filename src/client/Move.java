@@ -1,6 +1,6 @@
 package client;
 
-public class move {
+public class Move {
     public int positionX;
     public int positionY;
 

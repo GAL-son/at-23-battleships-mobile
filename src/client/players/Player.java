@@ -1,6 +1,7 @@
 package client.players;
+import  client.board.Board;
 
-abstract class Player {
+ abstract public class Player {
 
     int id;
     Board playerBard;
