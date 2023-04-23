@@ -4,12 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
+
+import com.battleships.model.client.Game;
+import com.battleships.model.client.Move;
+import com.battleships.model.client.ship.Ship;
+import com.google.android.material.snackbar.Snackbar;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -50,14 +57,25 @@ public class GameActivity extends AppCompatActivity {
                 layoutParams.setMargins(marginInDp, marginInDp, marginInDp, marginInDp);
                 imageView.setLayoutParams(layoutParams);
 
-                // Nadanie unikalnego id dla każdego ImageView
+                // Nadanie unikalnego id dla kaÅ¼dego ImageView
                 imageView.setId(i * 10 + j);
-
+                Integer[] pos2 = new Integer[2];
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         ImageView clickedImageView = (ImageView) v;
                         clickedImageView.setImageResource(imageResourceFieldWithoutShip);
+                        int pos = clickedImageView.getId();
+                        if (pos < 9) {
+                            pos2[0] = pos;
+                            pos2[1] = 0;
+                        }
+                        else
+                        {
+                            pos2[0]=pos/10;
+                            pos2[1]=pos%10;
+                        }
+                        Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(pos2[0])+", "+String.valueOf(pos2[1]), Snackbar.LENGTH_SHORT).show();
                     }
                 });
 
