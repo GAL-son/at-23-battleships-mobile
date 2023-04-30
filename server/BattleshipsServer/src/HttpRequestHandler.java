@@ -2,11 +2,11 @@ import java.net.*;
 import java.io.*;
 
 public class HttpRequestHandler {
-    //private int port;
+    public final int port;
     private ServerSocket serverSocket;
 
     HttpRequestHandler(int port) throws IOException {
-        //this.port = port;
+        this.port = port;
         this.serverSocket = new ServerSocket(port);
     }
 
@@ -15,7 +15,7 @@ public class HttpRequestHandler {
         return  serverSocket.accept();
     }
 
-    public String getHTTPRequest( Socket clientSocket) throws IOException {        
+    public String getHTTPRequest(Socket clientSocket) throws IOException {        
 
         BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 
