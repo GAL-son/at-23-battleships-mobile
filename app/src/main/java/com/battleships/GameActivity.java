@@ -1,88 +1,54 @@
 package com.battleships;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-
-import com.battleships.model.client.Game;
-import com.battleships.model.client.Move;
-import com.battleships.model.client.ship.Ship;
-import com.google.android.material.snackbar.Snackbar;
+import android.widget.Button;
 
 public class GameActivity extends AppCompatActivity {
 
+    private boolean isOurBoardDisplayed = true;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        Context context = getApplicationContext();
 
-        TableLayout tableLayout = findViewById(R.id.tableLayout);
-        int imageResourceField = R.drawable.field;
-        int imageResourceFieldWithoutShip = R.drawable.field_without_ship;
+        Button changeBoard = findViewById(R.id.buttonChangeBoard);
 
-        for (int i = 0; i < 10; i++) {
-            TableRow tableRow = new TableRow(context);
-            tableRow.setLayoutParams(new TableLayout.LayoutParams(
-                    TableLayout.LayoutParams.WRAP_CONTENT,
-                    TableLayout.LayoutParams.WRAP_CONTENT,
-                    1.0f
-            ));
+        changeBoard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-            for (int j = 0; j < 10; j++) {
-                ImageView imageView = new ImageView(context);
-                imageView.setLayoutParams(new TableRow.LayoutParams(
-                        TableRow.LayoutParams.WRAP_CONTENT,
-                        TableRow.LayoutParams.WRAP_CONTENT,
-                        1.0f
-                ));
+                if (isOurBoardDisplayed) {
+                    OurBoardFragment ourBoardFragment = new OurBoardFragment();
+                    fragmentTransaction.replace(R.id.fragmentContainerView, ourBoardFragment);
+                    isOurBoardDisplayed = false;
+                } else {
+                    EnemyBoardFragment opponentBoardFragment = new EnemyBoardFragment();
+                    fragmentTransaction.replace(R.id.fragmentContainerView, opponentBoardFragment);
+                    isOurBoardDisplayed = true;
+                }
 
-                imageView.setImageResource(imageResourceField);
-
-                int marginInPixels = 2; // W pikselach
-                float density = getResources().getDisplayMetrics().density;
-                int marginInDp = (int) (marginInPixels / density);
-
-                TableRow.LayoutParams layoutParams = (TableRow.LayoutParams) imageView.getLayoutParams();
-                layoutParams.setMargins(marginInDp, marginInDp, marginInDp, marginInDp);
-                imageView.setLayoutParams(layoutParams);
-
-                // Nadanie unikalnego id dla kaÅ¼dego ImageView
-                imageView.setId(i * 10 + j);
-                Integer[] pos2 = new Integer[2];
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ImageView clickedImageView = (ImageView) v;
-                        clickedImageView.setImageResource(imageResourceFieldWithoutShip);
-                        int pos = clickedImageView.getId();
-                        if (pos < 9) {
-                            pos2[0] = pos;
-                            pos2[1] = 0;
-                        }
-                        else
-                        {
-                            pos2[0]=pos/10;
-                            pos2[1]=pos%10;
-                        }
-                        Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(pos2[0])+", "+String.valueOf(pos2[1]), Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-
-                tableRow.addView(imageView);
+                fragmentTransaction.commit();
             }
+        });
+    }
 
-            tableLayout.addView(tableRow);
+    public Integer[] getFieldId(int pos){
+        Integer[] posId = new Integer[2];
+        if (pos < 9){
+            posId[0] = pos;
+            posId[1] = 0;
+        }else{
+            posId[0]=pos/10;
+            posId[1]=pos%10;
         }
+        return posId;
     }
 }
