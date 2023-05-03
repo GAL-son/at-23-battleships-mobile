@@ -1,5 +1,6 @@
 import java.io.IOException;
 import java.net.Socket;
+import java.security.DrbgParameters.Reseed;
 import java.util.LinkedList;
 
 import org.json.*;;
@@ -64,22 +65,56 @@ public class GameServer {
         int i = 0;
 
         // Server run loop
-        while(isActive && i < testCycles)
+        while(isActive)
         {
-            // Get new Connections
             try {
-                openConnections.push(httpRequestHandler.getClientSocket());
-            } catch (IOException e) {}      
+                Socket s = httpRequestHandler.getClientSocket();
+                
+                Request r = new Request(httpRequestHandler.getHTTPRequest(s), s);
+                System.out.println(r.getRequestJson());
+                String response = "";
+                   
+                response += "<h1>TwojaStara<h1>";
 
-            // Get new Request from openConnections
-            for (Socket socket : openConnections) {
-                try {
-                    requestQueue.push(new Request(httpRequestHandler.getHTTPRequest(socket)));
-                } catch (IOException e) {}
-            }            
+                System.out.println(response);
+
+                httpRequestHandler.sendResponse(s, response);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+
+            // // Get new Connections
+            // try {
+            //     Socket s = httpRequestHandler.getClientSocket();
+            //     requestQueue.push(new Request(httpRequestHandler.getHTTPRequest(s), s));
+            // } catch (IOException e) {}                 
+
+            // for (Request request : requestQueue) {
+            //     System.out.println(request.getRequestJson());
+            // }
+
+            // System.out.println(i + "\n");
+            // if(i >= 3)
+            // {
+            //     for (Request request : requestQueue) {
+            //         String response = "";
+            //         response += "HTTP/1.1 200 OK\r\n";
+            //         response += "<p>TwojaStara<p>";
+
+            //         try {
+            //             httpRequestHandler.sendResponse(request.responseSocket, response);
+            //             requestQueue.remove(request);
+            //         } catch (IOException e) {
+            //             // TODO Auto-generated catch block
+            //             e.printStackTrace();
+            //         }
+            //     }
+            // }
             
-            // Remove Expired Sessions
-            removeExpiredSessions();
+            // // Remove Expired Sessions
+            // i++;
+            // removeExpiredSessions();
         }
     }
 

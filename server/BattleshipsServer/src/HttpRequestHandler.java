@@ -12,7 +12,9 @@ public class HttpRequestHandler {
 
     public Socket getClientSocket() throws IOException
     {
-        return  serverSocket.accept();
+        Socket s = serverSocket.accept();
+        s.setKeepAlive(true);
+        return s;
     }
 
     public String getHTTPRequest(Socket clientSocket) throws IOException {        
@@ -28,15 +30,18 @@ public class HttpRequestHandler {
                 break;
             }
         }
-
         return message;
     }
 
     public void sendResponse(Socket clientSocket, String response) throws IOException {
         OutputStream client = clientSocket.getOutputStream();
+        client.write("HTTP/1.1 200 OK\r\n".getBytes());
+        client.write("\r\n".getBytes());
         client.write(response.getBytes());
+        client.write("\r\n\r\n".getBytes());
 
         client.flush();
+        client.close();
     }  
 
 }
