@@ -3,23 +3,22 @@ package com.battleships;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.DragEvent;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 
-public class SetShipsActivity extends AppCompatActivity implements View.OnTouchListener {
-    private TableLayout tableLayout = findViewById(R.id.tableLayout);
-    private ImageView ship1x = findViewById(R.id.imageViewShip1x);
-    private ImageView ship2x = findViewById(R.id.imageViewShip2x);
-    private ImageView ship3x = findViewById(R.id.imageViewShip3x);
-    private ImageView ship4x = findViewById(R.id.imageViewShip4x);
+public class SetShipsActivity extends AppCompatActivity {
 
-
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,15 +27,15 @@ public class SetShipsActivity extends AppCompatActivity implements View.OnTouchL
         Context context = getApplicationContext();
         createBoard(context);
 
-        ship1x.setOnTouchListener(this);
-        ship2x.setOnTouchListener(this);
-        ship3x.setOnTouchListener(this);
-        ship4x.setOnTouchListener(this);
+        ImageView ship1x = findViewById(R.id.imageViewShip1x);
+        ImageView ship2x = findViewById(R.id.imageViewShip2x);
+        ImageView ship3x = findViewById(R.id.imageViewShip3x);
+        ImageView ship4x = findViewById(R.id.imageViewShip4x);
 
     }
 
-    public void createBoard(Context context){
-
+    public void createBoard(Context context) {
+        TableLayout tableLayout = findViewById(R.id.tableLayout);
         int imageResourceField = R.drawable.field;
         int imageResourceFieldWithoutShip = R.drawable.field_without_ship;
 
@@ -66,26 +65,12 @@ public class SetShipsActivity extends AppCompatActivity implements View.OnTouchL
                 layoutParams.setMargins(marginInDp, marginInDp, marginInDp, marginInDp);
                 imageView.setLayoutParams(layoutParams);
 
-                // Nadanie unikalnego id dla kaÅ¼dego ImageView
+                // Nadanie unikalnego id dla każdego ImageView
                 imageView.setId(i * 10 + j);
 
-                imageView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        ImageView clickedImageView = (ImageView) v;
-                        clickedImageView.setImageResource(imageResourceFieldWithoutShip);
-                        int pos = clickedImageView.getId();
-                    }
-                });
                 tableRow.addView(imageView);
             }
             tableLayout.addView(tableRow);
         }
-    }
-
-
-    @Override
-    public boolean onTouch(View v, MotionEvent event) {
-        return false;
     }
 }

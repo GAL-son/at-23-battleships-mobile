@@ -7,6 +7,20 @@
     android:background="@color/black"
     tools:context=".SetShipsActivity">
 
+    <Button
+        android:id="@+id/buttonExitGame2"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/button"
+        android:text="Exit"
+        android:textColor="@color/red2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ImageViewLogo"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <ImageView
         android:id="@+id/ImageViewLogo"
         android:layout_width="250dp"
@@ -40,9 +54,9 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/button"
-        android:text="Exit"
-        android:textColor="@color/red2"
+        android:background="@drawable/button2"
+        android:text="I am ready!"
+        android:textColor="@color/light_green2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -95,13 +109,13 @@
 
             <ImageView
                 android:id="@+id/imageViewShip4x"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="140dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
                 android:layout_weight="1.0"
                 android:gravity="center"
-                android:src="@drawable/ship_4x" />
+                android:src="@drawable/ship4x" />
 
             <TextView
                 android:id="@+id/textViewEnemy4xShips"
@@ -122,13 +136,13 @@
 
             <ImageView
                 android:id="@+id/imageViewShip3x"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="105dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
                 android:layout_weight="1.0"
                 android:gravity="center"
-                android:src="@drawable/ship_3x" />
+                android:src="@drawable/ship3x" />
             <TextView
                 android:id="@+id/textViewEnemy3xShips"
                 android:layout_width="0dp"
@@ -148,13 +162,13 @@
 
             <ImageView
                 android:id="@+id/imageViewShip2x"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="70dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
                 android:layout_weight="1.0"
                 android:gravity="center"
-                android:src="@drawable/ship_2x" />
+                android:src="@drawable/ship2x" />
 
             <TextView
                 android:id="@+id/textViewEnemy2xShips"
@@ -175,13 +189,13 @@
 
             <ImageView
                 android:id="@+id/imageViewShip1x"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginBottom="0dp"
                 android:layout_weight="1.0"
                 android:gravity="center"
-                android:src="@drawable/ship_1x" />
+                android:src="@drawable/ship1x" />
 
             <TextView
                 android:id="@+id/textViewEnemy1xShips"
