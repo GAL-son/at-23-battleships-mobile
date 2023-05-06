@@ -32,7 +32,7 @@
         app:srcCompat="@drawable/battleships_logo" />
 
     <Button
-        android:id="@+id/buttonPlaySingle"
+        android:id="@+id/buttonLogin"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
 
     <Button
-        android:id="@+id/buttonPlayMulti"
+        android:id="@+id/buttonPlayAsGuest"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
@@ -59,7 +59,7 @@
         android:textSize="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPlaySingle" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonLogin" />
 
     <Button
         android:id="@+id/buttonRankings"
@@ -75,7 +75,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPlayMulti" />
+        app:layout_constraintTop_toBottomOf="@+id/buttonPlayAsGuest" />
 
     <Button
         android:id="@+id/buttonSettings"
