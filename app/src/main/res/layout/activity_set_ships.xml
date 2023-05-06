@@ -8,7 +8,7 @@
     tools:context=".SetShipsActivity">
 
     <Button
-        android:id="@+id/buttonExitGame2"
+        android:id="@+id/buttonExit"
         android:layout_width="75dp"
         android:layout_height="75dp"
         android:layout_marginStart="23dp"
@@ -41,14 +41,14 @@
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="16dp"
         android:background="@color/light_green"
-        app:layout_constraintBottom_toTopOf="@+id/buttonGoToEnemyBoard"
+        app:layout_constraintBottom_toTopOf="@+id/buttonReady"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
     </TableLayout>
 
     <Button
-        android:id="@+id/buttonGoToEnemyBoard"
+        android:id="@+id/buttonReady"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"

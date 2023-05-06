@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
@@ -13,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
@@ -27,11 +29,36 @@ public class SetShipsActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         createBoard(context);
 
+        Button exitButton = findViewById(R.id.buttonExit);
+        Button readyButton = findViewById(R.id.buttonReady);
         ImageView ship1x = findViewById(R.id.imageViewShip1x);
         ImageView ship2x = findViewById(R.id.imageViewShip2x);
         ImageView ship3x = findViewById(R.id.imageViewShip3x);
         ImageView ship4x = findViewById(R.id.imageViewShip4x);
 
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goBackToMainMenu();
+            }
+        });
+
+        readyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToGameActivity();
+            }
+        });
+    }
+
+    private void goBackToMainMenu(){
+        Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToGameActivity(){
+        Intent intent = new Intent(this, GameActivity.class);
+        startActivity(intent);
     }
 
     public void createBoard(Context context) {
