@@ -1,10 +1,8 @@
 import java.io.IOException;
 import java.net.Socket;
-import java.security.DrbgParameters.Reseed;
 import java.util.LinkedList;
 
-import org.json.*;;
-
+import org.json.*;
 
 public class GameServer {
     // Server config
@@ -19,13 +17,20 @@ public class GameServer {
         SERVER_INIT_FAILED
     };
 
+    static class Actions {
+        public static final String LOGIN = "login";
+        public static final String REGISTER = "register";    
+        public static final String GET_STATS = "getStats";
+
+    }
+
     private ServerState state;
     private boolean isActive;
 
     // Server Runtime Variables
     private LinkedList<Session> sessions;
-    private LinkedList<Socket> openConnections;
-    private LinkedList<Request> requestQueue;
+    //private LinkedList<Socket> openConnections;
+    //private LinkedList<Request> requestQueue;
     
     // Server Active Members
     private HttpRequestHandler httpRequestHandler;
@@ -40,8 +45,8 @@ public class GameServer {
         this.serverPort = serverPort;
 
         sessions = new LinkedList<>();
-        openConnections = new LinkedList<>();
-        requestQueue = new LinkedList<>();
+        //openConnections = new LinkedList<>();
+        //requestQueue = new LinkedList<>();
 
         try {
             httpRequestHandler = new HttpRequestHandler(serverPort);
@@ -71,56 +76,57 @@ public class GameServer {
                 Socket s = httpRequestHandler.getClientSocket();
                 
                 Request r = new Request(httpRequestHandler.getHTTPRequest(s), s);
+                JSONObject rObj = r.getRequestBody();
+
                 System.out.println(r.getRequestJson());
                 String response = "";
-                   
-                response += "<h1>TwojaStara<h1>";
 
+                if(!rObj.has("Action")){
+                    response = "REQUEST HAS NO ACTION FIELD";
+                    httpRequestHandler.sendResponse(s, response, HttpRequestHandler.ResponseType.NOT_FOUND);
+                    continue;
+                }                      
+
+                response = respond(rObj);
                 System.out.println(response);
 
-                httpRequestHandler.sendResponse(s, response);
+                httpRequestHandler.sendResponse(s, response, HttpRequestHandler.ResponseType.OK);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 
-            // // Get new Connections
-            // try {
-            //     Socket s = httpRequestHandler.getClientSocket();
-            //     requestQueue.push(new Request(httpRequestHandler.getHTTPRequest(s), s));
-            // } catch (IOException e) {}                 
-
-            // for (Request request : requestQueue) {
-            //     System.out.println(request.getRequestJson());
-            // }
-
-            // System.out.println(i + "\n");
-            // if(i >= 3)
-            // {
-            //     for (Request request : requestQueue) {
-            //         String response = "";
-            //         response += "HTTP/1.1 200 OK\r\n";
-            //         response += "<p>TwojaStara<p>";
-
-            //         try {
-            //             httpRequestHandler.sendResponse(request.responseSocket, response);
-            //             requestQueue.remove(request);
-            //         } catch (IOException e) {
-            //             // TODO Auto-generated catch block
-            //             e.printStackTrace();
-            //         }
-            //     }
-            // }
-            
-            // // Remove Expired Sessions
-            // i++;
-            // removeExpiredSessions();
         }
     }
 
-    public void createSession(int sesssionID, int userID)
+    private String respond(JSONObject body) throws IOException{
+        String action = body.getString("Action");
+
+        switch (action) {
+            case Actions.REGISTER:
+                // Send Email and Add user to database
+                return "REGISTER";
+            case Actions.LOGIN:
+                // Check if User Exists in database and check his password
+
+                createSession(Integer.parseInt(body.getString("UserID")));
+                return "SESSION CEARTED";
+            case Actions.GET_STATS:
+                //Fetch stats from Database
+
+                return "GET_STATS";         
+            default:
+                break;
+        }
+
+        return "";
+    }
+
+    public void createSession(int userID)
     {
-        sessions.add(new Session(userID));
+        Session s = new Session();
+        s.addUser(new User(userID));
+        sessions.push(s);
     }
 
     private void removeExpiredSessions()

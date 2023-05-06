@@ -2,22 +2,26 @@
 
 public class Session {
     public final int ID;
+    static int freeID = 0;
     
     User user;
     int lifetime;
     long lastUpdateTime;
     
-    public Session(int ID)
+    public Session()
     {
-        this.ID = ID;
+        this.ID = freeID;
+        freeID++;
         lifetime = 300;
         this.lastUpdateTime = System.currentTimeMillis();
     }
 
-    public Session(int ID, int lifetimeSeconds)
+    public Session(int lifetimeSeconds)
     {
-        this(ID);
-        this.update();
+        this.ID = freeID;
+        freeID++;
+        lifetime = lifetimeSeconds;
+        this.lastUpdateTime = System.currentTimeMillis();
     }
 
     public void addUser(User user)
