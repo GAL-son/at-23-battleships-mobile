@@ -4,55 +4,273 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".GameActivity">
 
     <ImageView
         android:id="@+id/ImageViewLogo"
-        android:layout_width="150dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="15dp"
+        android:layout_width="250dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-
-    <TextView
-        android:id="@+id/textViewYourBoard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="176dp"
-        android:text="Your Board"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TableLayout
-        android:id="@+id/tableLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="10dp"
-        android:background="@color/light_green"
-        app:layout_constraintBottom_toTopOf="@+id/buttonGoToEnemyBoard"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewYourBoard">
-
-    </TableLayout>
+        app:srcCompat="@drawable/battleships_logo" />
 
     <Button
-        android:id="@+id/buttonGoToEnemyBoard"
+        android:id="@+id/buttonChangeBoard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="5dp"
-        android:text="Go to enemy board"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/button"
+        android:text="Change board"
+        android:textColor="@color/red2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/buttonExitGame"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/button"
+        android:text="Exit"
+        android:textColor="@color/red2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ImageViewLogo"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/tableLayoutShips"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/textViewTurn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:text="Turn: "
+            android:textColor="@color/light_green"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/textViewTimeLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:layout_marginEnd="0dp"
+            android:layout_marginBottom="0dp"
+            android:text="TIME LEFT: "
+            android:textColor="@color/red2"
+            android:textSize="20sp" />
+
+    </LinearLayout>
+
+    <TableLayout
+        android:id="@+id/tableLayoutShips"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tableLayout" />
+        app:layout_constraintBottom_toTopOf="@id/fragmentContainerView"
+        tools:layout_editor_absoluteY="483dp">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewYourShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Your Ships"
+                android:textColor="@color/light_green"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/textViewShipsLeft"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Enemy Ships"
+                android:textColor="@color/light_green"
+                android:textSize="20sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewYour5xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Your Ships 5x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textViewEnemy5xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Enemy Ships 5x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewYour4xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Your Ships 4x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textViewEnemy4xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Enemy Ships 4x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewYour3xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Your Ships 3x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textViewEnemy3xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Enemy Ships 3x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewYour2xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Your Ships 2x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textViewEnemy2xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Enemy Ships 2x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/textViewYour1xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Your Ships 1x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/textViewEnemy1xShips"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1.0"
+                android:gravity="center"
+                android:text="Enemy Ships 1x"
+                android:textColor="@color/light_green"
+                android:textSize="12sp" />
+        </TableRow>
+    </TableLayout>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragmentContainerView"
+        android:name="com.battleships.OurBoardFragment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@id/buttonChangeBoard"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_our_board" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
