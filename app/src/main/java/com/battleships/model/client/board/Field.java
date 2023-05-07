@@ -1,9 +1,10 @@
 package com.battleships.model.client.board;
 import com.battleships.model.client.ship.Ship;
 
+import java.io.Serializable;
 
 
-public class Field {
+public class Field  implements Serializable {
     private Ship oocupyingShip;
     private boolean wasHit;
 

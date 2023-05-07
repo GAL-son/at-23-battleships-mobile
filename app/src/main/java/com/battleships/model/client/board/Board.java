@@ -1,8 +1,9 @@
 package com.battleships.model.client.board;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Board {
+public class Board implements Serializable {
 
     private int size=10;
    public ArrayList<ArrayList> fields = new ArrayList<>();

@@ -1,6 +1,8 @@
 package com.battleships.model.client.players.difficulty;
 
-public enum Difficulty {
+import java.io.Serializable;
+
+public enum Difficulty implements Serializable {
     Easy,
     Meadium,
     Hard

@@ -1,6 +1,8 @@
 package com.battleships.model.client.ship;
 
-public class Ship {
+import java.io.Serializable;
+
+public class Ship implements Serializable {
     private int size;
     private int health;
     private String type;//??

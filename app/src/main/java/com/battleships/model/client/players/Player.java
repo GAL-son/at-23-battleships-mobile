@@ -6,9 +6,10 @@ import com.battleships.model.client.board.Field;
 import com.battleships.model.client.ship.Ship;
 
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-abstract public class Player {
+abstract public class Player implements Serializable {
 
     int id;
     Board playerBoard= new Board();

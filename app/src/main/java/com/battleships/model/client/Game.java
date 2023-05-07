@@ -1,6 +1,10 @@
 package com.battleships.model.client;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
 
 import com.battleships.model.client.board.Field;
 import com.battleships.model.client.players.Player;
@@ -9,9 +13,9 @@ import com.battleships.model.client.players.PlayerLocal;
 import com.battleships.model.client.players.PlayerRemote;
 import com.battleships.model.client.ship.Ship;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Game {
+public class Game implements Serializable {
 
     private int id;
     private int state;
@@ -21,10 +25,7 @@ public class Game {
     private int type;
     // for now -> with 0 - with ai, 1 - online
     private int turn;
-
     private int player_active;
-
-
     private Player player1;
     private Player player2;
 
@@ -65,8 +66,8 @@ public class Game {
         //specifing ships sizes
         for (int i = 1; i < 5; i++)
             for (int x = 0; x < i; x++) {
-                player1.shipsSizes.add(5-i);
-                player2.shipsSizes.add(5-i);
+                player1.shipsSizes.add(5 - i);
+                player2.shipsSizes.add(5 - i);
             }
 
         Log.i("test", "game creation ");
@@ -76,16 +77,16 @@ public class Game {
 
     public void getMove(Move move, int player) {
         if (this.state == 0) {
-            Log.i("debug", "placing ship for player"+String.valueOf(player));
-            place_ship(move, player,0);
+            Log.i("debug", "placing ship for player" + String.valueOf(player));
+            place_ship(move, player, 0);
         }
-        if(this.state==1)
-        {
+        if (this.state == 1) {
 
         }
     }
 
-    public void place_ship(Move move, int player,int aline) {
+
+    public void place_ship(Move move, int player, int aline) {
         //WYMYUŚLIĆ SKĄD MA BYĆ BRANY ALIGNMENT
 
         //wybiramy gracza ktory ruszyl
@@ -99,46 +100,115 @@ public class Game {
         }
 
 
-
         //jesli gracz ktury rusza nie ma juz statkuw do psotawienia zakoncz wykonywanie
         if (currentPlayer.shipsSizes.isEmpty()) {
-            Log.i("debug", "all placed for player  "+String.valueOf(player));
+            Log.i("debug", "all placed for player  " + String.valueOf(player));
             return;
         }
 
         //pobiez  rozmiar nastepnego statku
         int size = currentPlayer.shipsSizes.get(currentPlayer.shipsSizes.size() - 1);
 
-        if(aline==0) {
-            Log.i("debug", "checking orizontal "+ String.valueOf(move.positionX)+"+"+String.valueOf(size));
+        if (aline == 0) {
+            Log.i("debug", "checking orizontal " + String.valueOf(move.positionX) + "+" + String.valueOf(size));
             //sprawdz czy mozna postawic statek w danym miejscu (beta) jesli nie to zakoncz wykonywanie
-            if (move.positionX + size > 9) {
+            if (move.positionX + (size - 1) > 9) {
                 Log.i("debug", "statek nie moze byc stwozony horizontal ");
                 return;
             }
         }
-        if(aline==1) {
+        if (aline == 1) {
             Log.i("debug", "checking veritcal");
             //sprawdz czy mozna postawic statek w danym miejscu (beta) jesli nie to zakoncz wykonywanie // konieczie POPRAWIĆ
-            if (move.positionY + size > 9) {
-                Log.i("debug", "statek nie moze byc stwozony vertical"+String.valueOf(statePlayer2));
+            if (move.positionY + (size - 1) > 9) {
+                Log.i("debug", "statek nie moze byc stwozony vertical" + String.valueOf(statePlayer2));
                 return;
             }
         }
 
+        boolean pom_return = false;
+        //sprawdzenie czy statek dotyka się z innym statkiem
+
+        if (aline == 0) {
+            for (int n = move.positionX - 1; n < move.positionX + size + 1; n++) {
+                if (n >= 0 && n <= 9) {
+                    if (n == move.positionX - 1 || n == move.positionX + size) {
+
+                        if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY)).getOocupyingShip() != null) {
+                            Log.i("debug", "znaleziono styk");
+                            pom_return = true;
+                        }
+
+                    }
+
+                    if (move.positionY + 1 < 10) {
+                        if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY + 1)).getOocupyingShip() != null) {
+                            Log.i("debug", "znaleziono styk");
+                            pom_return = true;
+                        }
+                    }
+
+                    if (move.positionY - 1 > -1) {
+                        if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY - 1)).getOocupyingShip() != null) {
+                            Log.i("debug", "znaleziono styk");
+                            pom_return = true;
+                        }
+
+                    }
+                }
+
+
+            }
+        }
+
+
+
+        if (aline==1) {
+            for (int n = move.positionY - 1; n < move.positionY + size + 1; n++) {
+                if (n >= 0 && n <= 9) {
+                    if (n == move.positionY - 1 || n == move.positionY + size) {
+
+                        if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(n)).getOocupyingShip() != null) {
+                            Log.i("debug", "znaleziono styk");
+                            pom_return = true;
+                        }
+
+                    }
+
+                    if (move.positionX + 1 < 10) {
+                        if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + 1).get(n)).getOocupyingShip() != null) {
+                            Log.i("debug", "znaleziono styk");
+                            pom_return = true;
+                        }
+                    }
+
+                    if (move.positionX - 1 > -1) {
+                        if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX - 1).get(n)).getOocupyingShip() != null) {
+                            Log.i("debug", "znaleziono styk");
+                            pom_return = true;
+                        }
+
+                    }
+                }
+
+
+            }
+        }
+        if (pom_return == true)
+            return;
+
         //dodaj statek do listy statkow gracza
-        Log.i("debug", "statek dodany do listy"+String.valueOf(player));
+        Log.i("debug", "statek dodany do listy" + String.valueOf(player));
         currentPlayer.ships.add(new Ship(size));
 
         //powiąz statek z polami na planszy gracza(dodac)
-        for(int i=0;i<size;i++) {
+        for (int i = 0; i < size; i++) {
             Log.i("debug", "powioązano" + String.valueOf(i) + " z " + String.valueOf(size));
             try {
 
 
-                ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + (i * ((aline + 1) % 2))).get(move.positionY + (i * ((aline) % 2)))).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size()-1));
-            } catch (Exception e)
-            {
+                ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + (i * ((aline + 1) % 2))).get(move.positionY + (i * ((aline) % 2)))).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
+            } catch (Exception e) {
                 Log.i("wtf", e.getMessage());
             }
         }
@@ -154,14 +224,14 @@ public class Game {
                 statePlayer2 = 1;
             }
         }
-        Log.i("debug", "status rozgrywki dla gracza1:"+String.valueOf(statePlayer1));
-        Log.i("debug", "status rozgrywki dla gracza2:"+String.valueOf(statePlayer2));
+        Log.i("debug", "status rozgrywki dla gracza1:" + String.valueOf(statePlayer1));
+        Log.i("debug", "status rozgrywki dla gracza2:" + String.valueOf(statePlayer2));
 
         //jesli  obaj gracze są juz w  stanie rozgrywki, ustaw stan rozgrywki na nastepny i zakoncz wykonyewanie
         if (statePlayer1 == 1 && statePlayer2 == 1) {
             state = 1;
         }
-        Log.i("debug", "status rozgrywki :"+String.valueOf(state));
+        Log.i("debug", "status rozgrywki :" + String.valueOf(state));
         //przypisz tymczasowy obiekt do odpowiedniego gracza
         if (player == 1)
             this.player1 = currentPlayer;
@@ -170,9 +240,9 @@ public class Game {
         }
 
     }
-    //funcka opisujaca procedury w momencie gry gracze strzelają do swoich statków
-    public void gameLoop(Move a)
-    {
+
+
+    public void gameLoop() {
 
     }
 
@@ -215,5 +285,7 @@ public class Game {
     public Player getPlayer2() {
         return player2;
     }
+
+
 
 }

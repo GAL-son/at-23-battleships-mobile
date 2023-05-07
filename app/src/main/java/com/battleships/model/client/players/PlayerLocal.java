@@ -1,6 +1,8 @@
 package com.battleships.model.client.players;
 
-public class PlayerLocal extends Player{
+import java.io.Serializable;
+
+public class PlayerLocal extends Player implements Serializable {
 
     public void getUiMove()
     {

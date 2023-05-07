@@ -1,6 +1,8 @@
 package com.battleships.model.client.players;
 
-public class PlayerRemote extends Player {
+import java.io.Serializable;
+
+public class PlayerRemote extends Player implements Serializable {
 
 
     private int ConnectedServerId;
