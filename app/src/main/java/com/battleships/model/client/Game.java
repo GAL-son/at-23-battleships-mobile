@@ -1,10 +1,15 @@
 package com.battleships.model.client;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
+
 import com.battleships.model.client.players.Player;
 import com.battleships.model.client.players.PlayerAi;
 import com.battleships.model.client.players.PlayerLocal;
 import com.battleships.model.client.players.PlayerRemote;
 
-public class Game {
+public class Game implements Parcelable {
 
     private int id;
     private int state;
@@ -53,6 +58,25 @@ public class Game {
     }
 
 
+    protected Game(Parcel in) {
+        id = in.readInt();
+        state = in.readInt();
+        type = in.readInt();
+        turn = in.readInt();
+    }
+
+    public static final Creator<Game> CREATOR = new Creator<Game>() {
+        @Override
+        public Game createFromParcel(Parcel in) {
+            return new Game(in);
+        }
+
+        @Override
+        public Game[] newArray(int size) {
+            return new Game[size];
+        }
+    };
+
     public void gameLoop()
     {
 
@@ -98,4 +122,16 @@ public class Game {
         return player2;
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeInt(state);
+        dest.writeInt(type);
+        dest.writeInt(turn);
+    }
 }

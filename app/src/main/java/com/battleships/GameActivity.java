@@ -12,6 +12,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.battleships.model.client.Game;
+
 public class GameActivity extends AppCompatActivity {
 
     private boolean isOurBoardDisplayed = true;
@@ -20,7 +22,8 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-
+        //odebranie obiektu game z setShipsActivity
+        Game game = getIntent().getParcelableExtra("game");
         Button changeBoard = findViewById(R.id.buttonChangeBoard);
         Button exitGame = findViewById(R.id.buttonExitGame);
 
@@ -74,7 +77,7 @@ public class GameActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public Integer[] getFieldId(int pos){
+    public static Integer[] getFieldId(int pos){
         Integer[] posId = new Integer[2];
         if (pos < 9){
             posId[0] = pos;
