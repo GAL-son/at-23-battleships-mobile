@@ -7,6 +7,8 @@ public class Field {
     private Ship oocupyingShip;
     private boolean wasHit;
 
+    public int test;
+
 
      public Field()
      {

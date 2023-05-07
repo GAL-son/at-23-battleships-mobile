@@ -9,15 +9,14 @@ public class Board {
 
     public Board() {
 
-        for (int n = 0; n < this.size; n++) {
-            fields.add(new ArrayList());
-        }
 
         for (int m = 0; m <this.size; m++) {
+            fields.add(new ArrayList<Field>());
             for (int n = 0; n < this.size; n++) {
-                fields.get(n).add(new Field());
+                fields.get(m).add(new Field());
             }
         }
+
 
     }
 

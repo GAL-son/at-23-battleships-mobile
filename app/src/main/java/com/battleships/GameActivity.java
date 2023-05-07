@@ -22,6 +22,13 @@ public class GameActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+       Game game_this;
+        try {
+            Game game=new Game(1,0);
+            game_this=game;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
@@ -72,10 +79,18 @@ public class GameActivity extends AppCompatActivity {
                         }
                         else
                         {
-                            pos2[0]=pos/10;
-                            pos2[1]=pos%10;
+                            pos2[0]=pos%10;
+                            pos2[1]=pos/10;
                         }
-                        Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(pos2[0])+", "+String.valueOf(pos2[1]), Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(tableLayout, "test1 " + String.valueOf(pos2[0])+", "+String.valueOf(pos2[1]), Snackbar.LENGTH_SHORT).show();
+
+                        try {
+                            game_this.getMove(new Move(pos2[0],pos2[1],1),1);
+                        } catch (Exception e) {
+                           //throw new RuntimeException(e);
+                        }
+
+
                     }
                 });
 

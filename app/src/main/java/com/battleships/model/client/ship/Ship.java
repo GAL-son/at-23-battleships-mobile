@@ -6,9 +6,9 @@ public class Ship {
     private String type;//??
 
 
-    public Ship(int size, int health) {
+    public Ship(int size) {
         this.size = size;
-        this.health = health;
+        this.health = size;
         this.type = resolveType(size);
     }
 
@@ -16,19 +16,19 @@ public class Ship {
         String name;
         switch (size) {
             case 1:
-                name = "maluch";
+                name = "kuter torpedowy";
                 break;
             case 2:
-                name = "korweta";
+                name = "łódź podwodna";
                 break;
             case 3:
-                name = "fregata";
+                name = "ciężki krążownik";
                 break;
             case 4:
                 name = "lotniskowiec";
                 break;
             default:
-                name = "WhatTheHeeel";
+                name = "???";
         }
         return name;
     }
