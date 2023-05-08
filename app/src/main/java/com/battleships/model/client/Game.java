@@ -14,6 +14,7 @@ import com.battleships.model.client.players.PlayerRemote;
 import com.battleships.model.client.ship.Ship;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Game implements Serializable {
 
@@ -162,8 +163,7 @@ public class Game implements Serializable {
         }
 
 
-
-        if (aline==1) {
+        if (aline == 1) {
             for (int n = move.positionY - 1; n < move.positionY + size + 1; n++) {
                 if (n >= 0 && n <= 9) {
                     if (n == move.positionY - 1 || n == move.positionY + size) {
@@ -206,8 +206,11 @@ public class Game implements Serializable {
             Log.i("debug", "powioązano" + String.valueOf(i) + " z " + String.valueOf(size));
             try {
 
-
-                ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + (i * ((aline + 1) % 2))).get(move.positionY + (i * ((aline) % 2)))).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
+                Log.i("xd?", "statek dowiazany na polu" + String.valueOf(move.positionX) + " ," + String.valueOf(move.positionY));
+                if (aline == 0)
+                    ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + i).get(move.positionY)).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
+                if (aline == 1)
+                    ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(move.positionY + i)).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
             } catch (Exception e) {
                 Log.i("wtf", e.getMessage());
             }
@@ -286,6 +289,19 @@ public class Game implements Serializable {
         return player2;
     }
 
-
+    public static ArrayList<Integer> histogram(ArrayList<Integer> a) {
+        ArrayList<Integer> histogram = new ArrayList<>();
+        for (int n = 0; n < 4; n++) {
+            histogram.add(0);
+        }
+        histogram.add(0);
+        for (Integer x : a) {
+            histogram.set(x - 1, (histogram.get(x - 1) + 1));
+        }
+        Log.i("histogram", "histogram: jeden*" + String.valueOf(histogram.get(0)) + " dwa*" + String.valueOf(histogram.get(1)) + " trzy*" + String.valueOf(histogram.get(2)) + " cztery*" + String.valueOf(histogram.get(3)));
+        return histogram;
+    }
 
 }
+
+

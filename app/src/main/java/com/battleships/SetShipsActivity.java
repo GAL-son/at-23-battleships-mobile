@@ -20,10 +20,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 import com.battleships.model.client.Game;
 import com.battleships.model.client.Move;
+import com.battleships.model.client.board.Field;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
 
 public class SetShipsActivity extends AppCompatActivity {
     Game game_this;
@@ -114,14 +118,43 @@ public class SetShipsActivity extends AppCompatActivity {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ImageView pom;
                         ImageView clickedImageView = (ImageView) v;
-                        clickedImageView.setImageResource(imageResourceFieldWithoutShip);
+                       // clickedImageView.setImageResource(imageResourceFieldWithoutShip);
                         int pos = clickedImageView.getId();
                         Integer[] posId = new Integer[0];
                         posId = getFieldId(pos);
+                        //
+                        //ilosc statków
+                        ArrayList<Integer> a=Game.histogram(game_this.getPlayer1().shipsSizes);
+                        TextView x4=findViewById(R.id.textViewEnemy4xShips);
+                        TextView x3=findViewById(R.id.textViewEnemy3xShips);
+                        TextView x2=findViewById(R.id.textViewEnemy2xShips);
+                        TextView x1=findViewById(R.id.textViewEnemy1xShips);
+
+                        //
                         Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                         try {
-                            game_this.place_ship(new Move(posId[0],posId[1],0),1,0);
+
+                            game_this.place_ship(new Move(posId[0],posId[1],0),1,1);
+                            for(int x=0;x<10;x++)
+                            {
+                                for(int y=0;y<10;y++)
+                                {
+                                            if (((Field)(game_this.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                                            {
+                                                pom=findViewById(10*x+y);
+                                                pom.setImageResource(imageResourceFieldWithoutShip);
+                                            }
+                                }
+                            }
+                            a=Game.histogram(game_this.getPlayer1().shipsSizes);
+                            {
+                                x1.setText(String.valueOf(a.get(0))+"x");
+                                x2.setText(String.valueOf(a.get(1))+"x");
+                                x3.setText(String.valueOf(a.get(2))+"x");
+                                x4.setText(String.valueOf(a.get(3))+"x");
+                            }
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }
