@@ -16,6 +16,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.battleships.model.client.Game;
+import com.battleships.model.client.board.Field;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -33,6 +35,14 @@ public class OurBoardFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Game game;
+
+    public void setGame(Game game_)
+    {
+        game=game_;
+    }
+
 
     public OurBoardFragment() {
         // Required empty public constructor
@@ -63,6 +73,7 @@ public class OurBoardFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
 
     }
 
@@ -118,15 +129,44 @@ public class OurBoardFragment extends Fragment {
 
                 // Nadanie unikalnego id dla każdego ImageView
                 imageView.setId(i * 10 + j);
+
+//                //
+//                ImageView pom1;
+//                for(int x=0;x<10;x++)
+//                {
+//                    for(int y=0;y<10;y++)
+//                    {
+//                        if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
+//                        {
+//                            pom1=rootView.findViewById(10*x+y);
+//                            pom1.setImageResource(imageResourceFieldWithoutShip);
+//                        }
+//                    }
+//                }
+//                //
+
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        ImageView pom;
                         ImageView clickedImageView = (ImageView) v;
-                        clickedImageView.setImageResource(imageResourceFieldWithoutShip);
+                      //  clickedImageView.setImageResource(imageResourceFieldWithoutShip);
                         int pos = clickedImageView.getId();
                         Integer[] posId = new Integer[0];
                         if (getActivity() instanceof GameActivity) {
                             posId = ((GameActivity) getActivity()).getFieldId(pos);
+
+                        }
+                        for(int x=0;x<10;x++)
+                        {
+                            for(int y=0;y<10;y++)
+                            {
+                                if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                                {
+                                    pom=rootView.findViewById(10*x+y);
+                                    pom.setImageResource(imageResourceFieldWithoutShip);
+                                }
+                            }
                         }
                         Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                     }

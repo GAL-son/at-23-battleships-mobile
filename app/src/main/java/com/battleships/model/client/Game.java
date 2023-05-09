@@ -65,10 +65,12 @@ public class Game implements Serializable {
         }
 
         //specifing ships sizes
+
+
         for (int i = 1; i < 5; i++)
-            for (int x = 0; x < i; x++) {
-                player1.shipsSizes.add(5 - i);
-                player2.shipsSizes.add(5 - i);
+            for (int x = i-1; x < 4; x++) {
+                player1.shipsSizes.add(i);
+                player2.shipsSizes.add(i);
             }
 
         Log.i("test", "game creation ");
@@ -128,19 +130,21 @@ public class Game implements Serializable {
         }
 
         boolean pom_return = false;
+
+
         //sprawdzenie czy statek dotyka się z innym statkiem
 
         if (aline == 0) {
             for (int n = move.positionX - 1; n < move.positionX + size + 1; n++) {
                 if (n >= 0 && n <= 9) {
-                    if (n == move.positionX - 1 || n == move.positionX + size) {
+
 
                         if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY)).getOocupyingShip() != null) {
                             Log.i("debug", "znaleziono styk");
                             pom_return = true;
                         }
 
-                    }
+
 
                     if (move.positionY + 1 < 10) {
                         if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY + 1)).getOocupyingShip() != null) {
@@ -156,6 +160,7 @@ public class Game implements Serializable {
                         }
 
                     }
+
                 }
 
 
@@ -166,14 +171,14 @@ public class Game implements Serializable {
         if (aline == 1) {
             for (int n = move.positionY - 1; n < move.positionY + size + 1; n++) {
                 if (n >= 0 && n <= 9) {
-                    if (n == move.positionY - 1 || n == move.positionY + size) {
+
 
                         if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(n)).getOocupyingShip() != null) {
                             Log.i("debug", "znaleziono styk");
                             pom_return = true;
                         }
 
-                    }
+
 
                     if (move.positionX + 1 < 10) {
                         if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + 1).get(n)).getOocupyingShip() != null) {

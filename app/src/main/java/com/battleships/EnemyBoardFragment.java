@@ -14,6 +14,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import com.battleships.model.client.Game;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -31,6 +32,13 @@ public class EnemyBoardFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Game game;
+
+    public void setGame(Game game_)
+    {
+        game=game_;
+    }
 
     public EnemyBoardFragment() {
         // Required empty public constructor

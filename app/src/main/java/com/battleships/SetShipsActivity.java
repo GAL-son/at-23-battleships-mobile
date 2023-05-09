@@ -78,7 +78,7 @@ public class SetShipsActivity extends AppCompatActivity {
 
     private void goToGameActivity(Game game){
         Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra("game",game);
+        intent.putExtra("game",game_this);
         startActivity(intent);
     }
 
@@ -127,10 +127,16 @@ public class SetShipsActivity extends AppCompatActivity {
                         //
                         //ilosc statków
                         ArrayList<Integer> a=Game.histogram(game_this.getPlayer1().shipsSizes);
+                        a=Game.histogram(game_this.getPlayer1().shipsSizes);
                         TextView x4=findViewById(R.id.textViewEnemy4xShips);
                         TextView x3=findViewById(R.id.textViewEnemy3xShips);
                         TextView x2=findViewById(R.id.textViewEnemy2xShips);
                         TextView x1=findViewById(R.id.textViewEnemy1xShips);
+
+                        x1.setText(String.valueOf(a.get(0))+"x");
+                        x2.setText(String.valueOf(a.get(1))+"x");
+                        x3.setText(String.valueOf(a.get(2))+"x");
+                        x4.setText(String.valueOf(a.get(3))+"x");
 
                         //
                         Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
