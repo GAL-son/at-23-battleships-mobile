@@ -34,18 +34,21 @@ public class GameActivity extends AppCompatActivity {
             Log.i("GameActivity", e.getMessage());
         }
 
-//        //to jest gówno rozwiązujące problemy, z tym ze to jesszce nie działa
-//        FragmentManager fragmentManagerPom = getSupportFragmentManager();
-//        FragmentTransaction fragmentTransactionPom = fragmentManagerPom.beginTransaction();
-//        OurBoardFragment ourBoardFragmentPom = new OurBoardFragment();
-//        ourBoardFragmentPom.setGame(game);
-//        fragmentTransactionPom.replace(R.id.fragmentContainerView, ourBoardFragmentPom);
-//        isOurBoardDisplayed = false;
-//        fragmentTransactionPom.commit();
-//        //koniec gówna
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        //to jest gówno rozwiązujące problemy, z tym ze to jesszce nie działa
+        FragmentManager fragmentManagerPom = getSupportFragmentManager();
+        FragmentTransaction fragmentTransactionPom = fragmentManagerPom.beginTransaction();
+        OurBoardFragment ourBoardFragmentPom = new OurBoardFragment();
+        //ourBoardFragmentPom.setGame(game);
+        getIntent().putExtra("game",game);
+        fragmentTransactionPom.replace(R.id.fragmentContainerView, ourBoardFragmentPom);
+        isOurBoardDisplayed = false;
+        fragmentTransactionPom.commit();
+        //koniec gówna
 
 
         String test="";
@@ -80,13 +83,15 @@ public class GameActivity extends AppCompatActivity {
                 if (isOurBoardDisplayed) {
                     OurBoardFragment ourBoardFragment = new OurBoardFragment();
                         Log.i("transfer do fragmenty", "fragment otrzymał dane");
-                        ourBoardFragment.setGame(game);
+                      // ourBoardFragment.setGame(game);
+                    getIntent().putExtra("game",game);
 
                     fragmentTransaction.replace(R.id.fragmentContainerView, ourBoardFragment);
                     isOurBoardDisplayed = false;
                 } else {
                     EnemyBoardFragment opponentBoardFragment = new EnemyBoardFragment();
-                    opponentBoardFragment.setGame(game);
+                    //opponentBoardFragment.setGame(game);
+                    getIntent().putExtra("game",game);
                     fragmentTransaction.replace(R.id.fragmentContainerView, opponentBoardFragment);
                     isOurBoardDisplayed = true;
                 }

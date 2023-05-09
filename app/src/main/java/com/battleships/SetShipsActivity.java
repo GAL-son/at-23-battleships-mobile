@@ -139,7 +139,7 @@ public class SetShipsActivity extends AppCompatActivity {
                         x4.setText(String.valueOf(a.get(3))+"x");
 
                         //
-                        Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
+                       // Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                         try {
 
                             game_this.place_ship(new Move(posId[0],posId[1],0),1,1);

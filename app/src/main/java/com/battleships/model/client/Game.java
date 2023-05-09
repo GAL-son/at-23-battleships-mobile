@@ -25,10 +25,14 @@ public class Game implements Serializable {
     private int statePlayer2 = 0;
     private int type;
     // for now -> with 0 - with ai, 1 - online
-    private int turn;
+    private int turn = 0;
     private int player_active;
     private Player player1;
     private Player player2;
+
+    public void nextTurn() {
+        turn = (turn + 1) % 2;
+    }
 
 
     public Game(int id, int type) throws Exception {
@@ -68,7 +72,7 @@ public class Game implements Serializable {
 
 
         for (int i = 1; i < 5; i++)
-            for (int x = i-1; x < 4; x++) {
+            for (int x = i - 1; x < 4; x++) {
                 player1.shipsSizes.add(i);
                 player2.shipsSizes.add(i);
             }
@@ -88,6 +92,10 @@ public class Game implements Serializable {
         }
     }
 
+
+    public void hitField(Move move, int player) {
+        ((Field) player2.getPlayerBard().fields.get(move.positionX).get(move.positionY)).hitField();
+    }
 
     public void place_ship(Move move, int player, int aline) {
         //WYMYUŚLIĆ SKĄD MA BYĆ BRANY ALIGNMENT
@@ -139,11 +147,10 @@ public class Game implements Serializable {
                 if (n >= 0 && n <= 9) {
 
 
-                        if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY)).getOocupyingShip() != null) {
-                            Log.i("debug", "znaleziono styk");
-                            pom_return = true;
-                        }
-
+                    if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY)).getOocupyingShip() != null) {
+                        Log.i("debug", "znaleziono styk");
+                        pom_return = true;
+                    }
 
 
                     if (move.positionY + 1 < 10) {
@@ -173,11 +180,10 @@ public class Game implements Serializable {
                 if (n >= 0 && n <= 9) {
 
 
-                        if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(n)).getOocupyingShip() != null) {
-                            Log.i("debug", "znaleziono styk");
-                            pom_return = true;
-                        }
-
+                    if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(n)).getOocupyingShip() != null) {
+                        Log.i("debug", "znaleziono styk");
+                        pom_return = true;
+                    }
 
 
                     if (move.positionX + 1 < 10) {
@@ -212,10 +218,14 @@ public class Game implements Serializable {
             try {
 
                 Log.i("xd?", "statek dowiazany na polu" + String.valueOf(move.positionX) + " ," + String.valueOf(move.positionY));
-                if (aline == 0)
+                if (aline == 0) {
                     ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + i).get(move.positionY)).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
-                if (aline == 1)
+                    currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX + i, move.positionY, 99));
+                }
+                if (aline == 1) {
                     ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(move.positionY + i)).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
+                    currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX, move.positionY + i, 99));
+                }
             } catch (Exception e) {
                 Log.i("wtf", e.getMessage());
             }
