@@ -39,7 +39,7 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        //to jest gówno rozwiązujące problemy, z tym ze to jesszce nie działa
+        //to jest gówno rozwiązujące problemy, z tym ze to jesszce nie działa edit: teraz działa
         FragmentManager fragmentManagerPom = getSupportFragmentManager();
         FragmentTransaction fragmentTransactionPom = fragmentManagerPom.beginTransaction();
         OurBoardFragment ourBoardFragmentPom = new OurBoardFragment();
@@ -51,24 +51,24 @@ public class GameActivity extends AppCompatActivity {
         //koniec gówna
 
 
-        String test="";
-
-        for(int x=0;x<=9;x++)
-        {
-            for(int y=0;y<=9;y++)
-            {
-                if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
-                {
-                    test+="X";
-                }
-                else
-                {
-                    test+="O";
-                }
-            }
-            Log.i("field", test);
-            test="";
-        }
+//        String test="";
+//
+//        for(int x=0;x<=9;x++)
+//        {
+//            for(int y=0;y<=9;y++)
+//            {
+//                if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
+//                {
+//                    test+="X";
+//                }
+//                else
+//                {
+//                    test+="O";
+//                }
+//            }
+//            Log.i("field", test);
+//            test="";
+//        }
         Button changeBoard = findViewById(R.id.buttonChangeBoard);
         Button exitGame = findViewById(R.id.buttonExitGame);
 

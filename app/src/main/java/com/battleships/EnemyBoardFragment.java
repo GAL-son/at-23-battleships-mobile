@@ -74,6 +74,27 @@ public class EnemyBoardFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    private  void drawBoardGameLoopEnemy(View rootView)
+    {
+
+        TextView turn = getActivity().findViewById(R.id.textViewTurn);
+        turn.setText("Turn:" + game.getTurn());
+
+        ImageView pom;
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
+                if (((Field)(game.getPlayer2().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                {
+                    pom=rootView.findViewById(10*x+y);
+                    pom.setImageResource(R.drawable.field_without_ship);
+                }
+                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(y).get(x))).getWasHit() == true) {
+                    pom = rootView.findViewById(10 * x + y);
+                    pom.setImageResource(R.drawable.field_without_ship);
+                }
+            }
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -148,7 +169,7 @@ public class EnemyBoardFragment extends Fragment {
                         //    {
                         try {
                             if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true) {
-                                game.hitField(new Move(posId[0], posId[1], 0), 2);
+                                game.hitField(new Move(posId[0], posId[1], 0), 1);
                                 Log.i("hiting", "field hit" + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]));
                                 game.nextTurn();
                                 turn.setText("Turn:" + game.getTurn());
@@ -159,16 +180,9 @@ public class EnemyBoardFragment extends Fragment {
                         }
 
                         //  }//part of turn based shinanigans
+                        drawBoardGameLoopEnemy(rootView);
 
 
-                        for (int x = 0; x < 10; x++) {
-                            for (int y = 0; y < 10; y++) {
-                                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(y).get(x))).getWasHit() == true) {
-                                    pom = rootView.findViewById(10 * x + y);
-                                    pom.setImageResource(imageResourceFieldWithoutShip);
-                                }
-                            }
-                        }
                         // Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                     }
                 });
@@ -180,17 +194,9 @@ public class EnemyBoardFragment extends Fragment {
         // Dodawanie TableLayout do FrameLayout
         frameLayout.addView(tableLayout);
 
-        ImageView pom;
-        TextView turn = getActivity().findViewById(R.id.textViewTurn);
-        turn.setText("Turn:" + game.getTurn());
-        for (int x = 0; x < 10; x++) {
-            for (int y = 0; y < 10; y++) {
-                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(y).get(x))).getWasHit() == true) {
-                    pom = rootView.findViewById(10 * x + y);
-                    pom.setImageResource(imageResourceFieldWithoutShip);
-                }
-            }
-        }
+
+        //pierwsze wyrysowanie
+        drawBoardGameLoopEnemy(rootView);
 
         return rootView;
     }

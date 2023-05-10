@@ -83,6 +83,21 @@ public class OurBoardFragment extends Fragment {
 
 
 }
+        private  void drawBoardGameLoopYour(View rootView)
+        {
+            ImageView pom;
+            for(int x=0;x<10;x++)
+            {
+                for(int y=0;y<10;y++)
+                {
+                    if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                    {
+                        pom=rootView.findViewById(10*x+y);
+                        pom.setImageResource(R.drawable.field_without_ship);
+                    }
+                }
+            }
+        }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -149,7 +164,7 @@ public class OurBoardFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
 
-                        ImageView clickedImageView = (ImageView) v;
+                           ImageView clickedImageView = (ImageView) v;
                       //  clickedImageView.setImageResource(imageResourceFieldWithoutShip);
                         int pos = clickedImageView.getId();
                         Integer[] posId = new Integer[0];
@@ -157,18 +172,8 @@ public class OurBoardFragment extends Fragment {
                             posId = ((GameActivity) getActivity()).getFieldId(pos);
 
                         }
-                        ImageView pom;
-                        for(int x=0;x<10;x++)
-                        {
-                            for(int y=0;y<10;y++)
-                            {
-                                if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
-                                {
-                                    pom=rootView.findViewById(10*x+y);
-                                    pom.setImageResource(imageResourceFieldWithoutShip);
-                                }
-                            }
-                        }
+
+                        drawBoardGameLoopYour(rootView);
                        // Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                     }
                 });
@@ -184,20 +189,8 @@ public class OurBoardFragment extends Fragment {
         frameLayout.addView(tableLayout);
 
 
-
-
-        ImageView pom;
-        for(int x=0;x<10;x++)
-        {
-            for(int y=0;y<10;y++)
-            {
-                if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
-                {
-                    pom=rootView.findViewById(10*x+y);
-                    pom.setImageResource(imageResourceFieldWithoutShip);
-                }
-            }
-        }
+        //pierwsze wyrysowanie
+        drawBoardGameLoopYour(rootView);
 
 
         return rootView;
