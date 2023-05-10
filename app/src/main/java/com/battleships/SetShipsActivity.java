@@ -50,12 +50,20 @@ public class SetShipsActivity extends AppCompatActivity {
         //game creation
 
         try {
-            Game game=new Game(1,0);
-            game_this=game;
+            Game game = new Game(1, 0);
+            game_this = game;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
+        if(game_this.getType()==0)
+        {
+            try {
+                vsAiProcedure();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,16 +79,60 @@ public class SetShipsActivity extends AppCompatActivity {
         });
     }
 
-    private void goBackToMainMenu(){
+    private void goBackToMainMenu() {
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
     }
 
-    private void goToGameActivity(Game game){
+    private void goToGameActivity(Game game) {
         Intent intent = new Intent(this, GameActivity.class);
-        intent.putExtra("game",game_this);
+        intent.putExtra("game", game_this);
         startActivity(intent);
     }
+
+    private void updateCountShips() {
+        ArrayList<Integer> a = Game.histogram(game_this.getPlayer1().shipsSizes);
+        a = Game.histogram(game_this.getPlayer1().shipsSizes);
+        TextView x4 = findViewById(R.id.textViewEnemy4xShips);
+        TextView x3 = findViewById(R.id.textViewEnemy3xShips);
+        TextView x2 = findViewById(R.id.textViewEnemy2xShips);
+        TextView x1 = findViewById(R.id.textViewEnemy1xShips);
+
+        x1.setText(String.valueOf(a.get(0)) + "x");
+        x2.setText(String.valueOf(a.get(1)) + "x");
+        x3.setText(String.valueOf(a.get(2)) + "x");
+        x4.setText(String.valueOf(a.get(3)) + "x");
+
+    }
+
+    private void vsAiProcedure() throws Exception {
+        game_this.place_ship(new Move(0,0, 0), 2, 1);
+        game_this.place_ship(new Move(2,0, 0), 2, 1);
+        game_this.place_ship(new Move(4,0, 0), 2, 1);
+        game_this.place_ship(new Move(6,0, 0), 2, 1);
+        game_this.place_ship(new Move(9,0, 0), 2, 1);
+        game_this.place_ship(new Move(0,6, 0), 2, 1);
+        game_this.place_ship(new Move(2,6, 0), 2, 1);
+       game_this.place_ship(new Move(4,6, 0), 2, 1);
+        game_this.place_ship(new Move(0,9, 0), 2, 1);
+       game_this.place_ship(new Move(9,9, 0), 2, 1);
+        game_this.place_ship(new Move(1,9, 0), 2, 1);//ponad limit
+        game_this.place_ship(new Move(9,9, 0), 2, 1);//ponad limit
+        game_this.place_ship(new Move(8,6, 0), 2, 1);//ponad limit
+    }
+
+    private void drawBoardPlacing() {
+        ImageView pom;
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
+                if (((Field) (game_this.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied()) {
+                    pom = findViewById(10 * x + y);
+                    pom.setImageResource(R.drawable.field_without_ship);
+                }
+            }
+        }
+    }
+
 
     public void createBoard(Context context) {
         TableLayout tableLayout = findViewById(R.id.tableLayout);
@@ -118,49 +170,20 @@ public class SetShipsActivity extends AppCompatActivity {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ImageView pom;
+                         // ImageView pom;
                         ImageView clickedImageView = (ImageView) v;
-                       // clickedImageView.setImageResource(imageResourceFieldWithoutShip);
+                        // clickedImageView.setImageResource(imageResourceFieldWithoutShip);
                         int pos = clickedImageView.getId();
                         Integer[] posId = new Integer[0];
                         posId = getFieldId(pos);
-                        //
                         //ilosc statków
-                        ArrayList<Integer> a=Game.histogram(game_this.getPlayer1().shipsSizes);
-                        a=Game.histogram(game_this.getPlayer1().shipsSizes);
-                        TextView x4=findViewById(R.id.textViewEnemy4xShips);
-                        TextView x3=findViewById(R.id.textViewEnemy3xShips);
-                        TextView x2=findViewById(R.id.textViewEnemy2xShips);
-                        TextView x1=findViewById(R.id.textViewEnemy1xShips);
+                        updateCountShips();
 
-                        x1.setText(String.valueOf(a.get(0))+"x");
-                        x2.setText(String.valueOf(a.get(1))+"x");
-                        x3.setText(String.valueOf(a.get(2))+"x");
-                        x4.setText(String.valueOf(a.get(3))+"x");
-
-                        //
-                        Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
+                        // Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                         try {
-
-                            game_this.place_ship(new Move(posId[0],posId[1],0),1,1);
-                            for(int x=0;x<10;x++)
-                            {
-                                for(int y=0;y<10;y++)
-                                {
-                                            if (((Field)(game_this.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
-                                            {
-                                                pom=findViewById(10*x+y);
-                                                pom.setImageResource(imageResourceFieldWithoutShip);
-                                            }
-                                }
-                            }
-                            a=Game.histogram(game_this.getPlayer1().shipsSizes);
-                            {
-                                x1.setText(String.valueOf(a.get(0))+"x");
-                                x2.setText(String.valueOf(a.get(1))+"x");
-                                x3.setText(String.valueOf(a.get(2))+"x");
-                                x4.setText(String.valueOf(a.get(3))+"x");
-                            }
+                            game_this.place_ship(new Move(posId[0], posId[1], 0), 1, 1);
+                            drawBoardPlacing();
+                            updateCountShips();
                         } catch (Exception e) {
                             throw new RuntimeException(e);
                         }

@@ -1,11 +1,17 @@
 package com.battleships.model.client.ship;
 
+import android.util.Log;
+
+import com.battleships.model.client.Move;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Ship implements Serializable {
     private int size;
     private int health;
     private String type;//??
+    public ArrayList<ArrayList<Integer>> pola=new ArrayList<>();
 
 
     public Ship(int size) {
@@ -14,6 +20,16 @@ public class Ship implements Serializable {
         this.type = resolveType(size);
     }
 
+    public void addField(Move move)
+    {
+
+       ArrayList<Integer> tmpArr= new ArrayList<>();
+        tmpArr.add(move.positionX);
+        tmpArr.add(move.positionY);
+        Log.i("pole dodane","pole dodane");
+       pola.add(tmpArr);
+
+    }
     private String resolveType(int size) {
         String name;
         switch (size) {

@@ -1,10 +1,13 @@
 package com.battleships;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.os.CountDownTimer;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +22,9 @@ import android.widget.TextView;
 import com.battleships.model.client.Game;
 import com.battleships.model.client.board.Field;
 import com.google.android.material.snackbar.Snackbar;
+
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -38,10 +44,10 @@ public class OurBoardFragment extends Fragment {
 
     Game game;
 
-    public void setGame(Game game_)
-    {
-        game=game_;
-    }
+//    public void setGame(Game game_)
+//    {
+//        game=game_;
+//    }
 
 
     public OurBoardFragment() {
@@ -72,14 +78,31 @@ public class OurBoardFragment extends Fragment {
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
 
 
-    }
+}
+        private  void drawBoardGameLoopYour(View rootView)
+        {
+            ImageView pom;
+            for(int x=0;x<10;x++)
+            {
+                for(int y=0;y<10;y++)
+                {
+                    if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                    {
+                        pom=rootView.findViewById(10*x+y);
+                        pom.setImageResource(R.drawable.field_without_ship);
+                    }
+                }
+            }
+        }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Intent intent=getActivity().getIntent();
+        game=(Game)(intent.getSerializableExtra("game"));
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_our_board, container, false);
         FrameLayout frameLayout = rootView.findViewById(R.id.frameLayout);
@@ -130,26 +153,18 @@ public class OurBoardFragment extends Fragment {
                 // Nadanie unikalnego id dla każdego ImageView
                 imageView.setId(i * 10 + j);
 
-//                //
-//                ImageView pom1;
-//                for(int x=0;x<10;x++)
-//                {
-//                    for(int y=0;y<10;y++)
-//                    {
-//                        if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
-//                        {
-//                            pom1=rootView.findViewById(10*x+y);
-//                            pom1.setImageResource(imageResourceFieldWithoutShip);
-//                        }
-//                    }
-//                }
-//                //
+
+
+
+
+
+
 
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        ImageView pom;
-                        ImageView clickedImageView = (ImageView) v;
+
+                           ImageView clickedImageView = (ImageView) v;
                       //  clickedImageView.setImageResource(imageResourceFieldWithoutShip);
                         int pos = clickedImageView.getId();
                         Integer[] posId = new Integer[0];
@@ -157,29 +172,31 @@ public class OurBoardFragment extends Fragment {
                             posId = ((GameActivity) getActivity()).getFieldId(pos);
 
                         }
-                        for(int x=0;x<10;x++)
-                        {
-                            for(int y=0;y<10;y++)
-                            {
-                                if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
-                                {
-                                    pom=rootView.findViewById(10*x+y);
-                                    pom.setImageResource(imageResourceFieldWithoutShip);
-                                }
-                            }
-                        }
-                        Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
+
+                        drawBoardGameLoopYour(rootView);
+                       // Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                     }
                 });
+
                 tableRow.addView(imageView);
             }
             tableLayout.addView(tableRow);
+
+
         }
+
         // Dodawanie TableLayout do FrameLayout
         frameLayout.addView(tableLayout);
 
+
+        //pierwsze wyrysowanie
+        drawBoardGameLoopYour(rootView);
+
+
         return rootView;
     }
+
+
 
 
 

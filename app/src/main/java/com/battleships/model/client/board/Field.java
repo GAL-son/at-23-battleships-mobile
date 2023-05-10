@@ -1,4 +1,6 @@
 package com.battleships.model.client.board;
+import android.util.Log;
+
 import com.battleships.model.client.ship.Ship;
 
 import java.io.Serializable;
@@ -23,6 +25,7 @@ public class Field  implements Serializable {
         if( oocupyingShip!=null)
         {
             this.oocupyingShip.hitShip();
+            Log.i("ship hit",  "ship was hit, its curent hp is: "+this.oocupyingShip.getHealth());
         }
     }
 

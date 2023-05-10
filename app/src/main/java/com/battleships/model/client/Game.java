@@ -25,10 +25,14 @@ public class Game implements Serializable {
     private int statePlayer2 = 0;
     private int type;
     // for now -> with 0 - with ai, 1 - online
-    private int turn;
+    private int turn = 0;
     private int player_active;
     private Player player1;
     private Player player2;
+
+    public void nextTurn() {
+        turn = (turn + 1) % 2;
+    }
 
 
     public Game(int id, int type) throws Exception {
@@ -68,7 +72,7 @@ public class Game implements Serializable {
 
 
         for (int i = 1; i < 5; i++)
-            for (int x = i-1; x < 4; x++) {
+            for (int x = i - 1; x < 4; x++) {
                 player1.shipsSizes.add(i);
                 player2.shipsSizes.add(i);
             }
@@ -88,6 +92,105 @@ public class Game implements Serializable {
         }
     }
 
+
+    public void hitField(Move move, int player) {
+        Player atacked_player;
+        if (player == 1)
+            atacked_player = this.player2;
+        else if (player == 2) {
+            atacked_player = this.player1;
+        } else {
+            return;
+        }
+        Log.i("test1", "player is celected");
+
+
+
+            ((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).hitField();
+
+        if(((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).getOocupyingShip()!=null) {
+            if (((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).getOocupyingShip().getHealth() == 0) {
+                Log.i("statek zniszczony", "hitField:  statek zniszczony");
+
+                ArrayList<ArrayList<Integer>> pola_this = ((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).getOocupyingShip().pola;
+                Log.i("debug", "ilosc pul=" + pola_this.size());
+                for (ArrayList<Integer> a : pola_this) {
+                    Log.i("fields", "statek zniszczony byl na polu" + a.get(0) + ", " + a.get(1));
+                    int x=a.get(0);
+                    int y=a.get(1);
+
+                    for (int n=-1;n<2;n++)
+                    {
+                        for (int m=-1;m<2;m++)
+                        {
+                            if (n==0&&m==0)
+                                break;
+                            x=x+n;
+                            y=y+m;
+                            if ( x < 10 && x >= 0 && y < 10 && y >= 0) {
+                                if((((Field) atacked_player.getPlayerBard().fields.get(x).get(y)).isOccupied() != true))
+                                    ((Field) atacked_player.getPlayerBard().fields.get(x).get(y)).hitField();
+                            }
+                            x=a.get(0);
+                            y=a.get(1);
+                        }
+                         x=a.get(0);
+                         y=a.get(1);
+                    }
+
+                    if ( x < 10 && x >= 0 && y+1 < 10 && y+1 >= 0) {
+                        if((((Field) atacked_player.getPlayerBard().fields.get(x).get(y+1)).isOccupied() != true))
+                            ((Field) atacked_player.getPlayerBard().fields.get(x).get(y+1)).hitField();
+                    }
+
+
+
+//                    if ( x+1 < 10 && x >= 0 && y < 10 && y >= 0) {
+//                        if((((Field) atacked_player.getPlayerBard().fields.get(x+1).get(y)).isOccupied() != true))
+//                        ((Field) atacked_player.getPlayerBard().fields.get(x+1).get(y)).hitField();
+//                    }
+//                    if (((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) + 1)).isOccupied() != true && a.get(0) < 10 && a.get(0) >= 0 && a.get(1) + 1 < 10 && a.get(1) + 1 >= 0) {
+//                        ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) + 1)).hitField();
+//                    }
+//                    if (((Field) atacked_player.getPlayerBard().fields.get(a.get(0) - 1).get(a.get(1))).isOccupied() != true && a.get(0) - 1 < 10 && a.get(0) - 1 >= 0 && a.get(1) < 10 && a.get(1) >= 0) {
+//                        ((Field) atacked_player.getPlayerBard().fields.get(a.get(0) - 1).get(a.get(1))).hitField();
+//                    }
+//                    if (((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) - 1)).isOccupied() != true && a.get(0) < 10 && a.get(0) >= 0 && a.get(1) - 1 < 10 && a.get(1) - 1 >= 0) {
+//                        ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)).get(a.get(1) - 1)).hitField();
+//                    }
+////                //skosy
+////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)-1)).isOccupied()!=true&&a.get(0)-1<10&&a.get(0)-1>=0&&a.get(1)-1<10&&a.get(1)-1>=0)
+////                {
+////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)-1)).hitField();
+////                }
+////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)+1)).isOccupied()!=true&&a.get(0)-1<10&&a.get(0)-1>=0&&a.get(1)+1<10&&a.get(1)+1>=0)
+////                {
+////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)-1).get(a.get(1)+1)).hitField();
+////                }
+////
+////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)+1)).isOccupied()!=true&&a.get(0)+1<10&&a.get(0)+1>=0&&a.get(1)+1<10&&a.get(1)+1>=0)
+////                {
+////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)+1)).hitField();
+////                }
+////                if(((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)-1)).isOccupied()!=true&&a.get(0)+1<10&&a.get(0)+1>=0&&a.get(1)-1<10&&a.get(1)-1>=0)
+////                {
+////                    ((Field) atacked_player.getPlayerBard().fields.get(a.get(0)+1).get(a.get(1)-1)).hitField();
+////                }
+
+
+                }
+            }
+        }
+
+        if (player==1)
+        {
+            this.player2=atacked_player;
+        } else if (player==2) {
+            this.player1=atacked_player;
+        }
+
+
+    }
 
     public void place_ship(Move move, int player, int aline) {
         //WYMYUŚLIĆ SKĄD MA BYĆ BRANY ALIGNMENT
@@ -139,11 +242,10 @@ public class Game implements Serializable {
                 if (n >= 0 && n <= 9) {
 
 
-                        if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY)).getOocupyingShip() != null) {
-                            Log.i("debug", "znaleziono styk");
-                            pom_return = true;
-                        }
-
+                    if (((Field) currentPlayer.getPlayerBard().fields.get(n).get(move.positionY)).getOocupyingShip() != null) {
+                        Log.i("debug", "znaleziono styk");
+                        pom_return = true;
+                    }
 
 
                     if (move.positionY + 1 < 10) {
@@ -173,11 +275,10 @@ public class Game implements Serializable {
                 if (n >= 0 && n <= 9) {
 
 
-                        if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(n)).getOocupyingShip() != null) {
-                            Log.i("debug", "znaleziono styk");
-                            pom_return = true;
-                        }
-
+                    if (((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(n)).getOocupyingShip() != null) {
+                        Log.i("debug", "znaleziono styk");
+                        pom_return = true;
+                    }
 
 
                     if (move.positionX + 1 < 10) {
@@ -206,16 +307,70 @@ public class Game implements Serializable {
         Log.i("debug", "statek dodany do listy" + String.valueOf(player));
         currentPlayer.ships.add(new Ship(size));
 
+        //nadanie statku pul
+        for (int i = 0; i < size; i++) {
+            Log.i("debug", "nadawanie pul" );
+            try {
+
+                Log.i("xd?", "statek dowiazany na polu" + String.valueOf(move.positionX) + " ," + String.valueOf(move.positionY));
+                if (aline == 0) {
+                    try {
+                        currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX + i, move.positionY, 99));
+                        Log.i(" dodano", "place_ship:  dodano");
+                    }
+                    catch (Exception e)
+                    {
+                        Log.i("nie dodano", "place_ship: nie dodano"+e.getMessage());
+                    }
+
+                }
+                if (aline == 1) {
+                    try {
+                        currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX, move.positionY + i, 99));
+                        Log.i(" dodano", "place_ship:  dodano");
+                   }
+                    catch (Exception e)
+                    {
+                        Log.i("nie dodano", "place_ship: nie dodano"+e.getMessage());
+                    }
+
+                }
+            } catch (Exception e) {
+                Log.i("wtf", e.getMessage());
+            }
+        }
+
+
         //powiąz statek z polami na planszy gracza(dodac)
         for (int i = 0; i < size; i++) {
             Log.i("debug", "powioązano" + String.valueOf(i) + " z " + String.valueOf(size));
             try {
 
                 Log.i("xd?", "statek dowiazany na polu" + String.valueOf(move.positionX) + " ," + String.valueOf(move.positionY));
-                if (aline == 0)
+                if (aline == 0) {
+//                    try {
+//                        currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX + i, move.positionY, 99));
+//                        Log.i(" dodano", "place_ship:  dodano");
+//                    }
+//                    catch (Exception e)
+//                    {
+//                        Log.i("nie dodano", "place_ship: nie dodano"+e.getMessage());
+//                    }
                     ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX + i).get(move.positionY)).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
-                if (aline == 1)
+                    //currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX + i, move.positionY, 99));
+                }
+                if (aline == 1) {
+//                    try {
+//                        currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX, move.positionY + i, 99));
+//                        Log.i(" dodano", "place_ship:  dodano");
+//                   }
+//                    catch (Exception e)
+//                    {
+//                        Log.i("nie dodano", "place_ship: nie dodano"+e.getMessage());
+//                    }
                     ((Field) currentPlayer.getPlayerBard().fields.get(move.positionX).get(move.positionY + i)).setOocupyingShip(currentPlayer.ships.get(currentPlayer.ships.size() - 1));
+                    //currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX, move.positionY + i, 99));
+                }
             } catch (Exception e) {
                 Log.i("wtf", e.getMessage());
             }

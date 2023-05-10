@@ -1,9 +1,11 @@
 package com.battleships;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +17,8 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.battleships.model.client.Game;
+import com.battleships.model.client.Move;
+import com.battleships.model.client.board.Field;
 import com.google.android.material.snackbar.Snackbar;
 
 /**
@@ -35,10 +39,10 @@ public class EnemyBoardFragment extends Fragment {
 
     Game game;
 
-    public void setGame(Game game_)
-    {
-        game=game_;
-    }
+//    public void setGame(Game game_)
+//    {
+//        game=game_;
+//    }
 
     public EnemyBoardFragment() {
         // Required empty public constructor
@@ -70,10 +74,32 @@ public class EnemyBoardFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    private  void drawBoardGameLoopEnemy(View rootView)
+    {
+
+        TextView turn = getActivity().findViewById(R.id.textViewTurn);
+        turn.setText("Turn:" + game.getTurn());
+
+        ImageView pom;
+        for (int x = 0; x < 10; x++) {
+            for (int y = 0; y < 10; y++) {
+                if (((Field)(game.getPlayer2().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                {
+                    pom=rootView.findViewById(10*x+y);
+                    pom.setImageResource(R.drawable.field_without_ship);
+                }
+                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(y).get(x))).getWasHit() == true) {
+                    pom = rootView.findViewById(10 * x + y);
+                    pom.setImageResource(R.drawable.field_without_ship);
+                }
+            }
+        }
+    }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Intent intent = getActivity().getIntent();
+        game = (Game) (intent.getSerializableExtra("game"));
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_our_board, container, false);
         FrameLayout frameLayout = rootView.findViewById(R.id.frameLayout);
@@ -111,6 +137,7 @@ public class EnemyBoardFragment extends Fragment {
                         1.0f
                 ));
 
+
                 imageView.setImageResource(imageResourceField);
 
                 int marginInPixels = 2; // W pikselach
@@ -124,12 +151,52 @@ public class EnemyBoardFragment extends Fragment {
                 // Nadanie unikalnego id dla każdego ImageView
                 imageView.setId(i * 10 + j);
 
+                imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TextView turn = getActivity().findViewById(R.id.textViewTurn);
+
+
+                        ImageView clickedImageView = (ImageView) v;
+                        int pos = clickedImageView.getId();
+                        Integer[] posId = new Integer[0];
+                        if (getActivity() instanceof GameActivity) {
+                            posId = ((GameActivity) getActivity()).getFieldId(pos);
+
+                        }
+                        ImageView pom;
+                        //   if (game.getTurn() == 0)// intergracja z serwerem zmieni sens tej instrukcji, nazrazie zawieszona dla testów
+                        //    {
+                        try {
+                            if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true) {
+                                game.hitField(new Move(posId[0], posId[1], 0), 1);
+                                Log.i("hiting", "field hit" + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]));
+                                game.nextTurn();
+                                turn.setText("Turn:" + game.getTurn());
+                            }
+                        } catch (Exception e) {
+                            Log.i("hiting", "field not hit");
+                            throw new RuntimeException(e);
+                        }
+
+                        //  }//part of turn based shinanigans
+                        drawBoardGameLoopEnemy(rootView);
+
+
+                        // Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+
                 tableRow.addView(imageView);
             }
             tableLayout.addView(tableRow);
         }
         // Dodawanie TableLayout do FrameLayout
         frameLayout.addView(tableLayout);
+
+
+        //pierwsze wyrysowanie
+        drawBoardGameLoopEnemy(rootView);
 
         return rootView;
     }
