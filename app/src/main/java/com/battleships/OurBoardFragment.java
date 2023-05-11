@@ -90,11 +90,25 @@ public class OurBoardFragment extends Fragment {
             {
                 for(int y=0;y<10;y++)
                 {
-                    if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                    if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied()&&((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).getWasHit())
                     {
                         pom=rootView.findViewById(10*x+y);
                         pom.setImageResource(R.drawable.field_without_ship);
                     }
+                    if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied()&&((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).getWasHit()==false)
+                    {
+                        pom=rootView.findViewById(10*x+y);
+                        pom.setImageResource(R.drawable.allied_ship);
+                    }
+                    if (((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied()==false&&((Field)(game.getPlayer1().getPlayerBard().fields.get(y).get(x))).getWasHit()==true)
+                    {
+                        pom=rootView.findViewById(10*x+y);
+                        pom.setImageResource(R.drawable.enemy_ship_hit);
+                    }
+
+
+
+
                 }
             }
         }

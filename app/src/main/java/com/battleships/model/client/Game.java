@@ -31,7 +31,7 @@ public class Game implements Serializable {
     private Player player2;
 
     public void nextTurn() {
-        turn = (turn + 1) % 2;
+        turn = (turn + 1) ;
     }
 
 
@@ -82,6 +82,7 @@ public class Game implements Serializable {
 
     }
 
+
     public void getMove(Move move, int player) {
         if (this.state == 0) {
             Log.i("debug", "placing ship for player" + String.valueOf(player));
@@ -90,6 +91,7 @@ public class Game implements Serializable {
         if (this.state == 1) {
 
         }
+
     }
 
 
@@ -102,7 +104,7 @@ public class Game implements Serializable {
         } else {
             return;
         }
-        Log.i("test1", "player is celected");
+        Log.i("test1", "player is selected");
 
 
 
@@ -422,6 +424,9 @@ public class Game implements Serializable {
     }
 
     public int getTurn() {
+        return turn%2;
+    }
+    public int getTurnFull() {
         return turn;
     }
 

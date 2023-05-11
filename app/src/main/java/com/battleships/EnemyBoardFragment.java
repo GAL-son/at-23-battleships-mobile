@@ -19,7 +19,11 @@ import android.widget.TextView;
 import com.battleships.model.client.Game;
 import com.battleships.model.client.Move;
 import com.battleships.model.client.board.Field;
+import com.battleships.model.client.players.PlayerAi;
+import com.battleships.model.client.ship.Ship;
 import com.google.android.material.snackbar.Snackbar;
+
+import java.util.ArrayList;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -36,6 +40,9 @@ public class EnemyBoardFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private Integer player1HP=0;
+    private Integer player2HP=0;
 
     Game game;
 
@@ -83,17 +90,55 @@ public class EnemyBoardFragment extends Fragment {
         ImageView pom;
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
-                if (((Field)(game.getPlayer2().getPlayerBard().fields.get(y).get(x))).isOccupied())
-                {
-                    pom=rootView.findViewById(10*x+y);
-                    pom.setImageResource(R.drawable.field_without_ship);
-                }
                 if (((Field) (game.getPlayer2().getPlayerBard().fields.get(y).get(x))).getWasHit() == true) {
                     pom = rootView.findViewById(10 * x + y);
                     pom.setImageResource(R.drawable.field_without_ship);
+                    if (((Field)(game.getPlayer2().getPlayerBard().fields.get(y).get(x))).isOccupied())
+                    {
+                        pom=rootView.findViewById(10*x+y);
+
+                        pom.setImageResource(R.drawable.enemy_ship_hit);
+                    }
                 }
             }
         }
+    }
+
+    private  void hitingProcedure(Move move, int player)
+    {
+
+        countHP();
+        TextView turn = getActivity().findViewById(R.id.textViewTurn);
+       game.hitField(move, player);
+        Log.i("hiting", "field hit" + String.valueOf(move.positionX) + ", " + String.valueOf(move.positionY));
+        game.nextTurn();
+        turn.setText("Turn:" + game.getTurn());
+        countHP();
+
+
+    }
+    private  void countHP(){
+        Integer pom1=0,pom2=0;
+        for (Ship s: game.getPlayer1().ships) {
+            pom1+=s.getHealth();
+        }
+        for (Ship s: game.getPlayer2().ships) {
+            pom2+=s.getHealth();
+        }
+        Log.i("countHP", "countHP: "+"hp p1= "+pom1+" p2 = "+pom2);
+        if(pom1==0)
+        {
+            GameEndProcedure(2);
+        }
+        if(pom2==0)
+        {
+            GameEndProcedure(1);
+        }
+    }
+
+    private void GameEndProcedure(int winner) {
+        game.setState(2);
+        Log.i("koniec", "gre wygrał gracz: "+winner+"zajeło mu to "+game.getTurnFull());
     }
 
     @Override
@@ -169,10 +214,17 @@ public class EnemyBoardFragment extends Fragment {
                         //    {
                         try {
                             if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true) {
-                                game.hitField(new Move(posId[0], posId[1], 0), 1);
-                                Log.i("hiting", "field hit" + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]));
-                                game.nextTurn();
-                                turn.setText("Turn:" + game.getTurn());
+                                hitingProcedure(new Move( posId[0],posId[1],0),1);
+
+
+                            Log.i("ai", "czy ai styrzeli?");
+                            if (game.getType()==0) {
+                                Log.i("ai", "ai strzeli");
+                                ArrayList<Integer> AImove = ((PlayerAi) (game.getPlayer2())).getAImove(game.getPlayer1().getPlayerBard());
+                                if (((Field) (game.getPlayer1().getPlayerBard().fields.get(AImove.get(0)).get(AImove.get(1)))).getWasHit() != true) {
+                                    hitingProcedure(new Move(AImove.get(0), AImove.get(1), 0), 2);
+                                }
+                            }
                             }
                         } catch (Exception e) {
                             Log.i("hiting", "field not hit");
