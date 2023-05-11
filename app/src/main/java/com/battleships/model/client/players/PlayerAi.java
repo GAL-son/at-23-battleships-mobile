@@ -6,6 +6,7 @@ import com.battleships.model.client.players.difficulty.Difficulty;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 
 public class PlayerAi extends Player implements Serializable {
@@ -26,6 +27,8 @@ public class PlayerAi extends Player implements Serializable {
 
     public ArrayList<Integer> getAImove(Board board)
     {
+
+
         int x,y;
         Random random=new Random();
         ArrayList<Integer> AImove=new ArrayList<>();

@@ -85,7 +85,10 @@ public class EnemyBoardFragment extends Fragment {
     {
 
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
+        if (game.getState()!=2)
         turn.setText("Turn:" + game.getTurn());
+        else
+            turn.setText("game ended");
 
         ImageView pom;
         for (int x = 0; x < 10; x++) {
@@ -139,6 +142,7 @@ public class EnemyBoardFragment extends Fragment {
     private void GameEndProcedure(int winner) {
         game.setState(2);
         Log.i("koniec", "gre wygrał gracz: "+winner+"zajeło mu to "+game.getTurnFull());
+
     }
 
     @Override
@@ -213,18 +217,25 @@ public class EnemyBoardFragment extends Fragment {
                         //   if (game.getTurn() == 0)// intergracja z serwerem zmieni sens tej instrukcji, nazrazie zawieszona dla testów
                         //    {
                         try {
-                            if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true) {
+                            if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true&&game.getState()<2) {
                                 hitingProcedure(new Move( posId[0],posId[1],0),1);
+                                drawBoardGameLoopEnemy(rootView);
 
 
                             Log.i("ai", "czy ai styrzeli?");
                             if (game.getType()==0) {
                                 Log.i("ai", "ai strzeli");
                                 ArrayList<Integer> AImove = ((PlayerAi) (game.getPlayer2())).getAImove(game.getPlayer1().getPlayerBard());
-                                if (((Field) (game.getPlayer1().getPlayerBard().fields.get(AImove.get(0)).get(AImove.get(1)))).getWasHit() != true) {
+                                if (((Field) (game.getPlayer1().getPlayerBard().fields.get(AImove.get(0)).get(AImove.get(1)))).getWasHit() != true&&game.getState()<2) {
                                     hitingProcedure(new Move(AImove.get(0), AImove.get(1), 0), 2);
                                 }
                             }
+                            }
+                            else
+                            {
+                                Log.i("", "game alredy ended");
+                                turn.setText("game ended");
+
                             }
                         } catch (Exception e) {
                             Log.i("hiting", "field not hit");
