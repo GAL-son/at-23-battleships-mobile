@@ -61,154 +61,118 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <TableLayout
-        android:id="@+id/tableLayout2"
+    <LinearLayout
+        android:id="@+id/LinearLayoutButtony"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/tableLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <TableRow
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonClearBoard"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="8dp">
+            android:layout_weight="1"
+            android:background="@drawable/button"
+            android:textColor="@color/red2"
+            android:layout_margin="4dp"
+            android:text="Clear board" />
 
-            <TextView
-                android:id="@+id/textViewYourShips"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:text="Your Ships"
-                android:textColor="@color/light_green"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/textViewShipsLeft"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:text="Ships left"
-                android:textColor="@color/light_green"
-                android:textSize="20sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonTurnTheShip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+            android:layout_weight="1"
+            android:background="@drawable/button2"
+            android:textColor="@color/light_green2"
+            android:layout_margin="4dp"
+            android:text="Turn the ship" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/LinearLayoutButtony"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutShipsImages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imageViewShip4x"
                 android:layout_width="140dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:src="@drawable/ship4x" />
-
-            <TextView
-                android:id="@+id/textViewEnemy4xShips"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:text="1x"
-                android:textColor="@color/light_green"
-                android:textSize="12sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+                app:srcCompat="@drawable/ship4x" />
 
             <ImageView
                 android:id="@+id/imageViewShip3x"
                 android:layout_width="105dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:src="@drawable/ship3x" />
-            <TextView
-                android:id="@+id/textViewEnemy3xShips"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:text="2x"
-                android:textColor="@color/light_green"
-                android:textSize="12sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+                app:srcCompat="@drawable/ship3x" />
 
             <ImageView
                 android:id="@+id/imageViewShip2x"
                 android:layout_width="70dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:src="@drawable/ship2x" />
-
-            <TextView
-                android:id="@+id/textViewEnemy2xShips"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:text="3x"
-                android:textColor="@color/light_green"
-                android:textSize="12sp" />
-        </TableRow>
-
-        <TableRow
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp">
+                app:srcCompat="@drawable/ship2x" />
 
             <ImageView
                 android:id="@+id/imageViewShip1x"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
-                android:layout_marginTop="0dp"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
-                android:src="@drawable/ship1x" />
+                app:srcCompat="@drawable/ship1x" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/LinearLayoutShipsLeft"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textViewEnemy1xShips"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="0dp"
-                android:layout_weight="1.0"
-                android:gravity="center"
+                android:id="@+id/textView4xShipsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="1x"
+                android:textColor="@color/light_green" />
+
+            <TextView
+                android:id="@+id/textView3xShipsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="2x"
+                android:textColor="@color/light_green" />
+
+            <TextView
+                android:id="@+id/textView2xShipsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:text="3x"
+                android:textColor="@color/light_green" />
+
+            <TextView
+                android:id="@+id/textView1xShipsLeft"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
                 android:text="4x"
-                android:textColor="@color/light_green"
-                android:textSize="12sp" />
-        </TableRow>
-    </TableLayout>
+                android:textColor="@color/light_green" />
+        </LinearLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

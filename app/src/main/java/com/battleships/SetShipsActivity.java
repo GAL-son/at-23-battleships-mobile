@@ -93,10 +93,10 @@ public class SetShipsActivity extends AppCompatActivity {
     private void updateCountShips() {
         ArrayList<Integer> a = Game.histogram(game_this.getPlayer1().shipsSizes);
         a = Game.histogram(game_this.getPlayer1().shipsSizes);
-        TextView x4 = findViewById(R.id.textViewEnemy4xShips);
-        TextView x3 = findViewById(R.id.textViewEnemy3xShips);
-        TextView x2 = findViewById(R.id.textViewEnemy2xShips);
-        TextView x1 = findViewById(R.id.textViewEnemy1xShips);
+        TextView x4 = findViewById(R.id.textView4xShipsLeft);
+        TextView x3 = findViewById(R.id.textView3xShipsLeft);
+        TextView x2 = findViewById(R.id.textView2xShipsLeft);
+        TextView x1 = findViewById(R.id.textView1xShipsLeft);
 
         x1.setText(String.valueOf(a.get(0)) + "x");
         x2.setText(String.valueOf(a.get(1)) + "x");
