@@ -31,6 +31,7 @@ import java.util.ArrayList;
 
 public class SetShipsActivity extends AppCompatActivity {
     Game game_this;
+    int align_selected = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,8 @@ public class SetShipsActivity extends AppCompatActivity {
 
         Button exitButton = findViewById(R.id.buttonExit);
         Button readyButton = findViewById(R.id.buttonReady);
+        Button turnShips = findViewById(R.id.buttonTurnTheShip);
+        Button clearBoardButton = findViewById(R.id.buttonClearBoard);
         ImageView ship1x = findViewById(R.id.imageViewShip1x);
         ImageView ship2x = findViewById(R.id.imageViewShip2x);
         ImageView ship3x = findViewById(R.id.imageViewShip3x);
@@ -56,8 +59,7 @@ public class SetShipsActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        if(game_this.getType()==0)
-        {
+        if (game_this.getType() == 0) {
             try {
                 vsAiProcedure();
             } catch (Exception e) {
@@ -76,6 +78,43 @@ public class SetShipsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 goToGameActivity(game_this);
             }
+        });
+
+        turnShips.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                align_selected = (align_selected + 1) % 2;
+            }
+        });
+        clearBoardButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("czyszczenie", "uruchomiono cyszczenie planszy ");
+                //to będzie skomplikowane
+                for (int i = 0; i < 10; i++) {
+                    for (int x = 0; x < 10; x++) {
+                        Log.i("czyszczenie", "usuwanie referencji");
+                        ((Field) (game_this.getPlayer1().getPlayerBard().fields.get(i).get(x))).oocupyingShip = null;
+                        Log.i("efekt suawaniareferencji", "wynik:"+ ((Field) (game_this.getPlayer1().getPlayerBard().fields.get(i).get(x))).isOccupied());
+
+
+                    }
+                }
+
+                game_this.getPlayer1().shipsSizes.clear();
+                game_this.getPlayer1().ships.clear();
+                for (int i = 1; i < 5; i++) {
+                    for (int x = i - 1; x < 4; x++) {
+                        Log.i("czyszczenie", "dodano rozmiar"+i);
+                        game_this.getPlayer1().shipsSizes.add(i);
+                    }
+                }
+
+                //czyszczenie planszy
+                drawBoardPlacing();
+                updateCountShips();
+            }
+
         });
     }
 
@@ -106,28 +145,33 @@ public class SetShipsActivity extends AppCompatActivity {
     }
 
     private void vsAiProcedure() throws Exception {
-        game_this.place_ship(new Move(0,0, 0), 2, 1);
-        game_this.place_ship(new Move(2,0, 0), 2, 1);
-        game_this.place_ship(new Move(4,0, 0), 2, 1);
-        game_this.place_ship(new Move(6,0, 0), 2, 1);
-        game_this.place_ship(new Move(9,0, 0), 2, 1);
-        game_this.place_ship(new Move(0,6, 0), 2, 1);
-        game_this.place_ship(new Move(2,6, 0), 2, 1);
-       game_this.place_ship(new Move(4,6, 0), 2, 1);
-        game_this.place_ship(new Move(0,9, 0), 2, 1);
-       game_this.place_ship(new Move(9,9, 0), 2, 1);
-        game_this.place_ship(new Move(1,9, 0), 2, 1);//ponad limit
-        game_this.place_ship(new Move(9,9, 0), 2, 1);//ponad limit
-        game_this.place_ship(new Move(8,6, 0), 2, 1);//ponad limit
+        game_this.place_ship(new Move(0, 0, 0), 2, 1);
+        game_this.place_ship(new Move(2, 0, 0), 2, 1);
+        game_this.place_ship(new Move(4, 0, 0), 2, 1);
+        game_this.place_ship(new Move(6, 0, 0), 2, 1);
+        game_this.place_ship(new Move(9, 0, 0), 2, 1);
+        game_this.place_ship(new Move(0, 6, 0), 2, 1);
+        game_this.place_ship(new Move(2, 6, 0), 2, 1);
+        game_this.place_ship(new Move(4, 6, 0), 2, 1);
+        game_this.place_ship(new Move(0, 9, 0), 2, 1);
+        game_this.place_ship(new Move(9, 9, 0), 2, 1);
+        game_this.place_ship(new Move(1, 9, 0), 2, 1);//ponad limit
+        game_this.place_ship(new Move(9, 9, 0), 2, 1);//ponad limit
+        game_this.place_ship(new Move(8, 6, 0), 2, 1);//ponad limit
     }
 
     private void drawBoardPlacing() {
         ImageView pom;
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
+                pom = findViewById(10 * x + y);
                 if (((Field) (game_this.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied()) {
-                    pom = findViewById(10 * x + y);
+
                     pom.setImageResource(R.drawable.field_without_ship);
+                }
+                else
+                {
+                    pom.setImageResource(R.drawable.field);
                 }
             }
         }
@@ -170,7 +214,7 @@ public class SetShipsActivity extends AppCompatActivity {
                 imageView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                         // ImageView pom;
+                        // ImageView pom;
                         ImageView clickedImageView = (ImageView) v;
                         // clickedImageView.setImageResource(imageResourceFieldWithoutShip);
                         int pos = clickedImageView.getId();
@@ -181,7 +225,7 @@ public class SetShipsActivity extends AppCompatActivity {
 
                         // Snackbar.make(tableLayout, "Clicked on field " + String.valueOf(posId[0]) + ", " + String.valueOf(posId[1]), Snackbar.LENGTH_SHORT).show();
                         try {
-                            game_this.place_ship(new Move(posId[0], posId[1], 0), 1, 1);
+                            game_this.place_ship(new Move(posId[0], posId[1], 0), 1, align_selected);
                             drawBoardPlacing();
                             updateCountShips();
                         } catch (Exception e) {

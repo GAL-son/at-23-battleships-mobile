@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 
 public class Field  implements Serializable {
-    private Ship oocupyingShip;
+    public Ship oocupyingShip;
     private boolean wasHit;
 
     public int test;
