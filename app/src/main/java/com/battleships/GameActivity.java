@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -102,32 +104,31 @@ public class GameActivity extends AppCompatActivity {
         exitGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener(){
+                Dialog dialog = new Dialog(GameActivity.this);
+                dialog.setContentView(R.layout.dialog_abort_game);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.setCancelable(false);
+
+                Button buttonAbortGame = dialog.findViewById(R.id.buttonAbortGame);
+                Button buttonContinueGame = dialog.findViewById(R.id.buttonContinueGame);
+
+                dialog.show();
+                buttonAbortGame.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case DialogInterface.BUTTON_POSITIVE:
-                                goBackToMainMenu();
-                                break;
-                            case DialogInterface.BUTTON_NEGATIVE:
-                                dialog.dismiss();
-                        }
+                    public void onClick(View v) {
+                        Intent intent = new Intent(GameActivity.this, MainMenuActivity.class);
+                        startActivity(intent);
                     }
-                };
+                });
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
-
-                builder.setMessage("Are you sure you want to exit game? You won't be able to come back")
-                        .setPositiveButton("Yes i want to leave",dialogClickListener)
-                        .setNegativeButton("No i want to continue game", dialogClickListener)
-                        .show();
+                buttonContinueGame.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
-    }
-
-    private void goBackToMainMenu(){
-        Intent intent = new Intent(this, MainMenuActivity.class);
-        startActivity(intent);
     }
 
     public static Integer[] getFieldId(int pos){

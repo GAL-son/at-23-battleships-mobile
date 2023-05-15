@@ -1,8 +1,11 @@
 package com.battleships;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TableLayout;
@@ -45,7 +49,6 @@ public class EnemyBoardFragment extends Fragment {
     private Integer player2HP = 0;
 
     Game game;
-
 //    public void setGame(Game game_)
 //    {
 //        game=game_;
@@ -87,8 +90,33 @@ public class EnemyBoardFragment extends Fragment {
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         if (game.getState() != 2)
             turn.setText("Turn:" + game.getTurn());
-        else
-            turn.setText("game ended");
+        else{
+            Dialog dialog = new Dialog(getActivity());
+            dialog.setContentView(R.layout.dialog_game_won);
+            dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.setCancelable(false);
+
+            Button buttonExitToMainMenu = dialog.findViewById(R.id.buttonExitToMainMenu);
+            Button buttonPlayAgain = dialog.findViewById(R.id.buttonPlayAgain);
+
+            dialog.show();
+            buttonExitToMainMenu.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), MainMenuActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+            buttonPlayAgain.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), SetShipsActivity.class);
+                    startActivity(intent);
+                }
+            });
+
+        }
 
         ImageView pom;
         for (int x = 0; x < 10; x++) {
@@ -105,6 +133,7 @@ public class EnemyBoardFragment extends Fragment {
             }
         }
     }
+
 
     private void hitingProcedure(Move move, int player) {
 
