@@ -30,8 +30,10 @@ public class Game implements Serializable {
     private Player player1;
     private Player player2;
 
+    public int winner = 0;
+
     public void nextTurn() {
-        turn = (turn + 1) ;
+        turn = (turn + 1);
     }
 
 
@@ -53,15 +55,15 @@ public class Game implements Serializable {
             throw new Exception("type specified not recoginised");
         }
 
-        this.player1 = new PlayerLocal();
+        this.player1 = new PlayerLocal(1);
 
         //seting up right players
         switch (this.type) {
             case 0:
-                this.player2 = new PlayerAi();
+                this.player2 = new PlayerAi(2);
                 break;
             case 1:
-                this.player2 = new PlayerRemote();
+                this.player2 = new PlayerRemote(2);
                 break;
             default:
                 this.state = 2;
@@ -107,10 +109,9 @@ public class Game implements Serializable {
         Log.i("test1", "player is selected");
 
 
+        ((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).hitField();
 
-            ((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).hitField();
-
-        if(((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).getOocupyingShip()!=null) {
+        if (((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).getOocupyingShip() != null) {
             if (((Field) atacked_player.getPlayerBard().fields.get(move.positionX).get(move.positionY)).getOocupyingShip().getHealth() == 0) {
                 Log.i("statek zniszczony", "hitField:  statek zniszczony");
 
@@ -118,33 +119,30 @@ public class Game implements Serializable {
                 Log.i("debug", "ilosc pul=" + pola_this.size());
                 for (ArrayList<Integer> a : pola_this) {
                     Log.i("fields", "statek zniszczony byl na polu" + a.get(0) + ", " + a.get(1));
-                    int x=a.get(0);
-                    int y=a.get(1);
+                    int x = a.get(0);
+                    int y = a.get(1);
 
-                    for (int n=-1;n<2;n++)
-                    {
-                        for (int m=-1;m<2;m++)
-                        {
-                            if (n==0&&m==0)
+                    for (int n = -1; n < 2; n++) {
+                        for (int m = -1; m < 2; m++) {
+                            if (n == 0 && m == 0)
                                 break;
-                            x=x+n;
-                            y=y+m;
-                            if ( x < 10 && x >= 0 && y < 10 && y >= 0) {
-                                if((((Field) atacked_player.getPlayerBard().fields.get(x).get(y)).isOccupied() != true))
+                            x = x + n;
+                            y = y + m;
+                            if (x < 10 && x >= 0 && y < 10 && y >= 0) {
+                                if ((((Field) atacked_player.getPlayerBard().fields.get(x).get(y)).isOccupied() != true))
                                     ((Field) atacked_player.getPlayerBard().fields.get(x).get(y)).hitField();
                             }
-                            x=a.get(0);
-                            y=a.get(1);
+                            x = a.get(0);
+                            y = a.get(1);
                         }
-                         x=a.get(0);
-                         y=a.get(1);
+                        x = a.get(0);
+                        y = a.get(1);
                     }
 
-                    if ( x < 10 && x >= 0 && y+1 < 10 && y+1 >= 0) {
-                        if((((Field) atacked_player.getPlayerBard().fields.get(x).get(y+1)).isOccupied() != true))
-                            ((Field) atacked_player.getPlayerBard().fields.get(x).get(y+1)).hitField();
+                    if (x < 10 && x >= 0 && y + 1 < 10 && y + 1 >= 0) {
+                        if ((((Field) atacked_player.getPlayerBard().fields.get(x).get(y + 1)).isOccupied() != true))
+                            ((Field) atacked_player.getPlayerBard().fields.get(x).get(y + 1)).hitField();
                     }
-
 
 
 //                    if ( x+1 < 10 && x >= 0 && y < 10 && y >= 0) {
@@ -184,11 +182,10 @@ public class Game implements Serializable {
             }
         }
 
-        if (player==1)
-        {
-            this.player2=atacked_player;
-        } else if (player==2) {
-            this.player1=atacked_player;
+        if (player == 1) {
+            this.player2 = atacked_player;
+        } else if (player == 2) {
+            this.player1 = atacked_player;
         }
 
 
@@ -311,7 +308,7 @@ public class Game implements Serializable {
 
         //nadanie statku pul
         for (int i = 0; i < size; i++) {
-            Log.i("debug", "nadawanie pul" );
+            Log.i("debug", "nadawanie pul");
             try {
 
                 Log.i("xd?", "statek dowiazany na polu" + String.valueOf(move.positionX) + " ," + String.valueOf(move.positionY));
@@ -319,10 +316,8 @@ public class Game implements Serializable {
                     try {
                         currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX + i, move.positionY, 99));
                         Log.i(" dodano", "place_ship:  dodano");
-                    }
-                    catch (Exception e)
-                    {
-                        Log.i("nie dodano", "place_ship: nie dodano"+e.getMessage());
+                    } catch (Exception e) {
+                        Log.i("nie dodano", "place_ship: nie dodano" + e.getMessage());
                     }
 
                 }
@@ -330,10 +325,8 @@ public class Game implements Serializable {
                     try {
                         currentPlayer.ships.get(currentPlayer.ships.size() - 1).addField(new Move(move.positionX, move.positionY + i, 99));
                         Log.i(" dodano", "place_ship:  dodano");
-                   }
-                    catch (Exception e)
-                    {
-                        Log.i("nie dodano", "place_ship: nie dodano"+e.getMessage());
+                    } catch (Exception e) {
+                        Log.i("nie dodano", "place_ship: nie dodano" + e.getMessage());
                     }
 
                 }
@@ -424,8 +417,9 @@ public class Game implements Serializable {
     }
 
     public int getTurn() {
-        return turn%2;
+        return turn % 2;
     }
+
     public int getTurnFull() {
         return turn;
     }
@@ -462,6 +456,20 @@ public class Game implements Serializable {
         histogram.add(0);
         for (Integer x : a) {
             histogram.set(x - 1, (histogram.get(x - 1) + 1));
+        }
+        Log.i("histogram", "histogram: jeden*" + String.valueOf(histogram.get(0)) + " dwa*" + String.valueOf(histogram.get(1)) + " trzy*" + String.valueOf(histogram.get(2)) + " cztery*" + String.valueOf(histogram.get(3)));
+        return histogram;
+    }
+
+    public static ArrayList<Integer> histogramInGame(ArrayList<Ship> a) {
+        ArrayList<Integer> histogram = new ArrayList<>();
+        for (int n = 0; n < 4; n++) {
+            histogram.add(0);
+        }
+        histogram.add(0);
+        for (Ship x : a) {
+            if (x.getHealth() > 0)
+                histogram.set(x.getSize() - 1, (histogram.get(x.getSize() - 1) + 1));
         }
         Log.i("histogram", "histogram: jeden*" + String.valueOf(histogram.get(0)) + " dwa*" + String.valueOf(histogram.get(1)) + " trzy*" + String.valueOf(histogram.get(2)) + " cztery*" + String.valueOf(histogram.get(3)));
         return histogram;

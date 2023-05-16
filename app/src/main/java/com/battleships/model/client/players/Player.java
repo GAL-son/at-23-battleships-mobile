@@ -14,7 +14,8 @@ abstract public class Player implements Serializable {
     int id;
     Board playerBoard= new Board();
 
-   public ArrayList<Ship> ships=new ArrayList<Ship>();
+
+    public ArrayList<Ship> ships=new ArrayList<Ship>();
    public ArrayList<Integer> shipsSizes=new ArrayList<Integer>();
     public int getId() {
         return id;
@@ -32,6 +33,10 @@ abstract public class Player implements Serializable {
         this.playerBoard = playerBoard;
     }
 
+
+    public Player(int id) {
+        this.id = id;
+    }
     public Field getField(Move move)
     {
         ArrayList<Field> array =this.playerBoard.fields.get(move.positionX);

@@ -76,7 +76,8 @@ public class SetShipsActivity extends AppCompatActivity {
         readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                goToGameActivity(game_this);
+                if (game_this.getPlayer1().shipsSizes.isEmpty())
+                    goToGameActivity(game_this);
             }
         });
 
@@ -95,7 +96,7 @@ public class SetShipsActivity extends AppCompatActivity {
                     for (int x = 0; x < 10; x++) {
                         Log.i("czyszczenie", "usuwanie referencji");
                         ((Field) (game_this.getPlayer1().getPlayerBard().fields.get(i).get(x))).oocupyingShip = null;
-                        Log.i("efekt suawaniareferencji", "wynik:"+ ((Field) (game_this.getPlayer1().getPlayerBard().fields.get(i).get(x))).isOccupied());
+                        Log.i("efekt suawaniareferencji", "wynik:" + ((Field) (game_this.getPlayer1().getPlayerBard().fields.get(i).get(x))).isOccupied());
 
 
                     }
@@ -105,7 +106,7 @@ public class SetShipsActivity extends AppCompatActivity {
                 game_this.getPlayer1().ships.clear();
                 for (int i = 1; i < 5; i++) {
                     for (int x = i - 1; x < 4; x++) {
-                        Log.i("czyszczenie", "dodano rozmiar"+i);
+                        Log.i("czyszczenie", "dodano rozmiar" + i);
                         game_this.getPlayer1().shipsSizes.add(i);
                     }
                 }
@@ -168,9 +169,7 @@ public class SetShipsActivity extends AppCompatActivity {
                 if (((Field) (game_this.getPlayer1().getPlayerBard().fields.get(y).get(x))).isOccupied()) {
 
                     pom.setImageResource(R.drawable.field_without_ship);
-                }
-                else
-                {
+                } else {
                     pom.setImageResource(R.drawable.field);
                 }
             }

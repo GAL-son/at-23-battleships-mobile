@@ -9,5 +9,8 @@ public class PlayerLocal extends Player implements Serializable {
 
     }
 
+    public PlayerLocal(int id) {
+        super(id);
+    }
 }
 

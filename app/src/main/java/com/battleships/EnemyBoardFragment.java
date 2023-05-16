@@ -90,7 +90,7 @@ public class EnemyBoardFragment extends Fragment {
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         if (game.getState() != 2)
             turn.setText("Turn:" + game.getTurn());
-        else{
+        else {
             Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.dialog_game_won);
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -98,7 +98,11 @@ public class EnemyBoardFragment extends Fragment {
 
             Button buttonExitToMainMenu = dialog.findViewById(R.id.buttonExitToMainMenu);
             Button buttonPlayAgain = dialog.findViewById(R.id.buttonPlayAgain);
-
+            TextView winner_textView = dialog.findViewById(R.id.textViewAlert);
+            if (game.winner == game.getPlayer1().getId())
+                winner_textView.setText("You win");
+            if (game.winner == game.getPlayer2().getId())
+                winner_textView.setText("You Lose");
             dialog.show();
             buttonExitToMainMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,6 +136,33 @@ public class EnemyBoardFragment extends Fragment {
                 }
             }
         }
+        ArrayList<Integer> histogramp1 = Game.histogramInGame(game.getPlayer1().ships);
+        ArrayList<Integer> histogramp2 = Game.histogramInGame(game.getPlayer2().ships);
+        Log.i("histogramGame", "gracz1:" + histogramp1.get(0) + "," + histogramp1.get(1) + "," + histogramp1.get(2) + "," + histogramp1.get(3) + ",");
+        Log.i("histogramGame", "gracz2:" + histogramp2.get(0) + "," + histogramp2.get(1) + "," + histogramp2.get(2) + "," + histogramp2.get(3) + ",");
+
+        {
+        TextView your4 = getActivity().findViewById(R.id.textViewYour4xShips);
+        TextView your3 = getActivity().findViewById(R.id.textViewYour3xShips);
+        TextView your2 = getActivity().findViewById(R.id.textViewYour2xShips);
+        TextView your1 = getActivity().findViewById(R.id.textViewYour1xShips);
+
+        TextView enemy4 = getActivity().findViewById(R.id.textViewEnemy4xShip);
+        TextView enemy3 = getActivity().findViewById(R.id.textViewEnemy3xShip);
+        TextView enemy2 = getActivity().findViewById(R.id.textViewEnemy2xShip);
+        TextView enemy1 = getActivity().findViewById(R.id.textViewEnemy1xShip);
+
+        your1.setText(histogramp1.get(0) + "x");
+        your2.setText(histogramp1.get(1) + "x");
+        your3.setText(histogramp1.get(2) + "x");
+        your4.setText(histogramp1.get(3) + "x");
+
+        enemy1.setText(histogramp2.get(0) + "x");
+        enemy2.setText(histogramp2.get(1) + "x");
+        enemy3.setText(histogramp2.get(2) + "x");
+        enemy4.setText(histogramp2.get(3) + "x");
+    }
+
     }
 
 
@@ -158,16 +189,25 @@ public class EnemyBoardFragment extends Fragment {
         }
         Log.i("countHP", "countHP: " + "hp p1= " + pom1 + " p2 = " + pom2);
         if (pom1 == 0) {
-            GameEndProcedure(2);
+            game.winner=game.getPlayer2().getId();
+            GameEndProcedure(game.winner);
         }
         if (pom2 == 0) {
-            GameEndProcedure(1);
+            game.winner=game.getPlayer2().getId();
+            GameEndProcedure(game.winner);
         }
     }
 
     private void GameEndProcedure(int winner) {
         game.setState(2);
-        Log.i("koniec", "gre wygrał gracz: " + winner + "zajeło mu to " + game.getTurnFull());
+        if (game.winner==game.getPlayer1().getId())
+            Log.i("koniec", "gre wygrał gracz: " + 1 + "zajeło mu to " + game.getTurnFull());
+
+        if (game.winner==game.getPlayer2().getId())
+            Log.i("koniec", "gre wygrał gracz: " + 2 + "zajeło mu to " + game.getTurnFull());
+
+
+      // Log.i("koniec", "gre wygrał gracz: " + game.winner + "zajeło mu to " + game.getTurnFull());
 
     }
 
@@ -243,6 +283,8 @@ public class EnemyBoardFragment extends Fragment {
                         //   if (game.getTurn() == 0)// intergracja z serwerem zmieni sens tej instrukcji, nazrazie zawieszona dla testów
                         //    {
                         try {
+
+
                             if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && game.getState() < 2) {
                                 hitingProcedure(new Move(posId[0], posId[1], 0), 1);
                                 drawBoardGameLoopEnemy(rootView);
