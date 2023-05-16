@@ -7,6 +7,7 @@ import com.battleships.model.client.board.Field;
 import com.battleships.model.client.players.difficulty.Difficulty;
 
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -16,6 +17,9 @@ public class PlayerAi extends Player implements Serializable {
     Difficulty difficulty;
 
     public ArrayList<ArrayList<Integer>> pojectionOfBoard = new ArrayList<>();
+
+    public ArrayList<ArrayList<Integer>> targeted_ship= new ArrayList<>();
+    //this will be next version // to jest chyba wykonalne
 
     public PlayerAi() {
         super();
@@ -115,7 +119,7 @@ public class PlayerAi extends Player implements Serializable {
         }
         Log.i("ai", "error catch 5");
 
-        String pom = "\n";
+        String pom = "\n\n";
         for (
                 int m = 0;
                 m < 10; m++) {
