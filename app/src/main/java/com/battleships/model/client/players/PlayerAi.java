@@ -56,24 +56,30 @@ public class PlayerAi extends Player implements Serializable {
         }
 
 
-        for (
-                int m = 0;
-                m < 10; m++) {
+        for (int m = 0;m < 10; m++) {
             Log.i("ai", "error catch 2.1");
             for (int n = 0; n < 10; n++) {
                 Log.i("ai", "error catch 2.2");
                 if (((Field) board.fields.get(n).get(m)).getWasHit()) {
                     pojectionOfBoard.get(n).set(m, 0);
                 }
+
+            }
+        }
+
+        greatest_value=0;
+        for (int m = 0; m < 10; m++) {
+            for (int n = 0; n < 10; n++) {
+
                 if (pojectionOfBoard.get(n).get(m) > greatest_value) {
                     greatest_value = pojectionOfBoard.get(n).get(m);
                     Log.i("gv", "greatest value=" + greatest_value);
                 }
             }
+
         }
 
         Log.i("ai", "error catch 2");
-
 
 
         int x, y;
@@ -82,16 +88,37 @@ public class PlayerAi extends Player implements Serializable {
         x = random.nextInt(10);
         y = random.nextInt(10);
         Log.i("ai", "error catch 2.8");
-        while (((Field) board.fields.get(x).
-
-                get(y)).
-
-                getWasHit() || pojectionOfBoard.get(x).
+        while (  pojectionOfBoard.get(x).
 
                 get(y) < greatest_value) {
             x = random.nextInt(10);
             y = random.nextInt(10);
-            Log.i("ai", "error catch 2.9"+"largestvalue:"+greatest_value+ "value here:"+pojectionOfBoard.get(x).get(y));
+//            Log.i("ai", "error catch 2.9" + "largestvalue:" + greatest_value + "value here:" + pojectionOfBoard.get(x).get(y));
+//            Log.i("check", "is thre even inbstance of grreatest value?");
+//            for (int m = 0;m < 10; m++) {
+//
+//                for (int n = 0; n < 10; n++) {
+//
+//                    if (pojectionOfBoard.get(n).get(m)==greatest_value) {
+//                        Log.i("hmm?", "znaleziono greatest value");
+//                    }
+//
+//                }
+//            }
+//
+//            String pom2 = "\n\n";
+//            for (
+//                    int m = 0;
+//                    m < 10; m++) {
+//                for (int n = 0; n < 10; n++) {
+//                    pom2 = pom2 + pojectionOfBoard.get(n).get(m) + ',';
+//                }
+//
+//                pom2 = pom2 + '\n';
+//            }
+//            Log.i("pojection", pom2);
+
+
         }
 
         Log.i("ai", "error catch 3");
@@ -141,25 +168,24 @@ public class PlayerAi extends Player implements Serializable {
         if (targeted_ship.size() > 1) {
             Log.i("aigesuualign", "zgadywan8ie zaczete");
             int targetowanyx1, targetowanyx2, targetowanyy1, targetowanyy2;
-            targetowanyx1 = targeted_ship.get(targeted_ship.size()-1).get(0);
-            targetowanyy1 = targeted_ship.get(targeted_ship.size()-1).get(1);
-            targetowanyx2 = targeted_ship.get(targeted_ship.size()-2).get(0);
-            targetowanyy2 = targeted_ship.get(targeted_ship.size()-2).get(1);
+            targetowanyx1 = targeted_ship.get(targeted_ship.size() - 1).get(0);
+            targetowanyy1 = targeted_ship.get(targeted_ship.size() - 1).get(1);
+            targetowanyx2 = targeted_ship.get(targeted_ship.size() - 2).get(0);
+            targetowanyy2 = targeted_ship.get(targeted_ship.size() - 2).get(1);
             if (targetowanyx1 != targetowanyx2) {
                 Log.i("aigesuualign", "statek jest w poziomie?");
-                if (x - 1 >= 0&&pojectionOfBoard.get(x-1).get(y)!=0)
-                    pojectionOfBoard.get(x - 1).set(y, pojectionOfBoard.get(x-1).get(y)+3);
-                if (x + 1 < 10&&pojectionOfBoard.get(x+1).get(y) !=0)
-                    pojectionOfBoard.get(x + 1).set(y, pojectionOfBoard.get(x+1).get(y)+3);
+                if (x - 1 >= 0 && pojectionOfBoard.get(x - 1).get(y) != 0)
+                    pojectionOfBoard.get(x - 1).set(y, pojectionOfBoard.get(x - 1).get(y) + 3);
+                if (x + 1 < 10 && pojectionOfBoard.get(x + 1).get(y) != 0)
+                    pojectionOfBoard.get(x + 1).set(y, pojectionOfBoard.get(x + 1).get(y) + 3);
 
             }
             if (targetowanyy1 != targetowanyy2) {
                 Log.i("aigesuualign", "statek jest w pionie?");
-                if (y - 1 >= 0&&pojectionOfBoard.get(x).get(y-1)!=0)
-                    pojectionOfBoard.get(x).set(y - 1, pojectionOfBoard.get(x).get(y-1)+3);
-                if (y + 1 < 10&&pojectionOfBoard.get(x).get(y+1)!=0)
-                    pojectionOfBoard.get(x).set(y + 1, pojectionOfBoard.get(x).get(y+1)+3);
-
+                if (y - 1 >= 0 && pojectionOfBoard.get(x).get(y - 1) != 0)
+                    pojectionOfBoard.get(x).set(y - 1, pojectionOfBoard.get(x).get(y - 1) + 3);
+                if (y + 1 < 10 && pojectionOfBoard.get(x).get(y + 1) != 0)
+                    pojectionOfBoard.get(x).set(y + 1, pojectionOfBoard.get(x).get(y + 1) + 3);
 
 
             }
