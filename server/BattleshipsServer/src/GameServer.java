@@ -24,6 +24,7 @@ public class GameServer {
         public static final String SEARCH_GAME = "searchGame";
         public static final String GAME_UPDATE = "gameUpdate";
         public static final String GAME_SET_SHIPS = "gameSetShips";
+        public static final String GAME_MAKE_MOVE = "gameMakeMove";
     }
 
     private ServerState state;
@@ -172,7 +173,7 @@ public class GameServer {
 
                 String subAction = body.getString("GameAction");
 
-                resolveGameAction(currentGame, subAction, PID);
+                resolveGameAction(currentGame, subAction, PID, body);
                 
             default:
                 break;
@@ -181,17 +182,17 @@ public class GameServer {
         return "";
     }
 
-    public void createSession(int userID)
+    private void createSession(int userID)
     {
         Session s = new Session();
         s.addUser(new User(userID));
         sessions.push(s);
     }
 
-    private String resolveGameAction(GameState game, String action, int PID) {
+    private String resolveGameAction(GameState game, String action, int PID, JSONObject body) {
         switch (action) {
             case Actions.GAME_SET_SHIPS:
-                
+                JSONArray shipFields = body.getJSONArray("ShipFields");
                 game.setPlayerShips(PID, null);
                 break;
         

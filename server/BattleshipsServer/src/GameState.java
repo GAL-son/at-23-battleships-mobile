@@ -131,15 +131,6 @@ public class GameState {
         if(state != State.FINISHED) return 0;
         if(shipFields[0] == 0) return PID[1];
         return PID[0];
-    }
-
-    
-
-    
-
-
-
-
-    
+    }   
     
 }
