@@ -89,7 +89,7 @@ public class EnemyBoardFragment extends Fragment {
 
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         if (game.getState() != 2)
-            turn.setText("Turn:" + game.getTurn());
+            turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? " your turn":" enemy turn"));
         else {
             Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.dialog_game_won);
@@ -173,7 +173,7 @@ public class EnemyBoardFragment extends Fragment {
         game.hitField(move, player);
         Log.i("hiting", "field hit" + String.valueOf(move.positionX) + ", " + String.valueOf(move.positionY));
         game.nextTurn();
-        turn.setText("Turn:" + game.getTurn());
+        turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? "your turn":" enemy turn"));
         countHP();
 
 
