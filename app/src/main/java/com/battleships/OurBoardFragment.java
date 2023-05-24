@@ -1,5 +1,6 @@
 package com.battleships;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,10 +22,14 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.battleships.model.client.Game;
+import com.battleships.model.client.Move;
 import com.battleships.model.client.board.Field;
+import com.battleships.model.client.players.PlayerAi;
+import com.battleships.model.client.ship.Ship;
 import com.google.android.material.snackbar.Snackbar;
 
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -72,6 +78,49 @@ public class OurBoardFragment extends Fragment {
         return fragment;
     }
 
+    private void countHP() {
+        Integer pom1 = 0, pom2 = 0;
+        for (Ship s : game.getPlayer1().ships) {
+            pom1 += s.getHealth();
+        }
+        for (Ship s : game.getPlayer2().ships) {
+            pom2 += s.getHealth();
+        }
+        Log.i("countHP", "countHP: " + "hp p1= " + pom1 + " p2 = " + pom2);
+        if (pom1 == 0) {
+            game.winner=game.getPlayer2().getId();
+            GameEndProcedure(game.winner);
+        }
+        if (pom2 == 0) {
+            game.winner=game.getPlayer1().getId();
+            GameEndProcedure(game.winner);
+        }
+    }
+
+    private void GameEndProcedure(int winner) {
+        game.setState(2);
+        if (game.winner==game.getPlayer1().getId())
+            Log.i("koniec", "gre wygrał gracz: " + 1 + "zajeło mu to " + game.getTurnFull());
+
+        if (game.winner==game.getPlayer2().getId())
+            Log.i("koniec", "gre wygrał gracz: " + 2 + "zajeło mu to " + game.getTurnFull());
+
+
+        // Log.i("koniec", "gre wygrał gracz: " + game.winner + "zajeło mu to " + game.getTurnFull());
+
+    }
+    private void hitingProcedure(Move move, int player) {
+
+        countHP();
+        TextView turn = getActivity().findViewById(R.id.textViewTurn);
+        game.hitField(move, player);
+        Log.i("hiting", "field hit" + String.valueOf(move.positionX) + ", " + String.valueOf(move.positionY));
+        game.nextTurn();
+        turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? "your turn":" enemy turn"));
+        countHP();
+
+
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,9 +131,47 @@ public class OurBoardFragment extends Fragment {
         }
 
 
+
+
 }
         private  void drawBoardGameLoopYour(View rootView)
         {
+            TextView turn = getActivity().findViewById(R.id.textViewTurn);
+            if (game.getState() != 2)
+                turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? " your turn" : " enemy turn"));
+            else {
+                Dialog dialog = new Dialog(getActivity());
+                dialog.setContentView(R.layout.dialog_game_won);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.setCancelable(false);
+
+                Button buttonExitToMainMenu = dialog.findViewById(R.id.buttonExitToMainMenu);
+                Button buttonPlayAgain = dialog.findViewById(R.id.buttonPlayAgain);
+                TextView winner_textView = dialog.findViewById(R.id.textViewAlert);
+                if (game.winner == game.getPlayer2().getId())
+                    winner_textView.setText("You lose");
+                if (game.winner == game.getPlayer1().getId())
+                    winner_textView.setText("You win");
+                dialog.show();
+                buttonExitToMainMenu.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), MainMenuActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+                buttonPlayAgain.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getActivity(), SetShipsActivity.class);
+                        startActivity(intent);
+                    }
+                });
+
+            }
+
+
             ImageView pom;
             for(int x=0;x<10;x++)
             {
@@ -111,6 +198,33 @@ public class OurBoardFragment extends Fragment {
 
                 }
             }
+            ArrayList<Integer> histogramp1 = Game.histogramInGame(game.getPlayer1().ships);
+            ArrayList<Integer> histogramp2 = Game.histogramInGame(game.getPlayer2().ships);
+            Log.i("histogramGame", "gracz1:" + histogramp1.get(0) + "," + histogramp1.get(1) + "," + histogramp1.get(2) + "," + histogramp1.get(3) + ",");
+            Log.i("histogramGame", "gracz2:" + histogramp2.get(0) + "," + histogramp2.get(1) + "," + histogramp2.get(2) + "," + histogramp2.get(3) + ",");
+
+            {
+                TextView your4 = getActivity().findViewById(R.id.textViewYour4xShips);
+                TextView your3 = getActivity().findViewById(R.id.textViewYour3xShips);
+                TextView your2 = getActivity().findViewById(R.id.textViewYour2xShips);
+                TextView your1 = getActivity().findViewById(R.id.textViewYour1xShips);
+
+                TextView enemy4 = getActivity().findViewById(R.id.textViewEnemy4xShip);
+                TextView enemy3 = getActivity().findViewById(R.id.textViewEnemy3xShip);
+                TextView enemy2 = getActivity().findViewById(R.id.textViewEnemy2xShip);
+                TextView enemy1 = getActivity().findViewById(R.id.textViewEnemy1xShip);
+
+                your1.setText(histogramp1.get(0) + "x");
+                your2.setText(histogramp1.get(1) + "x");
+                your3.setText(histogramp1.get(2) + "x");
+                your4.setText(histogramp1.get(3) + "x");
+
+                enemy1.setText(histogramp2.get(0) + "x");
+                enemy2.setText(histogramp2.get(1) + "x");
+                enemy3.setText(histogramp2.get(2) + "x");
+                enemy4.setText(histogramp2.get(3) + "x");
+            }
+
         }
 
     @Override
@@ -167,10 +281,26 @@ public class OurBoardFragment extends Fragment {
                 // Nadanie unikalnego id dla każdego ImageView
                 imageView.setId(i * 10 + j);
 
+                if(game.getTurn()%2==1) {
+                    try {
 
 
+                        if (game.getType() == 0) {
+                            Log.i("ai", "ai strzeli");
+                            ArrayList<Integer> AImove = ((PlayerAi) (game.getPlayer2())).getAImove(game.getPlayer1().getPlayerBard());
+                            Log.i("ai", "pozyskano koordynaty");
+                            if (((Field) (game.getPlayer1().getPlayerBard().fields.get(AImove.get(0)).get(AImove.get(1)))).getWasHit() != true && game.getState() < 2) {
+                                hitingProcedure(new Move(AImove.get(0), AImove.get(1), 0), 2);
+                            } else {
+                                Log.i("aha", "ai oddalo strzal w to smao miejsce");
+                            }
+                        }
+                    } catch (Exception e) {
 
-
+                    }
+                }
+                TextView ButtonChangeBoardGetAiMove=getActivity().findViewById(R.id.buttonChangeBoard);
+                ButtonChangeBoardGetAiMove.setText("CHANGE BOARD AND TAKE YOUR SHOT");
 
 
 
