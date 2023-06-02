@@ -18,3 +18,4 @@ local.properties
 .idea/misc.xml
 .idea/vcs.xml
 ./server/BattleshipsServer/bin
+.server/server/src/main/resources/application.properties
