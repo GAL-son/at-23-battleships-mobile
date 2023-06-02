@@ -43,7 +43,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageViewContainer" />
 
     <EditText
-        android:id="@+id/editTextLoginRegister"
+        android:id="@+id/editTextLogin"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"
@@ -55,7 +55,7 @@
         android:inputType="textPersonName"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:textColor="@color/light_green2"
+        android:textColor="@color/light_green"
         android:textColorHint="@color/light_green2"
         app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
         app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
@@ -71,7 +71,7 @@
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
         app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
-        app:layout_constraintTop_toBottomOf="@+id/editTextLoginRegister" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextLogin" />
 
     <EditText
         android:id="@+id/editTextPasswordRegister"
@@ -86,7 +86,7 @@
         android:hint="Password"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:textColor="@color/light_green2"
+        android:textColor="@color/light_green"
         android:textColorHint="@color/light_green2"
         app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
         app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
@@ -117,7 +117,7 @@
         android:hint="Password"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:textColor="@color/light_green2"
+        android:textColor="@color/light_green"
         android:textColorHint="@color/light_green2"
         app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
         app:layout_constraintStart_toStartOf="@+id/imageViewContainer"

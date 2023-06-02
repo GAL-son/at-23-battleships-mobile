@@ -193,7 +193,7 @@ public class EnemyBoardFragment extends Fragment {
             GameEndProcedure(game.winner);
         }
         if (pom2 == 0) {
-            game.winner=game.getPlayer2().getId();
+            game.winner=game.getPlayer1().getId();
             GameEndProcedure(game.winner);
         }
     }

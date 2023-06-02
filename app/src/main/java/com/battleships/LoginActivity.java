@@ -4,8 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+
+import javax.security.auth.login.LoginException;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -18,10 +22,13 @@ public class LoginActivity extends AppCompatActivity {
         Button cancelButton = findViewById(R.id.buttonCancelRegister);
         Button goToRegisterButton = findViewById(R.id.buttonCreateAccount);
 
+        EditText password = findViewById(R.id.editTextPasswordRegister);
+
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Log.i("TAG", "onClick: "+password.getText());
+                Log.e("passwd", String.valueOf(password.getText()));
             }
         });
 
