@@ -62,7 +62,7 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:id="@+id/LinearLayoutButtony"
+        android:id="@+id/LinearLayoutButtons"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -99,7 +99,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/LinearLayoutButtony"
+        app:layout_constraintBottom_toTopOf="@+id/LinearLayoutButtons"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
