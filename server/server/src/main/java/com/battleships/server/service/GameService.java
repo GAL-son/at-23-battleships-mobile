@@ -2,9 +2,12 @@ package com.battleships.server.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.battleships.server.api.model.Game;
 import com.battleships.server.api.model.User;
 
+@Service
 public class GameService {
     List<Game> activeGames;
     List<User> userQueue;

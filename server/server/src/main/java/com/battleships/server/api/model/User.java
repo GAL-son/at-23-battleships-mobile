@@ -7,6 +7,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -15,7 +16,8 @@ import lombok.Data;
 @Table(name="\"Player\"")
 public class User {
 
-    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Id @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "accSeq")
+    @SequenceGenerator(name="accSeq", initialValue = 1, allocationSize = 1)
     @Column(name="\"PlayerId\"", unique = true, nullable = false)
     private Integer uid;
 
@@ -26,6 +28,7 @@ public class User {
     @Column(name="\"Password\"")
     private String password;
 
+    @JsonIgnore
     @Column(name="\"EmailAddress\"")
     private String email;
 
