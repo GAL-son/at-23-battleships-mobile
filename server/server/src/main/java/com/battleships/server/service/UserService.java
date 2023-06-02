@@ -1,5 +1,6 @@
 package com.battleships.server.service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class UserService {
 
     @Autowired
     public UserService(UserRepository userRepository) {
+        activeUsers = new LinkedList<User>();
         this.userRepository = userRepository;
     }
 
@@ -42,6 +44,13 @@ public class UserService {
         } else {
             throw new InvalidPasswordException("Invalid password");
         }
+    }
+
+    public User getActiveUser(int id) {
+        for (User u : activeUsers) {
+            if(u.getUid() == id) return u;
+        }
+        return null;
     }
 
     public User registerUser(String login, String passwd, Optional<String> email) throws Exception

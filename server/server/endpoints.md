@@ -7,7 +7,7 @@
 * [RETURNS] USER JSON
 
 ### REGISTER
-* [ENDPOINT] PUT /api/register
+* [ENDPOINT] POST /api/register
 * [PARAMS] 
     - [BODY]String login, String password, String email (can be empty)
 * [RETURNS] USER JSON

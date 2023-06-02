@@ -72,6 +72,10 @@ public class Game {
         return player2;
     }
 
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
     // Game Functions
     public void playerJoin(User user) throws Exception {
         if(player1 == null) {
@@ -81,6 +85,10 @@ public class Game {
         } else {
             throw new Exception("GAME FULL");
         }
+    }
+
+    public boolean isPlayerInGame(User user) {
+        return (user.getUid() == player1.getUid() || user.getUid() == player2.getUid()); 
     }
 
     public void setShip(int pid, int shipSize, List<Field> shipFields) throws Exception {

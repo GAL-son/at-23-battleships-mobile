@@ -31,6 +31,8 @@ public class MainController {
         this.gameService = gameService;
     }
     
+
+    // User related endpoints
     @PostMapping(path = "/api/login")
     public User loginUser(@RequestParam String login, @RequestParam String password)
     {
@@ -85,12 +87,14 @@ public class MainController {
         return userService.getUsers();
     }
 
+    // Game related Endpoints
 
 
-    @RequestMapping("/test")
-    public String test()
-    {
-        return "LMAO DZIAŁA?";
-    }
+
+    // @RequestMapping("/test")
+    // public String test()
+    // {
+    //     return "LMAO DZIAŁA?";
+    // }
 
 }

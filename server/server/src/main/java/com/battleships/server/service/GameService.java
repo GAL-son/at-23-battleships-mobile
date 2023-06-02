@@ -1,30 +1,55 @@
 package com.battleships.server.service;
 
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.battleships.server.api.model.Field;
 import com.battleships.server.api.model.Game;
+import com.battleships.server.api.model.ShipFields;
 import com.battleships.server.api.model.User;
 
 @Service
 public class GameService {
     List<Game> activeGames;
     List<User> userQueue;
+    Map<User, Game> playersInGame;
 
-    public void addGame(int boardSize)
-    {
-        activeGames.add(new Game(activeGames.size(), boardSize));
+    public GameService() {
+        activeGames = new LinkedList<Game>();
+        userQueue = new LinkedList<User>();
+        playersInGame = new HashMap<User, Game>();
     }
-
-    public void enterQueue(User user)
+    
+    public Game getGame(int activeGameId)
     {
-        if(userQueue.size() == 0) {
-            userQueue.add(user);
-            return;
+        for(Game g : activeGames) {
+            if(g.getGameId() == activeGameId) return g;
+        }
+        
+        return null;
+    }
+    
+    public boolean enterQueue(User user)
+    {
+        userQueue.add(user);
+        return true;        
+    }
+    
+    public Game updateQueue(User user) {
+        // CHECK IF PLAYER ALREADY IN GAME
+        for(Map.Entry<User, Game> m : playersInGame.entrySet()) {
+            if(user.getUid() == m.getKey().getUid()) return m.getValue();
         }
 
-        User opponent;
+        // QUEUE EMPTY
+        if(userQueue.size() == 1) return null;
+        
+        // FIND OPPONENT
+        User opponent = null;
         Float scoreDifference = null;
         for(User u : userQueue)
         {   
@@ -36,10 +61,84 @@ public class GameService {
             }
         }
 
+        if(opponent == null) return null;
         
+        // OPPONENT FOUND - CREATE GAME
+        // Find empty game id
+        int maxid = 0;
+        for(Game g : activeGames) {
+            int gid = g.getGameId();
+            if(gid > maxid) maxid = gid; 
+        }
+        
+        // Push Game to list
+        Game game = new Game(maxid, 10);
+        addGame(game);
+        
+        // Add Players
+        try {
+            game.playerJoin(user);
+            userQueue.remove(user);
+            playersInGame.put(user, game);
+            
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        try {
+            game.playerJoin(opponent);
+            userQueue.remove(opponent);
+            playersInGame.put(opponent, game);
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+        return game;
     }
 
+    public boolean setShip(int gid, User user, List<ShipFields> ships) throws Exception {
+        Game game = this.getGame(gid);
 
+        // TODO: Make exceptions
+        if(game == null) throw new Exception("LMAO NO GAME");
 
+        if(!game.isPlayerInGame(user)) throw new Exception("LMAO U DONT PLAY");
 
+        for(ShipFields s : ships)
+        {
+            game.setShip(user.getUid(), s.getSize(), s.getShipFields());
+        }
+
+        return true;
+    }
+
+    public boolean makeMove(int gid, User user, Field move) throws Exception {
+        Game game = this.getGame(gid);
+        // TODO: Make exceptions
+        // TODO: Maybe make fucntion
+        if(game == null) throw new Exception("LMAO NO GAME");
+        if(!game.isPlayerInGame(user)) throw new Exception("LMAO U DONT PLAY");
+
+        // TODO: Prolly make exeptionn for this
+        game.makeMove(user.getUid(), move);
+
+        return false;
+    }
+    
+    public boolean isGameStated(int gid) throws Exception {
+        Game game = this.getGame(gid);
+        if(game == null) throw new Exception("LMAO NO GAME");
+
+        return game.isGameStarted();
+    }
+
+    // Helper functions
+    private void addGame(Game game)
+    {
+        activeGames.add(game);
+    }
+    
+    
 }
