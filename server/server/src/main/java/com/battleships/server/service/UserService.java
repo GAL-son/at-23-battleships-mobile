@@ -4,9 +4,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.boot.archive.spi.ArchiveContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import com.battleships.server.api.Exceptions.InvalidPasswordException;
@@ -40,6 +38,8 @@ public class UserService {
 
         if(passwd.equals(u.getPassword())) {
             activeUsers.add(u);
+            // DEBUG
+            System.out.println("USER " + u.getLogin() + " Loged in");
             return u;
         } else {
             throw new InvalidPasswordException("Invalid password");

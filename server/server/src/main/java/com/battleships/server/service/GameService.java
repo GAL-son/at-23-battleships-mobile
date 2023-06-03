@@ -7,9 +7,12 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.battleships.server.api.model.Field;
+import com.battleships.server.api.Exceptions.GameNotFoundExeption;
+// import com.battleships.server.api.Exceptions.PlayerNotInGameExeption;
+// import com.battleships.server.api.model.Field;
+// import com.battleships.server.api.model.Move;
+// import com.battleships.server.api.model.ShipFields;
 import com.battleships.server.api.model.Game;
-import com.battleships.server.api.model.ShipFields;
 import com.battleships.server.api.model.User;
 
 @Service
@@ -36,13 +39,13 @@ public class GameService {
     public boolean enterQueue(User user)
     {
         userQueue.add(user);
-        return true;        
+        return userQueue.contains(user);        
     }
     
     public Game updateQueue(User user) {
         // CHECK IF PLAYER ALREADY IN GAME
-        for(Map.Entry<User, Game> m : playersInGame.entrySet()) {
-            if(user.getUid() == m.getKey().getUid()) return m.getValue();
+        if(getPlayerGame(user)!= null) {
+            return getPlayerGame(user);
         }
 
         // QUEUE EMPTY
@@ -98,41 +101,50 @@ public class GameService {
         return game;
     }
 
-    public boolean setShip(int gid, User user, List<ShipFields> ships) throws Exception {
-        Game game = this.getGame(gid);
-
-        // TODO: Make exceptions
-        if(game == null) throw new Exception("LMAO NO GAME");
-
-        if(!game.isPlayerInGame(user)) throw new Exception("LMAO U DONT PLAY");
-
-        for(ShipFields s : ships)
-        {
-            game.setShip(user.getUid(), s.getSize(), s.getShipFields());
+    public Game getPlayerGame(User user)
+    {
+        for(Map.Entry<User, Game> m : playersInGame.entrySet()) {
+            if(user.getUid() == m.getKey().getUid()) return m.getValue();
         }
-
-        return true;
+        throw new GameNotFoundExeption();
     }
 
-    public boolean makeMove(int gid, User user, Field move) throws Exception {
-        Game game = this.getGame(gid);
-        // TODO: Make exceptions
-        // TODO: Maybe make fucntion
-        if(game == null) throw new Exception("LMAO NO GAME");
-        if(!game.isPlayerInGame(user)) throw new Exception("LMAO U DONT PLAY");
+    // // TODO: CHANGE OR DELETE THIS
+    // public boolean setShip(int gid, User user, List<ShipFields> ships) throws Exception {
+    //     Game game = this.getGame(gid);
 
-        // TODO: Prolly make exeptionn for this
-        game.makeMove(user.getUid(), move);
+    //     // TODO: Make exceptions
+    //     if(game == null) throw new Exception("LMAO NO GAME");
 
-        return false;
-    }
+    //     if(!game.isPlayerInGame(user)) throw new Exception("LMAO U DONT PLAY");
+
+    //     for(ShipFields s : ships)
+    //     {
+    //         game.setShip(user.getUid(), s.getSize(), s.getShipFields());
+    //     }
+
+    //     return true;
+    // }
+
+    // public boolean makeMove(int gid, User user, Move move){
+    //     Game game = this.getGame(gid);
+    //     // TODO: Make exceptions
+    //     // TODO: Maybe make fucntion
+    //     if(game == null) throw new GameNotFoundExeption();
+    //     if(!game.isPlayerInGame(user)) throw new PlayerNotInGameExeption();
+
+    //     // TODO: Prolly make exeptionn for this
+    //     //game.makeMove(user.getUid(), move);
+
+    //     return false;
+    // }
     
-    public boolean isGameStated(int gid) throws Exception {
-        Game game = this.getGame(gid);
-        if(game == null) throw new Exception("LMAO NO GAME");
+    // public boolean isGameStated(int gid) throws Exception {
+    //     Game game = this.getGame(gid);
+    //     if(game == null) throw new Exception("LMAO NO GAME");
 
-        return game.isGameStarted();
-    }
+    //     return game.isGameStarted();
+    // }
 
     // Helper functions
     private void addGame(Game game)
