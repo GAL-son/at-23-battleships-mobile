@@ -105,7 +105,7 @@
         app:layout_constraintTop_toBottomOf="@+id/editTextPasswordRegister" />
 
     <EditText
-        android:id="@+id/editTextTextPassword"
+        android:id="@+id/editTextPassword"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:layout_marginStart="32dp"

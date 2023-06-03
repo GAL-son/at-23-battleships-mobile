@@ -26,6 +26,7 @@ public class Connection {
         }
     }
 
+
     JSONObject stringToJson(String response){
         try {
             return new JSONObject(response);
@@ -40,6 +41,14 @@ public class Connection {
         return new FormBody.Builder()
                 .add("login", login)
                 .add("password",password)
+                .build();
+    }
+
+    RequestBody registerPlayerBody(String login, String password, String email){
+        return new FormBody.Builder()
+                .add("login", login)
+                .add("password",password)
+                .add("email",email)
                 .build();
     }
 }
