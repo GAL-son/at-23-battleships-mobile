@@ -89,7 +89,7 @@ public class EnemyBoardFragment extends Fragment {
 
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         if (game.getState() != 2)
-            turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? " your turn" : " enemy turn"));
+            turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? " your turn":" enemy turn"));
         else {
             Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.dialog_game_won);
@@ -99,10 +99,10 @@ public class EnemyBoardFragment extends Fragment {
             Button buttonExitToMainMenu = dialog.findViewById(R.id.buttonExitToMainMenu);
             Button buttonPlayAgain = dialog.findViewById(R.id.buttonPlayAgain);
             TextView winner_textView = dialog.findViewById(R.id.textViewAlert);
-            if (game.winner == game.getPlayer2().getId())
-                winner_textView.setText("You lose");
             if (game.winner == game.getPlayer1().getId())
                 winner_textView.setText("You win");
+            if (game.winner == game.getPlayer2().getId())
+                winner_textView.setText("You Lose");
             dialog.show();
             buttonExitToMainMenu.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,26 +142,26 @@ public class EnemyBoardFragment extends Fragment {
         Log.i("histogramGame", "gracz2:" + histogramp2.get(0) + "," + histogramp2.get(1) + "," + histogramp2.get(2) + "," + histogramp2.get(3) + ",");
 
         {
-            TextView your4 = getActivity().findViewById(R.id.textViewYour4xShips);
-            TextView your3 = getActivity().findViewById(R.id.textViewYour3xShips);
-            TextView your2 = getActivity().findViewById(R.id.textViewYour2xShips);
-            TextView your1 = getActivity().findViewById(R.id.textViewYour1xShips);
+        TextView your4 = getActivity().findViewById(R.id.textViewYour4xShips);
+        TextView your3 = getActivity().findViewById(R.id.textViewYour3xShips);
+        TextView your2 = getActivity().findViewById(R.id.textViewYour2xShips);
+        TextView your1 = getActivity().findViewById(R.id.textViewYour1xShips);
 
-            TextView enemy4 = getActivity().findViewById(R.id.textViewEnemy4xShip);
-            TextView enemy3 = getActivity().findViewById(R.id.textViewEnemy3xShip);
-            TextView enemy2 = getActivity().findViewById(R.id.textViewEnemy2xShip);
-            TextView enemy1 = getActivity().findViewById(R.id.textViewEnemy1xShip);
+        TextView enemy4 = getActivity().findViewById(R.id.textViewEnemy4xShip);
+        TextView enemy3 = getActivity().findViewById(R.id.textViewEnemy3xShip);
+        TextView enemy2 = getActivity().findViewById(R.id.textViewEnemy2xShip);
+        TextView enemy1 = getActivity().findViewById(R.id.textViewEnemy1xShip);
 
-            your1.setText(histogramp1.get(0) + "x");
-            your2.setText(histogramp1.get(1) + "x");
-            your3.setText(histogramp1.get(2) + "x");
-            your4.setText(histogramp1.get(3) + "x");
+        your1.setText(histogramp1.get(0) + "x");
+        your2.setText(histogramp1.get(1) + "x");
+        your3.setText(histogramp1.get(2) + "x");
+        your4.setText(histogramp1.get(3) + "x");
 
-            enemy1.setText(histogramp2.get(0) + "x");
-            enemy2.setText(histogramp2.get(1) + "x");
-            enemy3.setText(histogramp2.get(2) + "x");
-            enemy4.setText(histogramp2.get(3) + "x");
-        }
+        enemy1.setText(histogramp2.get(0) + "x");
+        enemy2.setText(histogramp2.get(1) + "x");
+        enemy3.setText(histogramp2.get(2) + "x");
+        enemy4.setText(histogramp2.get(3) + "x");
+    }
 
     }
 
@@ -173,7 +173,7 @@ public class EnemyBoardFragment extends Fragment {
         game.hitField(move, player);
         Log.i("hiting", "field hit" + String.valueOf(move.positionX) + ", " + String.valueOf(move.positionY));
         game.nextTurn();
-        turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? "your turn" : " enemy turn"));
+        turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? "your turn":" enemy turn"));
         countHP();
 
 
@@ -189,25 +189,25 @@ public class EnemyBoardFragment extends Fragment {
         }
         Log.i("countHP", "countHP: " + "hp p1= " + pom1 + " p2 = " + pom2);
         if (pom1 == 0) {
-            game.winner = game.getPlayer2().getId();
+            game.winner=game.getPlayer2().getId();
             GameEndProcedure(game.winner);
         }
         if (pom2 == 0) {
-            game.winner = game.getPlayer1().getId();
+            game.winner=game.getPlayer1().getId();
             GameEndProcedure(game.winner);
         }
     }
 
     private void GameEndProcedure(int winner) {
         game.setState(2);
-        if (game.winner == game.getPlayer1().getId())
+        if (game.winner==game.getPlayer1().getId())
             Log.i("koniec", "gre wygrał gracz: " + 1 + "zajeło mu to " + game.getTurnFull());
 
-        if (game.winner == game.getPlayer2().getId())
+        if (game.winner==game.getPlayer2().getId())
             Log.i("koniec", "gre wygrał gracz: " + 2 + "zajeło mu to " + game.getTurnFull());
 
 
-        // Log.i("koniec", "gre wygrał gracz: " + game.winner + "zajeło mu to " + game.getTurnFull());
+      // Log.i("koniec", "gre wygrał gracz: " + game.winner + "zajeło mu to " + game.getTurnFull());
 
     }
 
@@ -270,8 +270,7 @@ public class EnemyBoardFragment extends Fragment {
                     @Override
                     public void onClick(View v) {
                         TextView turn = getActivity().findViewById(R.id.textViewTurn);
-                        TextView ButtonChangeBoardGetAiMove=getActivity().findViewById(R.id.buttonChangeBoard);
-                        ButtonChangeBoardGetAiMove.setText("CHANGE BOARD AND GET AI MOVE");
+
 
                         ImageView clickedImageView = (ImageView) v;
                         int pos = clickedImageView.getId();
@@ -283,30 +282,37 @@ public class EnemyBoardFragment extends Fragment {
                         ImageView pom;
                         //   if (game.getTurn() == 0)// intergracja z serwerem zmieni sens tej instrukcji, nazrazie zawieszona dla testów
                         //    {
-                        if(game.getTurn()%2==0) {
-                            try {
+                        try {
 
 
-                                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && game.getState() < 2) {
-                                    hitingProcedure(new Move(posId[0], posId[1], 0), 1);
-                                    drawBoardGameLoopEnemy(rootView);
+                            if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && game.getState() < 2) {
+                                hitingProcedure(new Move(posId[0], posId[1], 0), 1);
+                                drawBoardGameLoopEnemy(rootView);
 
 
-
-
-                                } else {
-                                    if (game.getState() == 2) {
-                                        Log.i("", "game alredy ended");
-                                        turn.setText("game ended");
+                                Log.i("ai", "czy ai styrzeli?");
+                                if (game.getType() == 0) {
+                                    Log.i("ai", "ai strzeli");
+                                    ArrayList<Integer> AImove = ((PlayerAi) (game.getPlayer2())).getAImove(game.getPlayer1().getPlayerBard());
+                                    Log.i("ai", "pozyskano koordynaty");
+                                    if (((Field) (game.getPlayer1().getPlayerBard().fields.get(AImove.get(0)).get(AImove.get(1)))).getWasHit() != true && game.getState() < 2) {
+                                        hitingProcedure(new Move(AImove.get(0), AImove.get(1), 0), 2);
+                                    } else {
+                                        Log.i("aha", "ai oddalo strzal w to smao miejsce");
                                     }
-
                                 }
-                            } catch (Exception e) {
-                                Log.i("hiting", "field not hit");
-                                throw new RuntimeException(e);
-                            }
+                            } else {
+                                if(game.getState() ==2) {
+                                    Log.i("", "game alredy ended");
+                                    turn.setText("game ended");
+                                }
 
+                            }
+                        } catch (Exception e) {
+                            Log.i("hiting", "field not hit");
+                            throw new RuntimeException(e);
                         }
+
                         //  }//part of turn based shinanigans
                         drawBoardGameLoopEnemy(rootView);
 

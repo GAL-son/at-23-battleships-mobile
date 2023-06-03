@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    tools:context=".RegisterActivity">
+
+
+    <ImageView
+        android:id="@+id/imageViewLogo"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/battleships_logo" />
+
+    <ImageView
+        android:id="@+id/imageViewContainer"
+        android:layout_width="0dp"
+        android:layout_height="380dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="48dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageViewLogo"
+        app:srcCompat="@drawable/button2" />
+
+    <TextView
+        android:id="@+id/textViewLoginT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Login"
+        android:textColor="@color/light_green2"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
+        app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
+        app:layout_constraintTop_toTopOf="@+id/imageViewContainer" />
+
+    <EditText
+        android:id="@+id/editTextLogin"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/custom_input"
+        android:ems="10"
+        android:hint="Login"
+        android:inputType="textPersonName"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/light_green"
+        android:textColorHint="@color/light_green2"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
+        app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
+        app:layout_constraintTop_toBottomOf="@+id/textViewLoginT" />
+
+    <TextView
+        android:id="@+id/textViewPasswordT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Password"
+        android:textColor="@color/light_green2"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
+        app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
+        app:layout_constraintTop_toBottomOf="@+id/editTextLogin" />
+
+    <EditText
+        android:id="@+id/editTextPasswordRegister"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/custom_input"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="Password"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/light_green"
+        android:textColorHint="@color/light_green2"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
+        app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPasswordT" />
+
+    <TextView
+        android:id="@+id/textViewRepeatPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Repeat password"
+        android:textColor="@color/light_green2"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
+        app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
+        app:layout_constraintTop_toBottomOf="@+id/editTextPasswordRegister" />
+
+    <EditText
+        android:id="@+id/editTextTextPassword"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/custom_input"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="Password"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:textColor="@color/light_green"
+        android:textColorHint="@color/light_green2"
+        app:layout_constraintEnd_toEndOf="@+id/imageViewContainer"
+        app:layout_constraintStart_toStartOf="@+id/imageViewContainer"
+        app:layout_constraintTop_toBottomOf="@+id/textViewRepeatPassword" />
+
+    <LinearLayout
+        android:id="@+id/LinearLayoutButtons"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            android:id="@+id/buttonCreateAccount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button2"
+            android:text="Create account"
+            android:textColor="@color/light_green2" />
+
+        <Button
+            android:id="@+id/buttonCancelRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:layout_weight="1"
+            android:background="@drawable/button"
+            android:text="Cancel"
+            android:textColor="@color/red2" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

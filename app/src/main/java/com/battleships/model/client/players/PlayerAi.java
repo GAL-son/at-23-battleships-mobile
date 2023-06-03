@@ -26,7 +26,11 @@ public class PlayerAi extends Player implements Serializable {
         for (int m = 0; m < 10; m++) {
             pojectionOfBoard.add(new ArrayList<Integer>());
             for (int n = 0; n < 10; n++) {
-                pojectionOfBoard.get(m).add(1);
+                if ((n+m)%2==0) {
+                    pojectionOfBoard.get(m).add(1);
+                }
+                if ((n+m)%2==1)
+                    pojectionOfBoard.get(m).add(2);
             }
 
         }

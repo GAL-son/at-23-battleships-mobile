@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:context=".LoginScreen">
+    tools:context=".StartScreenActivity">
 
 
     <ImageView
@@ -28,7 +28,7 @@
         android:background="@drawable/button2"
         android:text="Login"
         android:textColor="@color/light_green2"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageViewLogo" />
@@ -43,7 +43,7 @@
         android:background="@drawable/button2"
         android:text="Play as a guest"
         android:textColor="@color/light_green2"
-        android:textSize="20dp"
+        android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
