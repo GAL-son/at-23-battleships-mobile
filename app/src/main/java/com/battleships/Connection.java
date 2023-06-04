@@ -13,7 +13,6 @@ import java.util.concurrent.CompletableFuture;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -164,6 +163,19 @@ public class Connection {
     RequestBody searchingGameBody(int uid){
         return new FormBody.Builder()
                 .add("uid", String.valueOf(uid))
+                .build();
+    }
+
+    /**
+     * Method creating body for set game request
+     * @param uid - player id
+     * @param shipsJsonString - String with ships positions
+     * @return request body
+     */
+    RequestBody setGameBody(int uid, String shipsJsonString){
+        return new FormBody.Builder()
+                .add("uid", String.valueOf(uid))
+                .add("shipsJsonString",shipsJsonString)
                 .build();
     }
 
