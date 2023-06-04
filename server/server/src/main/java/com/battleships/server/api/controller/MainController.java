@@ -1,17 +1,23 @@
 package com.battleships.server.api.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.battleships.server.api.Exceptions.GameNotFoundExeption;
 import com.battleships.server.api.Exceptions.NoUserException;
+import com.battleships.server.api.model.Field;
 import com.battleships.server.api.model.Game;
 import com.battleships.server.api.model.Move;
 import com.battleships.server.api.model.User;
@@ -32,6 +38,11 @@ public class MainController {
         this.gameService = gameService;
     }
 
+    // Server related endpoints
+    /**
+     * Endpoint method used for checking if server is active
+     * @return boolean value whether server is active or not
+     */
     @GetMapping(path = "/api/server")
     public boolean isServerActive()
     {
@@ -40,6 +51,12 @@ public class MainController {
     
 
     // User related endpoints
+    /**
+     * Endpoint method user to login to server.
+     * @param login - <i>request param</i> - user login
+     * @param password - <i>request param</i> - user password of the user
+     * @return - data of logged in user
+     */
     @PostMapping(path = "/api/login")
     public User loginUser(@RequestParam String login, @RequestParam String password)
     {
@@ -123,7 +140,7 @@ public class MainController {
      * @return boolean value whether queue was joined or not
      */
     @PostMapping(path = "/api/game/join")
-    public boolean joinGame(int uid)
+    public boolean joinGame(@RequestParam int uid)
     {
         User user = userService.getActiveUser(uid);
 
@@ -136,7 +153,7 @@ public class MainController {
      * @return boolean value whether game has been found or not.
      */
     @GetMapping(path = "/api/game/queue")
-    public boolean checkGameQueue(int uid)
+    public boolean checkGameQueue(@RequestParam int uid)
     {
         User user = userService.getActiveUser(uid);
         Game game = gameService.updateQueue(user);
@@ -145,10 +162,48 @@ public class MainController {
         else return true;
     }
 
+    @PostMapping(path = "/api/game/set")
+    public boolean setShips(int uid, String shipsJsonString) {
+        User user = userService.getActiveUser(uid);
+        Game game = gameService.getPlayerGame(user);
+
+        if(game == null) throw new GameNotFoundExeption("Game doesen't exist");
+
+        JSONObject shipsSetup = new JSONObject(shipsJsonString);
+        JSONArray ships = shipsSetup.getJSONArray("ships");
+
+        for(int i = 0; i < ships.length(); i++) {
+            JSONObject shipJsonObject = ships.getJSONObject(i);
+
+            int shipSize = shipJsonObject.getInt("size");
+            boolean shipVertical = shipJsonObject.getBoolean("vertical");
+            JSONArray fieldJsonArray = shipJsonObject.getJSONArray("fieldsxy");
+            int startx = fieldJsonArray.getInt(0);
+            int starty = fieldJsonArray.getInt(1);
+
+            List<Field> fields = new ArrayList<>();
+            for(int j = 0; j < shipSize; j++) {
+                fields.add(new Field(startx + ((!shipVertical) ? j : 0), starty + ((shipVertical) ? j : 0)));
+            }
+
+            try {
+                game.setShip(uid, shipSize, fields);
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ship", e);
+            }
+        }
+
+        return false;
+    }
+
     @GetMapping(path = "/api/game/state")
     public String getGameState(int uid) {
         User user = userService.getActiveUser(uid);
         Game game = gameService.getPlayerGame(user);
+
+        if(game == null) throw new GameNotFoundExeption("Game doesent exist");
 
         // Build gamestate JSON
         JSONObject gameState = new JSONObject();
@@ -163,6 +218,8 @@ public class MainController {
         return gameState.toString();
     }
 
+  
+
     @PostMapping(path = "/api/game/move")
     public boolean makeMove(int uid, int x, int y) {
         User user = userService.getActiveUser(uid);
@@ -170,15 +227,6 @@ public class MainController {
 
         Move move = new Move(uid, x, y);
         return game.makeMove(move);
-    }
-
-    
-
-
-    // @RequestMapping("/test")
-    // public String test()
-    // {
-    //     return "LMAO DZIAŁA?";
-    // }
+    }   
 
 }

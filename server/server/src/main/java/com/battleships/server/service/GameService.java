@@ -5,9 +5,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.battleships.server.api.Exceptions.GameNotFoundExeption;
+import com.battleships.server.api.Exceptions.NoUserException;
 // import com.battleships.server.api.Exceptions.PlayerNotInGameExeption;
 // import com.battleships.server.api.model.Field;
 // import com.battleships.server.api.model.Move;
@@ -48,7 +51,9 @@ public class GameService {
             return getPlayerGame(user);
         }
 
-        // QUEUE EMPTY
+        /* DEBUG */ System.out.println(userQueue);
+
+        // QUEUE IS EMPTY
         if(userQueue.size() == 1) return null;
         
         // FIND OPPONENT
@@ -56,6 +61,7 @@ public class GameService {
         Float scoreDifference = null;
         for(User u : userQueue)
         {   
+            if( u.getUid() == user.getUid()) continue;
             float newScoreDifference = Math.abs(user.getGammerScore() - u.getGammerScore()); 
             if(scoreDifference == null || scoreDifference > newScoreDifference)
             {
@@ -64,7 +70,9 @@ public class GameService {
             }
         }
 
-        if(opponent == null) return null;
+        /* DEBUG */ System.out.println("Opponent found: " + opponent + " withd score difference" + scoreDifference);
+
+        if(opponent == null) throw new NoUserException("Error when finding opponent!!!");
         
         // OPPONENT FOUND - CREATE GAME
         // Find empty game id
@@ -86,6 +94,7 @@ public class GameService {
             
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            System.out.println("Failed adding player");
             e.printStackTrace();
         }
         
@@ -95,8 +104,11 @@ public class GameService {
             playersInGame.put(opponent, game);
         } catch (Exception e) {
             // TODO Auto-generated catch block
+            System.out.println("Failed adding opponent");
             e.printStackTrace();
         }
+
+        /* DEBUG */ System.out.println(userQueue);
         
         return game;
     }
@@ -106,7 +118,7 @@ public class GameService {
         for(Map.Entry<User, Game> m : playersInGame.entrySet()) {
             if(user.getUid() == m.getKey().getUid()) return m.getValue();
         }
-        throw new GameNotFoundExeption();
+        return null;
     }
 
     // // TODO: CHANGE OR DELETE THIS
