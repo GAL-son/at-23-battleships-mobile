@@ -69,7 +69,8 @@
             android:layout_weight="1"
             android:text="30"
             android:textColor="@color/red2"
-            android:textSize="30sp" />
+            android:textSize="30sp"
+            android:visibility="invisible" />
 
     </LinearLayout>
 

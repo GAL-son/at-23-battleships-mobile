@@ -51,10 +51,12 @@ public class SetShipsActivity extends AppCompatActivity {
         ImageView ship3x = findViewById(R.id.imageViewShip3x);
         ImageView ship4x = findViewById(R.id.imageViewShip4x);
 
+        int type_form_intent=getIntent().getIntExtra("newGameType",0);
+        Log.i("gamemode", "selectedGameType:"+type_form_intent);
         //game creation
 
         try {
-            Game game = new Game(1, 0);
+            Game game = new Game(1, type_form_intent);
             game_this = game;
         } catch (Exception e) {
             throw new RuntimeException(e);

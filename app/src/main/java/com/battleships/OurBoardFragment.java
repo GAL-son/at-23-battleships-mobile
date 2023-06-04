@@ -48,6 +48,7 @@ public class OurBoardFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+
     Game game;
 
 //    public void setGame(Game game_)
