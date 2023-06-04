@@ -156,5 +156,16 @@ public class Connection {
                 .build();
     }
 
+    /**
+     * Method creating body for join and queue requests
+     * @param uid - player id
+     * @return request body
+     */
+    RequestBody searchingGameBody(int uid){
+        return new FormBody.Builder()
+                .add("uid", String.valueOf(uid))
+                .build();
+    }
+
 
 }
