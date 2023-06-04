@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 import okhttp3.Call;
@@ -23,6 +24,13 @@ public class Connection {
     public static final String serverUrl = "http://10.0.2.2:8080";
     final OkHttpClient client = new OkHttpClient();
 
+    /**
+     * Method used for POST requests
+     * @param endpoint -
+     * @param body - request body
+     * @return String representation of json object/array
+     * @throws IOException
+     */
     String post(String endpoint, RequestBody body) throws IOException {
         Request request = new Request.Builder()
                 .url(serverUrl+endpoint)
@@ -33,6 +41,11 @@ public class Connection {
         }
     }
 
+    /**
+     * Method used for GET requests
+     * @param endpoint -
+     * @return String representation of json object/array
+     */
     String get(String endpoint){
         CompletableFuture<String> future = new CompletableFuture<>();
         Request request = new Request.Builder()
@@ -56,7 +69,42 @@ public class Connection {
         return future.join();
     }
 
+    /**
+     * Method used for GET requests with parameters (/game/start request)
+     * @param endpoint -
+     * @param params - Map with request parameters
+     * @return String representation of json object/array
+     */
+    String get(String endpoint, Map<String,String> params) {
+        Map.Entry<String, String> entry = params.entrySet().iterator().next();
+        CompletableFuture<String> future = new CompletableFuture<>();
 
+        Request request = new Request.Builder()
+                .url(serverUrl + endpoint + "/?" + entry.getKey()+"="+entry.getValue())
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful())
+                        throw new IOException("Unexpected code " + response);
+                    future.complete(responseBody.string());
+                }
+            }
+        });
+        return future.join();
+    }
+    /**
+     * Method used for converting String to JSONObject
+     * @param response - String representation of json object
+     * @return JSONObject
+     */
     static JSONObject stringToJson(String response){
         try {
             return new JSONObject(response);
@@ -65,7 +113,11 @@ public class Connection {
         }
         return null;
     }
-
+    /**
+     * Method used for converting String to JSONArray
+     * @param response - String representation of json array
+     * @return JSONArray
+     */
     static JSONArray stringToJsonArray(String response){
         try{
             return new JSONArray(response);
@@ -75,6 +127,12 @@ public class Connection {
         return null;
     }
 
+    /**
+     * Method creating body for logging in and logging out requests
+     * @param login - user login
+     * @param password - user password
+     * @return request body
+     */
     RequestBody playerRequestBody(String login, String password){
 
         return new FormBody.Builder()
@@ -83,6 +141,13 @@ public class Connection {
                 .build();
     }
 
+    /**
+     * Method creating body for register request
+     * @param login - user login
+     * @param password - user password
+     * @param email - user email
+     * @return request body
+     */
     RequestBody registerPlayerBody(String login, String password, String email){
         return new FormBody.Builder()
                 .add("login", login)
@@ -90,4 +155,6 @@ public class Connection {
                 .add("email",email)
                 .build();
     }
+
+
 }
