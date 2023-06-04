@@ -25,6 +25,7 @@ public class UserService {
     public UserService(UserRepository userRepository) {
         activeUsers = new LinkedList<User>();
         this.userRepository = userRepository;
+        this.activeUsers = new LinkedList<>();
     }
 
     public User loginUser(String login, String passwd) throws NoUserException, InvalidPasswordException {

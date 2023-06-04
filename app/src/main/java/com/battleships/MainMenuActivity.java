@@ -40,7 +40,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void goToLoginScreen(){
-        Intent intent = new Intent(this, LoginScreen.class);
+        Intent intent = new Intent(this, StartScreenActivity.class);
         startActivity(intent);
     }
 }

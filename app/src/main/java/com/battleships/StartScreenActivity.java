@@ -6,9 +6,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-public class LoginScreen extends AppCompatActivity {
+public class StartScreenActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,7 +20,7 @@ public class LoginScreen extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginScreen.this, "This feature is not available yet", Toast.LENGTH_SHORT).show();
+                goToLoginActivity();
             }
         });
 
@@ -35,6 +34,11 @@ public class LoginScreen extends AppCompatActivity {
 
     private void goToMainMenu(){
         Intent intent = new Intent(this, MainMenuActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToLoginActivity(){
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }
