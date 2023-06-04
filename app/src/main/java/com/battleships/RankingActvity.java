@@ -61,8 +61,8 @@ public class RankingActvity extends AppCompatActivity {
         Object lock = new Object();
         new Thread(() -> {
             try{
-                String response = connection.get("http://10.0.2.2:8080/api/ranking");
-                JSONArray json = connection.stringToJsonArray(response);
+                String response = connection.get(Endpoints.RANKING.getEndpoint());
+                JSONArray json = Connection.stringToJsonArray(response);
 
                 for(int i = 0; i < json.length(); i++){
                     rankingInfo.add(json.getJSONObject(i));

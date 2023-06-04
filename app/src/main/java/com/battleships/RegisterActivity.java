@@ -62,8 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
         Object lock = new Object();
         new Thread(() -> {
             try{
-                String response = connection.post("http://10.0.2.2:8080/api/register",body);
-                JSONObject json = connection.stringToJson(response);
+                String response = connection.post(Endpoints.REGISTER.getEndpoint(), body);
+                JSONObject json = Connection.stringToJson(response);
 
                 Log.i("json", String.valueOf(json));
 

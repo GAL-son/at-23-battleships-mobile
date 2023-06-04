@@ -20,12 +20,12 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 
 public class Connection {
-    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    public static final String serverUrl = "http://10.0.2.2:8080";
     final OkHttpClient client = new OkHttpClient();
 
-    String post(String url, RequestBody body) throws IOException {
+    String post(String endpoint, RequestBody body) throws IOException {
         Request request = new Request.Builder()
-                .url(url)
+                .url(serverUrl+endpoint)
                 .post(body)
                 .build();
         try (Response response = client.newCall(request).execute()) {
@@ -33,10 +33,10 @@ public class Connection {
         }
     }
 
-    String get(String url){
+    String get(String endpoint){
         CompletableFuture<String> future = new CompletableFuture<>();
         Request request = new Request.Builder()
-                .url(url)
+                .url(serverUrl+endpoint)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -57,7 +57,7 @@ public class Connection {
     }
 
 
-    JSONObject stringToJson(String response){
+    static JSONObject stringToJson(String response){
         try {
             return new JSONObject(response);
         } catch (JSONException e) {
@@ -66,7 +66,7 @@ public class Connection {
         return null;
     }
 
-    JSONArray stringToJsonArray(String response){
+    static JSONArray stringToJsonArray(String response){
         try{
             return new JSONArray(response);
         } catch (JSONException e) {
