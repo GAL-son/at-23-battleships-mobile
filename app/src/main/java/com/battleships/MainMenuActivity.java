@@ -17,6 +17,7 @@ public class MainMenuActivity extends AppCompatActivity {
 
         Button playSingle = findViewById(R.id.buttonLogin);
         Button logOutButton = findViewById(R.id.buttonLogOut);
+        Button buttonRankings = findViewById(R.id.buttonRankings);
 
         playSingle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -32,6 +33,13 @@ public class MainMenuActivity extends AppCompatActivity {
                 Toast.makeText( MainMenuActivity.this, "You have been successfully logged out", Toast.LENGTH_SHORT).show();
             }
         });
+
+        buttonRankings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToRankings();
+            }
+        });
     }
 
     private void goToSettingShips(){
@@ -41,6 +49,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void goToLoginScreen(){
         Intent intent = new Intent(this, StartScreenActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToRankings(){
+        Intent intent = new Intent(this, RankingActvity.class);
         startActivity(intent);
     }
 }

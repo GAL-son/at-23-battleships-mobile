@@ -33,7 +33,7 @@ public class Connection {
         }
     }
 
-    CompletableFuture<String> get(String url){
+    String get(String url){
         CompletableFuture<String> future = new CompletableFuture<>();
         Request request = new Request.Builder()
                 .url(url)
@@ -53,8 +53,7 @@ public class Connection {
                 }
             }
         });
-
-        return future;
+        return future.join();
     }
 
 
