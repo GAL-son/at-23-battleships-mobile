@@ -1,6 +1,8 @@
 package com.battleships;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +30,12 @@ public class RankingActvity extends AppCompatActivity {
 
         Button buttonGoBack = findViewById(R.id.buttonGoBackToMainMenu);
 
+
+        RecyclerView recyclerView = findViewById(R.id.recyclerViewRanking);
         setUpRankingModels();
+        RankingRecyclerViewAdapter adapter = new RankingRecyclerViewAdapter(this,rankingInfo);
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         for(JSONObject o : rankingInfo){
             try {
                 Log.i("asd", String.valueOf(o.get("login")));
@@ -36,7 +43,6 @@ public class RankingActvity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-
         buttonGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,7 +77,7 @@ public class RankingActvity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    return score1.compareTo(score2);
+                    return score2.compareTo(score1);
                 });
             } catch (JSONException e) {
                 e.printStackTrace();
