@@ -179,5 +179,19 @@ public class Connection {
                 .build();
     }
 
+    /**
+     * Method creating body for move requests
+     * @param uid - player id
+     * @param x - x value of move
+     * @param y - y value of move
+     * @return request body
+     */
+    RequestBody moveBody(int uid, int x, int y){
+        return new FormBody.Builder()
+                .add("uid", String.valueOf(uid))
+                .add("x", String.valueOf(x))
+                .add("y", String.valueOf(y))
+                .build();
+    }
 
 }
