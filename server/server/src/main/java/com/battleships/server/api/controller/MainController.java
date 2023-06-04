@@ -47,8 +47,7 @@ public class MainController {
     public boolean isServerActive()
     {
         return true;
-    }
-    
+    }    
 
     // User related endpoints
     /**
@@ -162,6 +161,12 @@ public class MainController {
         else return true;
     }
 
+    /**
+     * Endpont method used for seting ships when game is starting
+     * @param uid - <i>request param</i> - id of user seting his ships
+     * @param shipsJsonString
+     * @return
+     */
     @PostMapping(path = "/api/game/set")
     public boolean setShips(int uid, String shipsJsonString) {
         User user = userService.getActiveUser(uid);
@@ -172,12 +177,13 @@ public class MainController {
         JSONObject shipsSetup = new JSONObject(shipsJsonString);
         JSONArray ships = shipsSetup.getJSONArray("ships");
 
+        game.setPlayerSetup(uid, shipsJsonString);
         for(int i = 0; i < ships.length(); i++) {
             JSONObject shipJsonObject = ships.getJSONObject(i);
 
             int shipSize = shipJsonObject.getInt("size");
             boolean shipVertical = shipJsonObject.getBoolean("vertical");
-            JSONArray fieldJsonArray = shipJsonObject.getJSONArray("fieldsxy");
+            JSONArray fieldJsonArray = shipJsonObject.getJSONArray("fieldxy");
             int startx = fieldJsonArray.getInt(0);
             int starty = fieldJsonArray.getInt(1);
 
@@ -190,12 +196,27 @@ public class MainController {
                 game.setShip(uid, shipSize, fields);
             } catch (Exception e) {
                 // TODO Auto-generated catch block
+                // TODO Create invalid ship exception
                 e.printStackTrace();
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ship", e);
             }
         }
 
+        /* DEBUG */game.printP1Board();
+        /* DEBUG */game.printP2Board();
+
         return false;
+    }
+
+    @GetMapping(path = "/api/game/start")
+    public String getEnemyBoard(@RequestParam int uid) {
+        User user = userService.getActiveUser(uid);
+        Game game = gameService.getPlayerGame(user);
+
+        if(game == null) throw new GameNotFoundExeption("Game doesent exist");
+
+        if(game.isGameStarted()) return game.getPlayerSetup(uid);
+        else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GAME NOT STARTED");
     }
 
     @GetMapping(path = "/api/game/state")
@@ -205,20 +226,9 @@ public class MainController {
 
         if(game == null) throw new GameNotFoundExeption("Game doesent exist");
 
-        // Build gamestate JSON
-        JSONObject gameState = new JSONObject();
-        gameState.put("gid", game.getGameId());
-        gameState.put("player", uid);
-        gameState.put("opponent", game.getOpponentPid(uid));
-        gameState.put("state", game.isGameStarted());
-        gameState.put("lastMove", game.getLastMove());
-
-
         // Send gamestate as String
-        return gameState.toString();
-    }
-
-  
+        return game.getGameStateUpdate(uid).toString();
+    }  
 
     @PostMapping(path = "/api/game/move")
     public boolean makeMove(int uid, int x, int y) {

@@ -35,6 +35,7 @@ public class Move {
     {
         JSONObject obj = new JSONObject();
         obj.put("uid", uid);
+        obj.put("field", move.toString());
         return obj;
     }
 
