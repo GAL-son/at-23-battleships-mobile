@@ -3,6 +3,9 @@ package com.battleships.server.api.model;
 import java.util.List;
 import java.util.Random;
 
+import com.battleships.server.api.Exceptions.InvalidFieldException;
+import com.battleships.server.api.Exceptions.PlayerNotInGameExeption;
+
 public class Game {
     private int gameId;
 
@@ -23,7 +26,10 @@ public class Game {
     private Ship[][] p2Board;
     private int p2FieldsAlive;
 
-    
+    // Move History
+    private List<Move> history;
+
+        
     // Constructor
     public Game(int gid, int boardSize) {
         this.gameId = gid;
@@ -47,6 +53,7 @@ public class Game {
             }
         }
        
+        // No players at the begining
         player1 = null;
         player2 = null;
 
@@ -72,6 +79,15 @@ public class Game {
         return player2;
     }
 
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
+    public Move getLastMove()
+    {
+        return (history.isEmpty()) ? null : history.get(history.size()-1);
+    }
+
     // Game Functions
     public void playerJoin(User user) throws Exception {
         if(player1 == null) {
@@ -81,6 +97,10 @@ public class Game {
         } else {
             throw new Exception("GAME FULL");
         }
+    }
+
+    public boolean isPlayerInGame(User user) {
+        return (user.getUid() == player1.getUid() || user.getUid() == player2.getUid()); 
     }
 
     public void setShip(int pid, int shipSize, List<Field> shipFields) throws Exception {
@@ -111,40 +131,63 @@ public class Game {
         }
     }
 
-    public Boolean makeMove(int pid, Field move) throws Exception {
-        if(!isFieldCorrect(move)) return null;
+    public Boolean makeMove(Move move){
+        if(!isFieldCorrect(move.getMove())) throw new InvalidFieldException();
 
-        int player = getPlayerFromPid(pid);
+        int player = getPlayerFromPid(move.getUid());
+
+        // true - hit, false - missed
         boolean moveResult = false;
 
-        if(player == 0) {
-            if(!(moveResult = (p2Board[move.x][move.y] == null))) {
-                p2Board[move.x][move.y].hit();
-            }
-            return moveResult;
-        }
 
-        if(player == 1) {
-            if(!(moveResult = (p1Board[move.x][move.y] == null))) {
-                p1Board[move.x][move.y].hit();
+        history.add(move);
+        if(player == 0) {
+            if(!(moveResult = (p2Board[move.getX()][move.getY()] == null))) {
+                p2Board[move.getX()][move.getY()].hit();
+                nextTurn();
             }
-            return moveResult;
+        } else {
+            if(!(moveResult = (p1Board[move.getX()][move.getY()] == null))) {
+                p1Board[move.getX()][move.getY()].hit();
+                nextTurn();
+            }
         }        
-        return null;
+        return moveResult;
     }
 
-    public boolean isGameOver()
-    {
+    public boolean isGameOver() {
         return (gameStarted && (p1FieldsAlive == 0 || p2FieldsAlive == 0));
     }
 
-    // Helper functions
-    private int getPlayerFromPid(int pid) throws Exception {
-        if(pid == player1.getUid()) return 0;
-        if(pid == player2.getUid()) return 1;
-        throw new Exception("Invalid player");
+    public void getGameStateUpdate(int pid) {
+        int player = getPlayerFromPid(pid);
+
+        int opponentPid = getOpponentPid(pid);
+        
+
+
     }
 
+    public int getOpponentPid(int pid) {
+        if(pid == player1.getUid()) return player2.getUid();
+        if(pid == player2.getUid()) return player1.getUid();
+        throw new PlayerNotInGameExeption();
+    }
+
+    public void nextTurn()
+    {
+        turn = (++turn)%2;
+    }
+
+
+    // Helper functions
+    private int getPlayerFromPid(int pid){
+        if(pid == player1.getUid()) return 0;
+        if(pid == player2.getUid()) return 1;
+        throw new PlayerNotInGameExeption();
+    }
+
+    
     private Boolean isFieldCorrect(Field field){
         return ((field.x >= 0 && field.x < boardSize) && (field.y >= 0 && field.y < boardSize));
     }
