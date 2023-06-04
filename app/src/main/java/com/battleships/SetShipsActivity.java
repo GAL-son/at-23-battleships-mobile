@@ -9,6 +9,7 @@ import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.DragEvent;
@@ -27,8 +28,16 @@ import com.battleships.model.client.Move;
 import com.battleships.model.client.board.Field;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import okhttp3.RequestBody;
 
 public class SetShipsActivity extends AppCompatActivity {
     Game game_this;
@@ -51,8 +60,8 @@ public class SetShipsActivity extends AppCompatActivity {
         ImageView ship3x = findViewById(R.id.imageViewShip3x);
         ImageView ship4x = findViewById(R.id.imageViewShip4x);
 
-        int type_form_intent=getIntent().getIntExtra("newGameType",0);
-        Log.i("gamemode", "selectedGameType:"+type_form_intent);
+        int type_form_intent = getIntent().getIntExtra("newGameType", 0);
+        Log.i("gamemode", "selectedGameType:" + type_form_intent);
         //game creation
 
         try {
@@ -68,7 +77,10 @@ public class SetShipsActivity extends AppCompatActivity {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        } else {
+            setLocalPlayerID();
         }
+
         exitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,10 +91,23 @@ public class SetShipsActivity extends AppCompatActivity {
         readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (game_this.getPlayer1().shipsSizes.isEmpty())
-                    goToGameActivity(game_this);
+                if (game_this.getPlayer1().shipsSizes.isEmpty()) {
+
+                    if (game_this.getType() == 1) {
+                        joinGame();
+                        Log.i("loby joined", "onClick: ");
+                        while(true) {
+                           boolean gameFound=gameFound();
+                           if (gameFound==true)
+                               break;
+                        }
+                    }
+
+                   goToGameActivity(game_this);
+                }
             }
         });
+
 
         turnShips.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,6 +145,100 @@ public class SetShipsActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    private boolean joinGame() {
+        Connection conn = new Connection();
+
+        RequestBody body = conn.searchingGameBody(game_this.getPlayer1().getId());
+        AtomicBoolean lobbyJoined = new AtomicBoolean(false);
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                String response = conn.post(Endpoints.GAME_JOIN.getEndpoint(), body);
+                Log.i("the response", response);
+                if (!response.equals(true)) {
+                    String status = response;
+                    Log.i("status", status);
+                } else {
+                    lobbyJoined.set(true);
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return lobbyJoined.get();
+    }
+    private boolean gameFound() {
+        Connection conn2 = new Connection();
+
+        RequestBody body = conn2.searchingGameBody(game_this.getPlayer1().getId());
+        AtomicBoolean gameFound = new AtomicBoolean(false);
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(5);
+                String response = conn2.post(Endpoints.GAME_QUEUE.getEndpoint(), body);
+                JSONObject json = Connection.stringToJson(response);
+                if (json.has("status")) {
+                    String status = json.getString("status");
+                    Log.i("no user of this id logged in", status);
+                } else {
+                    if (response.equals("true")){
+                        gameFound.set(true);
+                    }
+                    else {
+                        Log.i("game not found yet", "");
+                    }
+                }
+
+
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return gameFound.get();
+    }
+
+    private void setLocalPlayerID() {
+        int id;
+        SharedPreferences sharedPred = getApplicationContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        id = Integer.valueOf(sharedPred.getString("uid", null));
+        game_this.getPlayer1().setId(id);
     }
 
     private void goBackToMainMenu() {
@@ -162,13 +281,12 @@ public class SetShipsActivity extends AppCompatActivity {
 //        game_this.place_ship(new Move(1, 9, 0), 2, 1);//ponad limit
 //        game_this.place_ship(new Move(9, 9, 0), 2, 1);//ponad limit
 //        game_this.place_ship(new Move(8, 6, 0), 2, 1);//ponad limit
-        Random random=new Random();
-        int x,y,align;
-        while(game_this.getPlayer2().shipsSizes.size()>0)
-        {
-            x=random.nextInt(10);
-            y=random.nextInt(10);
-            align=random.nextInt(1);
+        Random random = new Random();
+        int x, y, align;
+        while (game_this.getPlayer2().shipsSizes.size() > 0) {
+            x = random.nextInt(10);
+            y = random.nextInt(10);
+            align = random.nextInt(1);
             game_this.place_ship(new Move(x, y, 0), 2, align);
         }
     }

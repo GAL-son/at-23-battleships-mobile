@@ -24,13 +24,14 @@ import okhttp3.RequestBody;
 
 public class LoginActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
         Context context = getApplicationContext();
-        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
 
         Button loginButton = findViewById(R.id.buttonLogin);
         Button cancelButton = findViewById(R.id.buttonCancelRegister);
@@ -94,8 +95,8 @@ public class LoginActivity extends AppCompatActivity {
         Object lock = new Object();
         new Thread(() -> {
             try{
-                String response = connection.post("http://10.0.2.2:8080/api/login",body);
-                JSONObject json = connection.stringToJson(response);
+                String response = connection.post(Endpoints.LOGIN.getEndpoint(),body);
+                JSONObject json = Connection.stringToJson(response);
 
                 Log.i("json", String.valueOf(json));
                 if(json.has("status")){
@@ -104,6 +105,10 @@ public class LoginActivity extends AppCompatActivity {
                 }else{
                     isAuthorized.set(true);
                 }
+
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("uid", String.valueOf(json.get("uid")));
+                editor.apply();
 
             }catch (IOException | JSONException e) {
                 e.printStackTrace();
