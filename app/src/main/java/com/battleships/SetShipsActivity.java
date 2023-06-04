@@ -94,8 +94,11 @@ public class SetShipsActivity extends AppCompatActivity {
                 if (game_this.getPlayer1().shipsSizes.isEmpty()) {
 
                     if (game_this.getType() == 1) {
-                        joinGame();
+
+                      if( joinGame())
                         Log.i("loby joined", "onClick: ");
+                      else
+                          Log.i("not joined", "onClick: ");
                         while(true) {
                            boolean gameFound=gameFound();
                            if (gameFound==true)
@@ -195,8 +198,9 @@ public class SetShipsActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 TimeUnit.SECONDS.sleep(5);
-                String response = conn2.post(Endpoints.GAME_QUEUE.getEndpoint(), body);
+                String response = conn2.get(Endpoints.GAME_QUEUE.getEndpoint());
                 JSONObject json = Connection.stringToJson(response);
+                Log.i("queue response", response);
                 if (json.has("status")) {
                     String status = json.getString("status");
                     Log.i("no user of this id logged in", status);
@@ -210,7 +214,7 @@ public class SetShipsActivity extends AppCompatActivity {
                 }
 
 
-            } catch (IOException | JSONException e) {
+            } catch ( JSONException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
