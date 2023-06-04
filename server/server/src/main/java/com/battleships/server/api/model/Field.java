@@ -6,5 +6,10 @@ public class Field {
         this.y = y;
     }
 
+    @Override
+    public String toString() {
+        return "[" + x + "," + y + "]";
+    }
+
     public final int x, y;
 }
