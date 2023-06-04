@@ -28,6 +28,7 @@ import com.battleships.model.client.board.Field;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class SetShipsActivity extends AppCompatActivity {
     Game game_this;
@@ -146,19 +147,28 @@ public class SetShipsActivity extends AppCompatActivity {
     }
 
     private void vsAiProcedure() throws Exception {
-        game_this.place_ship(new Move(0, 0, 0), 2, 1);
-        game_this.place_ship(new Move(2, 0, 0), 2, 1);
-        game_this.place_ship(new Move(4, 0, 0), 2, 1);
-        game_this.place_ship(new Move(6, 0, 0), 2, 1);
-        game_this.place_ship(new Move(9, 0, 0), 2, 1);
-        game_this.place_ship(new Move(0, 6, 0), 2, 1);
-        game_this.place_ship(new Move(2, 6, 0), 2, 1);
-        game_this.place_ship(new Move(4, 6, 0), 2, 1);
-        game_this.place_ship(new Move(0, 9, 0), 2, 1);
-        game_this.place_ship(new Move(9, 9, 0), 2, 1);
-        game_this.place_ship(new Move(1, 9, 0), 2, 1);//ponad limit
-        game_this.place_ship(new Move(9, 9, 0), 2, 1);//ponad limit
-        game_this.place_ship(new Move(8, 6, 0), 2, 1);//ponad limit
+//        game_this.place_ship(new Move(0, 0, 0), 2, 1);
+//        game_this.place_ship(new Move(2, 0, 0), 2, 1);
+//        game_this.place_ship(new Move(4, 0, 0), 2, 1);
+//        game_this.place_ship(new Move(6, 0, 0), 2, 1);
+//        game_this.place_ship(new Move(9, 0, 0), 2, 1);
+//        game_this.place_ship(new Move(0, 6, 0), 2, 1);
+//        game_this.place_ship(new Move(2, 6, 0), 2, 1);
+//        game_this.place_ship(new Move(4, 6, 0), 2, 1);
+//        game_this.place_ship(new Move(0, 9, 0), 2, 1);
+//        game_this.place_ship(new Move(9, 9, 0), 2, 1);
+//        game_this.place_ship(new Move(1, 9, 0), 2, 1);//ponad limit
+//        game_this.place_ship(new Move(9, 9, 0), 2, 1);//ponad limit
+//        game_this.place_ship(new Move(8, 6, 0), 2, 1);//ponad limit
+        Random random=new Random();
+        int x,y,align;
+        while(game_this.getPlayer2().shipsSizes.size()>0)
+        {
+            x=random.nextInt(10);
+            y=random.nextInt(10);
+            align=random.nextInt(1);
+            game_this.place_ship(new Move(x, y, 0), 2, align);
+        }
     }
 
     private void drawBoardPlacing() {

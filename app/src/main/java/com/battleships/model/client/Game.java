@@ -55,12 +55,12 @@ public class Game implements Serializable {
             throw new Exception("type specified not recoginised");
         }
 
-        this.player1 = new PlayerLocal(1);
+        this.player1 = new PlayerLocal(1);//add resolving login to id
 
         //seting up right players
         switch (this.type) {
             case 0:
-                this.player2 = new PlayerAi(2);
+                this.player2 = new PlayerAi(999999);
                 break;
             case 1:
                 this.player2 = new PlayerRemote(2);
