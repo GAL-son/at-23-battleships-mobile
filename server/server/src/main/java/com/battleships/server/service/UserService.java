@@ -1,12 +1,13 @@
 package com.battleships.server.service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.boot.archive.spi.ArchiveContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.battleships.server.api.Exceptions.InvalidPasswordException;
 import com.battleships.server.api.Exceptions.NoUserException;
@@ -22,6 +23,7 @@ public class UserService {
 
     @Autowired
     public UserService(UserRepository userRepository) {
+        activeUsers = new LinkedList<User>();
         this.userRepository = userRepository;
     }
 
@@ -32,16 +34,24 @@ public class UserService {
         }
         //return userRepository.getReferenceById(0);
         if(optUser.isEmpty()) {
-            throw new NoUserException("NO USER");
+            throw new NoUserException("No Such User");
         }
         User u = optUser.get();
 
         if(passwd.equals(u.getPassword())) {
             activeUsers.add(u);
+            /* DEBUG */ System.out.println("USER " + u.getLogin() + " Loged in");
             return u;
         } else {
-            throw new InvalidPasswordException("Invalid password");
+            throw new InvalidPasswordException("PASSWORD INVALID");
         }
+    }
+
+    public User getActiveUser(int id) {
+        for (User u : activeUsers) {
+            if(u.getUid() == id) return u;
+        }
+        throw new NoUserException("User not logged in.");
     }
 
     public User registerUser(String login, String passwd, Optional<String> email) throws Exception
@@ -49,7 +59,8 @@ public class UserService {
         Optional<User> clone = userRepository.getUserByLogin(login);
 
         if(clone.isPresent()) {
-            throw new Exception("Login Taken");
+            // TODO: Create Exeption for this
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Login already used");
         }
 
         User user = new User();
@@ -60,6 +71,8 @@ public class UserService {
 
         user = userRepository.save(user);
      
+        /* DEBUG */ System.out.println("User registered: " + user);
+
         return user;
     }
 
