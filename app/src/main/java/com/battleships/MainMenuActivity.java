@@ -2,7 +2,9 @@ package com.battleships;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +16,7 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
+
 
         Button playSingle = findViewById(R.id.buttonLogin);
         Button logOutButton = findViewById(R.id.buttonLogOut);
@@ -29,6 +32,7 @@ public class MainMenuActivity extends AppCompatActivity {
         logOutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                logOut();
                 goToLoginScreen();
                 Toast.makeText( MainMenuActivity.this, "You have been successfully logged out", Toast.LENGTH_SHORT).show();
             }
@@ -55,5 +59,14 @@ public class MainMenuActivity extends AppCompatActivity {
     private void goToRankings(){
         Intent intent = new Intent(this, RankingActvity.class);
         startActivity(intent);
+    }
+
+    private void logOut(){
+        Context context = getApplicationContext();
+        SharedPreferences sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        sharedPreferences.edit()
+                .remove("login")
+                .remove("uid")
+                .apply();
     }
 }
