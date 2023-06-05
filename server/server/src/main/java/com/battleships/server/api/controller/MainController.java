@@ -141,7 +141,7 @@ public class MainController {
 
         JSONObject userJsonObject = new JSONObject();
         userJsonObject.put("name", user.getLogin());
-        userJsonObject.put("score", user.getGammerScore());
+        userJsonObject.put("score", user.getGamerScore());
         
         return userJsonObject.toString();
     }
@@ -346,12 +346,11 @@ public class MainController {
     @PostMapping(value="path")
     public float postMethodName(@RequestParam int uid, @RequestParam float score) {
         User u = userService.userRepository.getReferenceById(uid);
-        u.setGammerScore(score);
+        u.setGamerScore(score);
 
         userService.userRepository.save(u);
         
-        return u.getGammerScore();
-    }
-    
+        return u.getGamerScore();
+    }   
 
 }
