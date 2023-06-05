@@ -33,5 +33,5 @@ public class User {
     private String email;
 
     @Column(name="\"RankingScore\"")
-    private float gammerScore;   
+    private float gamerScore;   
 }
