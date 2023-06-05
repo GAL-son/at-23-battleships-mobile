@@ -68,7 +68,7 @@ public class UserService {
         user.setLogin(login);
         user.setPassword(passwd);
         user.setEmail(email.isPresent() ? email.get() : "");
-        user.setGammerScore(0);
+        user.setGamerScore(0);
 
         user = userRepository.save(user);
      

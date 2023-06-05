@@ -219,12 +219,12 @@ public class Game {
         // Build gamestate JSON
         JSONObject user = new JSONObject();
         user.put("login", player.getLogin());
-        user.put("score", player.getGammerScore());
+        user.put("score", player.getGamerScore());
         gameState.put("player", user);
 
         JSONObject enemy = new JSONObject();
         enemy.put("login",opponent.getLogin());
-        enemy.put("score", opponent.getGammerScore());
+        enemy.put("score", opponent.getGamerScore());
         gameState.put("opponent", enemy);
         gameState.put("turnId", getTurnPid());
         gameState.put("isStarted", gameStarted);
