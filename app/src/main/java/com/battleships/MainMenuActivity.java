@@ -57,7 +57,7 @@ public class MainMenuActivity extends AppCompatActivity {
     }
 
     private void goToRankings(){
-        Intent intent = new Intent(this, RankingActvity.class);
+        Intent intent = new Intent(this, RankingActivity.class);
         startActivity(intent);
     }
 

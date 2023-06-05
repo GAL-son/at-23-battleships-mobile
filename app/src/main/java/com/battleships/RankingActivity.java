@@ -15,18 +15,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 
-public class RankingActvity extends AppCompatActivity {
+public class RankingActivity extends AppCompatActivity {
 
     ArrayList<JSONObject> rankingInfo = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ranking_actvity);
+        setContentView(R.layout.activity_ranking);
 
         Button buttonGoBack = findViewById(R.id.buttonGoBackToMainMenu);
 
