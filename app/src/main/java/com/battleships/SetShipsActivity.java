@@ -95,18 +95,18 @@ public class SetShipsActivity extends AppCompatActivity {
 
                     if (game_this.getType() == 1) {
 
-                      if( joinGame())
-                        Log.i("loby joined", "onClick: ");
-                      else
-                          Log.i("not joined", "onClick: ");
-                        while(true) {
-                           boolean gameFound=gameFound();
-                           if (gameFound==true)
-                               break;
+                        if (joinGame())
+                            Log.i("loby joined", "onClick: ");
+                        else
+                            Log.i("not joined", "onClick: ");
+                        while (true) {
+                            boolean gameFound = gameFound();
+                            if (gameFound == true)
+                                break;
                         }
                     }
 
-                   goToGameActivity(game_this);
+                    goToGameActivity(game_this);
                 }
             }
         });
@@ -189,6 +189,7 @@ public class SetShipsActivity extends AppCompatActivity {
 
         return lobbyJoined.get();
     }
+
     private boolean gameFound() {
         Connection conn2 = new Connection();
 
@@ -205,16 +206,15 @@ public class SetShipsActivity extends AppCompatActivity {
                     String status = json.getString("status");
                     Log.i("no user of this id logged in", status);
                 } else {
-                    if (response.equals("true")){
+                    if (response.equals("true")) {
                         gameFound.set(true);
-                    }
-                    else {
+                    } else {
                         Log.i("game not found yet", "");
                     }
                 }
 
 
-            } catch ( JSONException e) {
+            } catch (JSONException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
