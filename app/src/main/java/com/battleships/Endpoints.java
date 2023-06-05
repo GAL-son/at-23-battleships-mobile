@@ -5,12 +5,12 @@ public enum Endpoints {
         REGISTER("/api/register"), //POST
         RANKING("/api/ranking"), //GET
         SERVER("/api/server"), //GET
-        LOGOUT("api/logout"), //POST
+        LOGOUT("/api/logout"), //POST
         GAME_JOIN("/api/game/join"), //POST
         GAME_QUEUE("/api/game/queue"), //get
-        GAME_SET("api/game/set"), //POST
-        GAME_START("api/game/start"), //GET
-        GAME_STATE("api/game/state"), //GET
+        GAME_SET("/api/game/set"), //POST
+        GAME_START("/api/game/start"), //GET
+        GAME_STATE("/api/game/state"), //GET
         GAME_MOVE("/api/game/move"); //POST
 
         private final String endpoint;

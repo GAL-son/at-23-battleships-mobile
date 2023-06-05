@@ -95,18 +95,18 @@ public class SetShipsActivity extends AppCompatActivity {
 
                     if (game_this.getType() == 1) {
 
-                        if (joinGame())
-                            Log.i("loby joined", "onClick: ");
-                        else
-                            Log.i("not joined", "onClick: ");
-                        while (true) {
-                            boolean gameFound = gameFound();
-                            if (gameFound == true)
-                                break;
+                      if( joinGame())
+                        Log.i("loby joined", "onClick: ");
+                      else
+                          Log.i("not joined", "onClick: ");
+                        while(true) {
+                           boolean gameFound=gameFound();
+                           if (gameFound==true)
+                               break;
                         }
                     }
 
-                    goToGameActivity(game_this);
+                   goToGameActivity(game_this);
                 }
             }
         });
@@ -160,9 +160,12 @@ public class SetShipsActivity extends AppCompatActivity {
             try {
                 String response = conn.post(Endpoints.GAME_JOIN.getEndpoint(), body);
                 Log.i("the response", response);
-                if (!response.equals(true)) {
-                    String status = response;
-                    Log.i("status", status);
+               // JSONObject json = Connection.stringToJson(response);
+
+               // Log.i("the response", response);
+                if (!response.equals("true")) {
+
+                    Log.i("status", response);
                 } else {
                     lobbyJoined.set(true);
                 }
@@ -189,7 +192,6 @@ public class SetShipsActivity extends AppCompatActivity {
 
         return lobbyJoined.get();
     }
-
     private boolean gameFound() {
         Connection conn2 = new Connection();
 
@@ -199,25 +201,26 @@ public class SetShipsActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 TimeUnit.SECONDS.sleep(5);
-                String response = conn2.get(Endpoints.GAME_QUEUE.getEndpoint());
-                JSONObject json = Connection.stringToJson(response);
+                String response = conn2.post(Endpoints.GAME_QUEUE.getEndpoint(),body);
+              //  JSONObject json = Connection.stringToJson(response);
                 Log.i("queue response", response);
-                if (json.has("status")) {
-                    String status = json.getString("status");
-                    Log.i("no user of this id logged in", status);
+                if (response.equals("false")) {
+                    //String status = json.getString("status");
+                    Log.i("no user of this id logged in", response);
                 } else {
-                    if (response.equals("true")) {
+                    if (response.equals("true")){
                         gameFound.set(true);
-                    } else {
+                    }
+                    else {
                         Log.i("game not found yet", "");
                     }
                 }
 
 
-            } catch (JSONException e) {
-                e.printStackTrace();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 synchronized (lock) {
                     lock.notify();

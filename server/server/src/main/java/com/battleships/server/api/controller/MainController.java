@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,6 +24,7 @@ import com.battleships.server.api.model.Move;
 import com.battleships.server.api.model.User;
 import com.battleships.server.service.GameService;
 import com.battleships.server.service.UserService;
+
 
 
 @RestController
@@ -40,7 +42,11 @@ public class MainController {
 
     // Server related endpoints
     /**
-     * Endpoint method used for checking if server is active
+     * Endpoint method used for checking if server is active. 
+     * <ul>
+     * <li>Method - <b>GET</b></li> 
+     * <li>Path - {@code /api/server}</li>
+     * </ul>
      * @return boolean value whether server is active or not
      */
     @GetMapping(path = "/api/server")
@@ -51,10 +57,14 @@ public class MainController {
 
     // User related endpoints
     /**
-     * Endpoint method user to login to server.
+     * Endpoint method user to login to server. 
+     * <ul>
+     * <li>Method - <b>POST</b></li> 
+     * <li>Path - {@code /api/login}</li>
+     * </ul>
      * @param login - <i>request param</i> - user login
-     * @param password - <i>request param</i> - user password of the user
-     * @return - data of logged in user
+     * @param password - <i>request param</i> - user password
+     * @return - JSON formatted user data
      */
     @PostMapping(path = "/api/login")
     public User loginUser(@RequestParam String login, @RequestParam String password)
@@ -66,9 +76,13 @@ public class MainController {
 
     /**
      * Endpoint method used for loging users out
+     * <ul>
+     * <li>Method - <b>POST</b></li> 
+     * <li>Path - {@code /api/logout}</li>
+     * </ul>
      * @param login login of user to log out
      * @param password password for authentication
-     * @return boolean value wether user was logedout
+     * @return boolean value whether user was loged out
      */
     @PostMapping(path = "/api/logout")
     public Boolean logoutUser(@RequestParam String login, @RequestParam String password) {
@@ -77,15 +91,19 @@ public class MainController {
 
     /**
      * Endpoint method used for registration of new users
+     * <ul>
+     * <li>Method - <b>POST</b></li> 
+     * <li>Path - {@code /api/register}</li>
+     * </ul>
      * @param login - <i>request param<i> - login of new user
      * @param password - <i>request param<i> - password of new user
      * @param email - <i>request param<i> - email of new user
-     * @return data of newly created user
+     * @return JSON formatted data of newly created user
      */
     @PostMapping("/api/register")
     public User registerUser(@RequestParam String login, @RequestParam String password, @RequestParam String email)
     {
-        System.out.println("REGISTER");
+        /* DEBUG */ System.out.println("REGISTER");
         Optional<String> emailOptional = Optional.empty();
         User user = null;
         if(email.isBlank()) {
@@ -103,28 +121,37 @@ public class MainController {
         return user;
     }
 
+    // TODO: Decide if nesecary
     /**
      * Endpoint method that returns score of user with given <b>id</b>
-     * @param id - <i>request param<i> - id of user that score will be pulled
+     * <ul>
+     * <li>Method - <b>GET</b></li> 
+     * <li>Path - {@code /api/stats/{uid}}</li>
+     * </ul>
+     * @param uid - <i>request param<i> - id of user that score will be pulled
      * @return score of user with given <b>id</b>
      */
-    @GetMapping("/api/stats/{id}")
-    public String getScore(@PathVariable("id") int id) {
-        System.out.println("USER" + id);
-        User user = userService.userRepository.getReferenceById(id);
+    @GetMapping("/api/stats/{uid}")
+    public String getScore(@PathVariable("uid") int uid) {
+        System.out.println("USER" + uid);
+        User user = userService.userRepository.getReferenceById(uid);
         if(user == null) {
             throw new NoUserException("No such User");
         }
 
         JSONObject userJsonObject = new JSONObject();
         userJsonObject.put("name", user.getLogin());
-        userJsonObject.put("score", user.getGammerScore());
+        userJsonObject.put("score", user.getGamerScore());
         
         return userJsonObject.toString();
     }
 
     /**
      * Endpoint method used for geting player ranking
+     * <ul>
+     * <li>Method - <b>GET</b></li> 
+     * <li>Path - {@code /api/ranking}</li>
+     * </ul>
      * @return List of all users stored in database (id, login, score)
      */
     @GetMapping(path = "/api/ranking")
@@ -134,8 +161,12 @@ public class MainController {
 
     // Game related Endpoints
     /**
-     * Endpoint method user uses to join game queue
-     * @param uid - <i>request param<//i> - id of user joining queue
+     * Endpoint method used to join game queue
+     * <ul>
+     * <li>Method - <b>POST</b></li> 
+     * <li>Path - {@code /api/game/join}</li>
+     * </ul>
+     * @param uid - <i>request param</i> - id of user joining queue
      * @return boolean value whether queue was joined or not
      */
     @PostMapping(path = "/api/game/join")
@@ -148,10 +179,14 @@ public class MainController {
     
     /**
      * Endpoint method used to determine if user has been assigned to a game. 
+     * <ul>
+     * <li>Method - <b>POST</b></li> 
+     * <li>Path - {@code /api/game/queue}</li>
+     * </ul>
      * @param uid - <i>request param</i> - id of user checking queue
      * @return boolean value whether game has been found or not.
      */
-    @GetMapping(path = "/api/game/queue")
+    @PostMapping(path = "/api/game/queue")
     public boolean checkGameQueue(@RequestParam int uid)
     {
         User user = userService.getActiveUser(uid);
@@ -163,9 +198,28 @@ public class MainController {
 
     /**
      * Endpont method used for seting ships when game is starting
+     * <ul>
+     * <li>Method - <b>POST</b></li> 
+     * <li>Path - {@code /api/game/set}</li>
+     * </ul>
      * @param uid - <i>request param</i> - id of user seting his ships
-     * @param shipsJsonString
-     * @return
+     * @param shipsJsonString - String containing JSON representation of ship setup. 
+     * Format for seting up ships:
+     * <pre>
+     * {
+     *  "ships": [
+     *      {
+     *      "size": 4,
+     *      "fieldxy": [
+     *          0,
+     *          0
+     *      ],
+     *      "vertical": true
+     *      }, ... 
+     *  ]
+     * }
+     * </pre>
+     * @return boolean value whether ships were set correctly
      */
     @PostMapping(path = "/api/game/set")
     public boolean setShips(int uid, String shipsJsonString) {
@@ -208,6 +262,17 @@ public class MainController {
         return false;
     }
 
+    /**
+     * Endpoint method for getting ships of player's opponent. 
+     * A bit hacky because ldgxeyea wanted this.
+     * <ul>
+     * <li>Method - <b>GET</b></li> 
+     * <li>Path - {@code /api/game/start}</li>
+     * </ul>
+     * @param uid - <i>request param</i> - id of user seting his ships
+     * @return JSON formatted ship setup 
+     * @see{ setPlayerShips()}
+     */
     @GetMapping(path = "/api/game/start")
     public String getEnemyBoard(@RequestParam int uid) {
         User user = userService.getActiveUser(uid);
@@ -219,6 +284,33 @@ public class MainController {
         else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GAME NOT STARTED");
     }
 
+    // TODO: Decide how to format javadoc return JSON
+    /**
+     * Endpoint method used for pooling current game state. 
+     * <ul>
+     * <li>Method - <b>GET</b></li> 
+     * <li>Path - {@code /api/game/state}</li>
+     * </ul>
+     * @param uid - <i>request param</i> - id of user pooling for state
+     * @return JSON formatted state of current game:
+     * <pre>
+     * {
+     *  "turnId":1,
+     *  "gid":0,
+     *  "opponent":
+     *      {
+     *      "score":0,
+     *      "login":"gal_son"
+     *      },
+     *  "isStarted":true,
+     *  "isFinished":false,
+     *  "player":{
+     *      "score":0,
+     *      "login":"test13"
+     *      }
+     *  }
+     * <pre>
+     */
     @GetMapping(path = "/api/game/state")
     public String getGameState(int uid) {
         User user = userService.getActiveUser(uid);
@@ -230,6 +322,17 @@ public class MainController {
         return game.getGameStateUpdate(uid).toString();
     }  
 
+    /**
+     * Endpoint method used for making a move when game is started
+     * <ul>
+     * <li>Method - <b>POST</b></li> 
+     * <li>Path - {@code /api/game/move}</li>
+     * </ul>
+     * @param uid - <i>request param</i> - id of user that is making a move 
+     * @param x - <i>request param</i> - x position of move (0-9)
+     * @param y - <i>request param</i> - y position of move (0-9)
+     * @return boolean value whether move (shot) was succesfull or not (enemy ship was hit)
+     */
     @PostMapping(path = "/api/game/move")
     public boolean makeMove(int uid, int x, int y) {
         User user = userService.getActiveUser(uid);
@@ -237,6 +340,17 @@ public class MainController {
 
         Move move = new Move(uid, x, y);
         return game.makeMove(move);
+    }   
+
+    //TODO: Delete this later - method for testing
+    @PostMapping(value="path")
+    public float postMethodName(@RequestParam int uid, @RequestParam float score) {
+        User u = userService.userRepository.getReferenceById(uid);
+        u.setGamerScore(score);
+
+        userService.userRepository.save(u);
+        
+        return u.getGamerScore();
     }   
 
 }
