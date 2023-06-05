@@ -160,9 +160,12 @@ public class SetShipsActivity extends AppCompatActivity {
             try {
                 String response = conn.post(Endpoints.GAME_JOIN.getEndpoint(), body);
                 Log.i("the response", response);
-                if (!response.equals(true)) {
-                    String status = response;
-                    Log.i("status", status);
+               // JSONObject json = Connection.stringToJson(response);
+
+               // Log.i("the response", response);
+                if (!response.equals("true")) {
+
+                    Log.i("status", response);
                 } else {
                     lobbyJoined.set(true);
                 }
@@ -199,11 +202,11 @@ public class SetShipsActivity extends AppCompatActivity {
             try {
                 TimeUnit.SECONDS.sleep(5);
                 String response = conn2.get(Endpoints.GAME_QUEUE.getEndpoint());
-                JSONObject json = Connection.stringToJson(response);
+              //  JSONObject json = Connection.stringToJson(response);
                 Log.i("queue response", response);
-                if (json.has("status")) {
-                    String status = json.getString("status");
-                    Log.i("no user of this id logged in", status);
+                if (response.equals("false")) {
+                    //String status = json.getString("status");
+                    Log.i("no user of this id logged in", response);
                 } else {
                     if (response.equals("true")){
                         gameFound.set(true);
@@ -214,8 +217,6 @@ public class SetShipsActivity extends AppCompatActivity {
                 }
 
 
-            } catch ( JSONException e) {
-                e.printStackTrace();
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             } finally {
