@@ -72,8 +72,8 @@ public class RankingActvity extends AppCompatActivity {
                     Double score1 = 0.0;
                     Double score2 = 0.0;
                     try {
-                        score1 = (Double) o1.get("gammerScore");
-                        score2 = (Double) o2.get("gammerScore");
+                        score1 = (Double) o1.get("gamerScore");
+                        score2 = (Double) o2.get("gamerScore");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
