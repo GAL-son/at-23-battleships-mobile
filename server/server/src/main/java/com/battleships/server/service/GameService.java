@@ -5,16 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import com.battleships.server.api.Exceptions.GameNotFoundExeption;
 import com.battleships.server.api.Exceptions.NoUserException;
-// import com.battleships.server.api.Exceptions.PlayerNotInGameExeption;
-// import com.battleships.server.api.model.Field;
-// import com.battleships.server.api.model.Move;
-// import com.battleships.server.api.model.ShipFields;
 import com.battleships.server.api.model.Game;
 import com.battleships.server.api.model.User;
 
@@ -62,7 +54,7 @@ public class GameService {
         for(User u : userQueue)
         {   
             if( u.getUid() == user.getUid()) continue;
-            float newScoreDifference = Math.abs(user.getGammerScore() - u.getGammerScore()); 
+            float newScoreDifference = Math.abs(user.getGamerScore() - u.getGamerScore()); 
             if(scoreDifference == null || scoreDifference > newScoreDifference)
             {
                 scoreDifference = newScoreDifference;
@@ -121,27 +113,9 @@ public class GameService {
         return null;
     }
 
-    // // TODO: CHANGE OR DELETE THIS
-    // public boolean setShip(int gid, User user, List<ShipFields> ships) throws Exception {
-    //     Game game = this.getGame(gid);
-
-    //     // TODO: Make exceptions
-    //     if(game == null) throw new Exception("LMAO NO GAME");
-
-    //     if(!game.isPlayerInGame(user)) throw new Exception("LMAO U DONT PLAY");
-
-    //     for(ShipFields s : ships)
-    //     {
-    //         game.setShip(user.getUid(), s.getSize(), s.getShipFields());
-    //     }
-
-    //     return true;
-    // }
-
     // public boolean makeMove(int gid, User user, Move move){
     //     Game game = this.getGame(gid);
     //     // TODO: Make exceptions
-    //     // TODO: Maybe make fucntion
     //     if(game == null) throw new GameNotFoundExeption();
     //     if(!game.isPlayerInGame(user)) throw new PlayerNotInGameExeption();
 
