@@ -201,7 +201,7 @@ public class SetShipsActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 TimeUnit.SECONDS.sleep(5);
-                String response = conn2.get(Endpoints.GAME_QUEUE.getEndpoint());
+                String response = conn2.post(Endpoints.GAME_QUEUE.getEndpoint(),body);
               //  JSONObject json = Connection.stringToJson(response);
                 Log.i("queue response", response);
                 if (response.equals("false")) {
@@ -219,6 +219,8 @@ public class SetShipsActivity extends AppCompatActivity {
 
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
+            } catch (IOException e) {
+                e.printStackTrace();
             } finally {
                 synchronized (lock) {
                     lock.notify();
