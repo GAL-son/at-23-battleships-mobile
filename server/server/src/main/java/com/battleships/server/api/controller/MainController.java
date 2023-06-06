@@ -306,6 +306,10 @@ public class MainController {
      *      "score":0,
      *      "login":"test13"
      *      }
+     *  "lastMove":{
+     *      "uid": 1,
+     *      "field": [0, 0]
+     *      }
      *  }
      * <pre>
      */
