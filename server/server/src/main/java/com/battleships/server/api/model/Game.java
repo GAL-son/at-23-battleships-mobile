@@ -291,6 +291,17 @@ public class Game {
         else return player1.getUid();
     }
 
+    public void giveUp(int uid) {
+        int player = getPlayerFromPid(uid);
+
+        if(player == 0) {
+            p1FieldsAlive = 0;
+        } else {
+            p2FieldsAlive = 0;
+        }
+
+    }
+
     /* DEBUG */ public void printP1Board()
     {
         for(int y = 0; y < boardSize; y++)
