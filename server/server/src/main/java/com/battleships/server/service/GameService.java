@@ -22,8 +22,7 @@ public class GameService {
         playersInGame = new HashMap<User, Game>();
     }
     
-    public Game getGame(int activeGameId)
-    {
+    public Game getGame(int activeGameId) {
         for(Game g : activeGames) {
             if(g.getGameId() == activeGameId) return g;
         }
@@ -31,8 +30,7 @@ public class GameService {
         return null;
     }
     
-    public boolean enterQueue(User user)
-    {
+    public boolean enterQueue(User user) {
         userQueue.add(user);
         return userQueue.contains(user);        
     }
@@ -105,12 +103,20 @@ public class GameService {
         return game;
     }
 
-    public Game getPlayerGame(User user)
-    {
+    public Game getPlayerGame(User user) {
         for(Map.Entry<User, Game> m : playersInGame.entrySet()) {
             if(user.getUid() == m.getKey().getUid()) return m.getValue();
         }
         return null;
+    }
+
+    public void endGame(User user) {
+        Game game = playersInGame.get(user);
+        playersInGame.remove(user);
+
+        if(!playersInGame.containsValue(game)) {
+            activeGames.remove(game);
+        }
     }
 
     // public boolean makeMove(int gid, User user, Move move){

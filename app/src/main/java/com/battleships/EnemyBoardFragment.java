@@ -36,12 +36,16 @@ import com.google.android.material.snackbar.Snackbar;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+import okhttp3.RequestBody;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -62,8 +66,7 @@ public class EnemyBoardFragment extends Fragment {
     private Integer player1HP = 0;
     private Integer player2HP = 0;
 
-    static private Boolean TimerActive=false;
-
+    static private Boolean TimerActive = false;
 
 
     Game game;
@@ -105,27 +108,24 @@ public class EnemyBoardFragment extends Fragment {
     }
 
 
-    private void startTimer(View rootView)
-    {
-        TextView countdown=getActivity().findViewById(R.id.textViewTimeLeft);
-        int cntd=((GameActivity)getActivity()).cntdwn;
+    private void startTimer(View rootView) {
+        TextView countdown = getActivity().findViewById(R.id.textViewTimeLeft);
+        int cntd = ((GameActivity) getActivity()).cntdwn;
 
 
-        if(countdown.getText().equals("over"))
-        {
-            TimerActive=false;
+        if (countdown.getText().equals("over")) {
+            TimerActive = false;
 
         }
-        if(TimerActive==true)
-        {
+        if (TimerActive == true) {
             return;
         }
 
 
-        CountDownTimer turnTimer= new CountDownTimer(5000,1000){
+        CountDownTimer turnTimer = new CountDownTimer(5000, 1000) {
             @Override
             public void onTick(long l) {
-                countdown.setText("time"+l/1000);
+                countdown.setText("time" + l / 1000);
                 Log.i("ontick", "onTick: ");
             }
 
@@ -134,12 +134,12 @@ public class EnemyBoardFragment extends Fragment {
                 Log.i("ontick", "over ");
 
                 Snackbar.make(rootView, "time over, making auto move", Snackbar.LENGTH_SHORT).show();
-                Move move_= getFreeField();
+                Move move_ = getFreeField();
 
                 new Handler().post(new Runnable() {
                     @Override
                     public void run() {
-                        hitingProcedure(move_,1);
+                        hitingProcedure(move_, 1);
                     }
                 });
                 drawBoardGameLoopEnemy(rootView);
@@ -147,8 +147,8 @@ public class EnemyBoardFragment extends Fragment {
             }
         };
 
-      turnTimer.start();
-      this.TimerActive=true;
+        turnTimer.start();
+        this.TimerActive = true;
     }
 
     private Move getFreeField() {
@@ -159,19 +159,15 @@ public class EnemyBoardFragment extends Fragment {
             throw new RuntimeException(e);
         }
 
-        for (int y = 0; y < 10; y++)
-        {
-            for (int x = 0;x<10;x++)
-            {
-                if (  ((Field) (game.getPlayer2().getPlayerBard().fields.get(x).get(y))).getWasHit() != true )
-                {
-                    move.positionY=y;
-                    move.positionX=x;
+        for (int y = 0; y < 10; y++) {
+            for (int x = 0; x < 10; x++) {
+                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(x).get(y))).getWasHit() != true) {
+                    move.positionY = y;
+                    move.positionX = x;
                 }
             }
         }
-        if(move==null)
-        {
+        if (move == null) {
             throw new RuntimeException();
         }
 
@@ -179,15 +175,12 @@ public class EnemyBoardFragment extends Fragment {
     }
 
 
-
-
     private void drawBoardGameLoopEnemy(View rootView) {
-
 
 
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         if (game.getState() != 2)
-            turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? " your turn":" enemy turn"));
+            turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? " your turn" : " enemy turn"));
         else {
             Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.dialog_game_won);
@@ -240,55 +233,56 @@ public class EnemyBoardFragment extends Fragment {
         Log.i("histogramGame", "gracz2:" + histogramp2.get(0) + "," + histogramp2.get(1) + "," + histogramp2.get(2) + "," + histogramp2.get(3) + ",");
 
         {
-        TextView your4 = getActivity().findViewById(R.id.textViewYour4xShips);
-        TextView your3 = getActivity().findViewById(R.id.textViewYour3xShips);
-        TextView your2 = getActivity().findViewById(R.id.textViewYour2xShips);
-        TextView your1 = getActivity().findViewById(R.id.textViewYour1xShips);
+            TextView your4 = getActivity().findViewById(R.id.textViewYour4xShips);
+            TextView your3 = getActivity().findViewById(R.id.textViewYour3xShips);
+            TextView your2 = getActivity().findViewById(R.id.textViewYour2xShips);
+            TextView your1 = getActivity().findViewById(R.id.textViewYour1xShips);
 
-        TextView enemy4 = getActivity().findViewById(R.id.textViewEnemy4xShip);
-        TextView enemy3 = getActivity().findViewById(R.id.textViewEnemy3xShip);
-        TextView enemy2 = getActivity().findViewById(R.id.textViewEnemy2xShip);
-        TextView enemy1 = getActivity().findViewById(R.id.textViewEnemy1xShip);
+            TextView enemy4 = getActivity().findViewById(R.id.textViewEnemy4xShip);
+            TextView enemy3 = getActivity().findViewById(R.id.textViewEnemy3xShip);
+            TextView enemy2 = getActivity().findViewById(R.id.textViewEnemy2xShip);
+            TextView enemy1 = getActivity().findViewById(R.id.textViewEnemy1xShip);
 
-        your1.setText(histogramp1.get(0) + "x");
-        your2.setText(histogramp1.get(1) + "x");
-        your3.setText(histogramp1.get(2) + "x");
-        your4.setText(histogramp1.get(3) + "x");
+            your1.setText(histogramp1.get(0) + "x");
+            your2.setText(histogramp1.get(1) + "x");
+            your3.setText(histogramp1.get(2) + "x");
+            your4.setText(histogramp1.get(3) + "x");
 
-        enemy1.setText(histogramp2.get(0) + "x");
-        enemy2.setText(histogramp2.get(1) + "x");
-        enemy3.setText(histogramp2.get(2) + "x");
-        enemy4.setText(histogramp2.get(3) + "x");
-    }
+            enemy1.setText(histogramp2.get(0) + "x");
+            enemy2.setText(histogramp2.get(1) + "x");
+            enemy3.setText(histogramp2.get(2) + "x");
+            enemy4.setText(histogramp2.get(3) + "x");
+        }
 
     }
 
 
     private void hitingProcedure(Move move, int player) {
 
-        FragmentActivity activity= getActivity();
-        if (activity!=null)
-        {
-            TextView turn = activity.findViewById(R.id.textViewTurn);;
+        FragmentActivity activity = getActivity();
+        if (activity != null) {
+            TextView turn = activity.findViewById(R.id.textViewTurn);
+            ;
         }
         countHP();
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         game.hitField(move, player);
         Log.i("hiting", "field hit" + String.valueOf(move.positionX) + ", " + String.valueOf(move.positionY));
         game.nextTurn();
-        turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? "your turn":" enemy turn"));
+        turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? "your turn" : " enemy turn"));
         countHP();
 
 
     }
+
     private void hitingProcedureDynamic(Move move, int player, View acc) {
 
         countHP();
-        TextView turn =acc.findViewById(R.id.textViewTurn);
+        TextView turn = acc.findViewById(R.id.textViewTurn);
         game.hitField(move, player);
         Log.i("hiting", "field hit" + String.valueOf(move.positionX) + ", " + String.valueOf(move.positionY));
         game.nextTurn();
-        turn.setText("Turn:" + game.getTurnFull()+ ((game.getTurn()==0) ? "your turn":" enemy turn"));
+        turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? "your turn" : " enemy turn"));
         countHP();
 
 
@@ -304,32 +298,123 @@ public class EnemyBoardFragment extends Fragment {
         }
         Log.i("countHP", "countHP: " + "hp p1= " + pom1 + " p2 = " + pom2);
         if (pom1 == 0) {
-            game.winner=game.getPlayer2().getId();
+            game.winner = game.getPlayer2().getId();
             GameEndProcedure(game.winner);
         }
         if (pom2 == 0) {
-            game.winner=game.getPlayer1().getId();
+            game.winner = game.getPlayer1().getId();
             GameEndProcedure(game.winner);
         }
     }
 
+
+    private void shootOnServer(int x , int y )
+    {
+        Connection connection = new Connection();
+
+        RequestBody body=connection.moveBody(game.getPlayer1().getId(),x,y);
+        AtomicBoolean didHit = new AtomicBoolean(false);
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                String response = connection.post(Endpoints.GAME_MOVE.getEndpoint(),body);
+                Log.i("TheResponseOfMove", response);
+                JSONObject json = Connection.stringToJson(response);
+
+                Log.i("the response", response);
+                if (json.has("status")) {
+                    Log.i("status", response);
+                } else {
+                        if(response.equals("true"))
+                        {
+                            didHit.set(true);
+                        }
+
+
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+        }).start();
+        synchronized (lock) {
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+
+    }
     private void GameEndProcedure(int winner) {
         game.setState(2);
-        if (game.winner==game.getPlayer1().getId())
+        if (game.winner == game.getPlayer1().getId())
             Log.i("koniec", "gre wygrał gracz: " + 1 + "zajeło mu to " + game.getTurnFull());
 
-        if (game.winner==game.getPlayer2().getId())
+        if (game.winner == game.getPlayer2().getId())
             Log.i("koniec", "gre wygrał gracz: " + 2 + "zajeło mu to " + game.getTurnFull());
 
 
-      // Log.i("koniec", "gre wygrał gracz: " + game.winner + "zajeło mu to " + game.getTurnFull());
+        // Log.i("koniec", "gre wygrał gracz: " + game.winner + "zajeło mu to " + game.getTurnFull());
 
     }
 
+    private void setStateFromSever() {
+        Connection conn = new Connection();
+
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("uid", String.valueOf(game.getPlayer1().getId()));
+        }};
+
+
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                String response = conn.get(Endpoints.GAME_STATE.getEndpoint(), map);
+                Log.i("TheResponseOfStateFetch", response);
+                JSONObject json = Connection.stringToJson(response);
+
+
+                Log.i("the response", response);
+                if (json.has("status")) {
+                    Log.i("status", response);
+                } else {
+
+                    try {
+                        game.gameStateFromServer = GameStateFromServer.getState(json);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-
 
         Intent intent = getActivity().getIntent();
         game = (Game) (intent.getSerializableExtra("game"));
@@ -357,7 +442,7 @@ public class EnemyBoardFragment extends Fragment {
         textViewYourBoard.setTextSize(30);
         textViewYourBoard.setGravity(Gravity.CENTER_HORIZONTAL);
         tableLayout.addView(textViewYourBoard);
-
+        setStateFromSever();
         for (int i = 0; i < 10; i++) {
             TableRow tableRow = new TableRow(getContext());
             tableRow.setLayoutParams(new TableLayout.LayoutParams(
@@ -405,7 +490,7 @@ public class EnemyBoardFragment extends Fragment {
                         //   if (game.getTurn() == 0)// intergracja z serwerem zmieni sens tej instrukcji, nazrazie zawieszona dla testów
                         //    {
 
-                        if(game.getType()==0) {
+                        if (game.getType() == 0) {
                             try {
 
                                 if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && game.getState() < 2 && game.getTurn() % 2 == 0) {
@@ -421,7 +506,29 @@ public class EnemyBoardFragment extends Fragment {
                                 Log.i("hiting", "field not hit");
                                 throw new RuntimeException(e);
                             }
-                        } else if (game.getType()==1) {
+                        } else if (game.getType() == 1) {//czy multi
+                            setStateFromSever();
+                            if (game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()) {//czy twa tura
+                                try {
+                                    if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && !game.gameStateFromServer.isFinished()) {//czy gra ni4 skonczona i pole nie strzeone
+                                        hitingProcedure(new Move(posId[0], posId[1], 0), 1);
+                                        shootOnServer(posId[0],posId[1]);
+                                        setStateFromSever();
+                                        Log.i("InGameStateDownloadTest",game.gameStateFromServer.toString());
+                                        drawBoardGameLoopEnemy(rootView);
+                                    } else {
+                                        if (game.getState() == 2) {
+                                            Log.i("", "game alredy ended");
+                                            turn.setText("game ended");
+                                        }
+                                    }
+                                } catch (Exception e) {
+                                    Log.i("hiting", "field not hit");
+                                    throw new RuntimeException(e);
+                                }
+
+                            }
+                            Log.i("GameStateFromServer", game.gameStateFromServer.toString());
 
 
                         }

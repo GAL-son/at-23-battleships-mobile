@@ -15,18 +15,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 
-public class RankingActvity extends AppCompatActivity {
+public class RankingActivity extends AppCompatActivity {
 
     ArrayList<JSONObject> rankingInfo = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ranking_actvity);
+        setContentView(R.layout.activity_ranking);
 
         Button buttonGoBack = findViewById(R.id.buttonGoBackToMainMenu);
 
@@ -72,8 +69,8 @@ public class RankingActvity extends AppCompatActivity {
                     Double score1 = 0.0;
                     Double score2 = 0.0;
                     try {
-                        score1 = (Double) o1.get("gammerScore");
-                        score2 = (Double) o2.get("gammerScore");
+                        score1 = (Double) o1.get("gamerScore");
+                        score2 = (Double) o2.get("gamerScore");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

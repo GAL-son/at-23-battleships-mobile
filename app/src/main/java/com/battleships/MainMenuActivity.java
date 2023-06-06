@@ -70,8 +70,8 @@ public class MainMenuActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void goToRankings() {
-        Intent intent = new Intent(this, RankingActvity.class);
+    private void goToRankings(){
+        Intent intent = new Intent(this, RankingActivity.class);
         startActivity(intent);
     }
 

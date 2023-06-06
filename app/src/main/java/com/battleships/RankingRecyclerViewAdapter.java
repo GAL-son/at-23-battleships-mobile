@@ -41,7 +41,7 @@ public class RankingRecyclerViewAdapter extends RecyclerView.Adapter<RankingRecy
         }
 
         try {
-            holder.textViewScore.setText(String.valueOf(rankingItems.get(position).get("gammerScore")));
+            holder.textViewScore.setText(String.valueOf(rankingItems.get(position).get("gamerScore")));
         } catch (JSONException e) {
             e.printStackTrace();
         }

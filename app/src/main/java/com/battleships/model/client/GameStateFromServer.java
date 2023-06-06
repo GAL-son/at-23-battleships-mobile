@@ -5,6 +5,7 @@ import android.util.Log;
 import com.battleships.Connection;
 import com.battleships.Endpoints;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +22,12 @@ public class GameStateFromServer {
     private String playerLogin;
     private int lastx;
     private int lasty;
+
+    public int getLastShootingUserID() {
+        return lastShootingUserID;
+    }
+
+    private int lastShootingUserID;
 
     public void setPlayerLogin(String playerLogin) {
         this.playerLogin = playerLogin;
@@ -112,6 +119,9 @@ public class GameStateFromServer {
     public void setFinished(boolean finished) {
         isFinished = finished;
     }
+    public void setLastShootingUserID(int lastShootingUserID) {
+        this.lastShootingUserID = lastShootingUserID;
+    }
 
     @Override
     public String toString() {
@@ -122,6 +132,9 @@ public class GameStateFromServer {
                 ", oponentLogin='" + oponentLogin + '\'' +
                 ", playerScore=" + playerScore +
                 ", playerLogin='" + playerLogin + '\'' +
+                ", lastx=" + lastx +
+                ", lasty=" + lasty +
+                ", lastShootingUserID=" + lastShootingUserID +
                 ", isStarted=" + isStarted +
                 ", isFinished=" + isFinished +
                 '}';
@@ -146,8 +159,20 @@ public class GameStateFromServer {
         tmp1.playerLogin = you.getString("login");
         tmp1.playerScore = you.getInt("score");
 
+        if(state.has("lastMove")) {
+
+            JSONObject jsoonInner = state.getJSONObject("lastMove");
+            JSONArray movexy = jsoonInner.getJSONArray("field");
+
+            tmp1.lastx = movexy.getInt(0);
+            tmp1.lasty = movexy.getInt(1);
+            tmp1.lastShootingUserID = jsoonInner.getInt("uid");
+        }
+
+
         return tmp1;
     }
+
 
 
 }

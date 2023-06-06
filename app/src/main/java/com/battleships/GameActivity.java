@@ -18,7 +18,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.battleships.model.client.Game;
+import com.battleships.model.client.GameStateFromServer;
 import com.battleships.model.client.board.Field;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class GameActivity extends AppCompatActivity {
 
@@ -136,6 +143,8 @@ public class GameActivity extends AppCompatActivity {
         });
 
     }
+
+
 
     public static Integer[] getFieldId(int pos){
         Integer[] posId = new Integer[2];
