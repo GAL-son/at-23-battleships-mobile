@@ -26,14 +26,20 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.battleships.model.client.Game;
+import com.battleships.model.client.GameStateFromServer;
 import com.battleships.model.client.Move;
 import com.battleships.model.client.board.Field;
 import com.battleships.model.client.players.PlayerAi;
 import com.battleships.model.client.ship.Ship;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -171,6 +177,9 @@ public class EnemyBoardFragment extends Fragment {
 
         return move;
     }
+
+
+
 
     private void drawBoardGameLoopEnemy(View rootView) {
 

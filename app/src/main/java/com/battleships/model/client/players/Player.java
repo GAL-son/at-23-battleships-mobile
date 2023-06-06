@@ -13,6 +13,7 @@ abstract public class Player implements Serializable {
 
     int id;
     Board playerBoard= new Board();
+    public  ArrayList<ArrayList<Integer>> shipsCoordsAndAlignment=new ArrayList<ArrayList<Integer>>();
 
 
     public ArrayList<Ship> ships=new ArrayList<Ship>();

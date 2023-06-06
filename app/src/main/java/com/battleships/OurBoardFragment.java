@@ -22,6 +22,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.battleships.model.client.Game;
+import com.battleships.model.client.GameStateFromServer;
 import com.battleships.model.client.Move;
 import com.battleships.model.client.board.Field;
 import com.battleships.model.client.players.PlayerAi;
@@ -29,7 +30,12 @@ import com.battleships.model.client.ship.Ship;
 import com.google.android.material.snackbar.Snackbar;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -227,6 +233,56 @@ public class OurBoardFragment extends Fragment {
             }
 
         }
+    private void setStateFromSever()
+    {
+        Connection conn =new Connection();
+
+        Map<String,String> map= new HashMap<String,String>(){{
+            put("uid",String.valueOf(game.getPlayer1().getId()));
+        }};
+
+
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                String response = conn.get(Endpoints.GAME_STATE.getEndpoint(),map);
+                Log.i("TheResponseOfStateFetch", response);
+                JSONObject json = Connection.stringToJson(response);
+
+
+                Log.i("the response", response);
+                if (json.has("status")) {
+                    Log.i("status", response);
+                } else {
+
+                    try {
+                        game.gameStateFromServer= GameStateFromServer.getState(json);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+
+
+
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -282,6 +338,8 @@ public class OurBoardFragment extends Fragment {
                 // Nadanie unikalnego id dla każdego ImageView
                 imageView.setId(i * 10 + j);
 
+
+
                 if(game.getTurn()%2==1) {
                     try {
 
@@ -332,6 +390,12 @@ public class OurBoardFragment extends Fragment {
 
         // Dodawanie TableLayout do FrameLayout
         frameLayout.addView(tableLayout);
+        if(game.getType()==1)
+        {
+            //gra jest w trybi muliplayer
+            setStateFromSever();
+            Log.i("GameStateFromServer", game.gameStateFromServer.toString());
+        }
 
 
         //pierwsze wyrysowanie

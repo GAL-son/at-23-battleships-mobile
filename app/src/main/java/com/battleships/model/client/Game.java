@@ -30,6 +30,8 @@ public class Game implements Serializable {
     private Player player1;
     private Player player2;
 
+    public GameStateFromServer gameStateFromServer;
+
     public int winner = 0;
 
     public void nextTurn() {
@@ -306,6 +308,15 @@ public class Game implements Serializable {
         Log.i("debug", "statek dodany do listy" + String.valueOf(player));
         currentPlayer.ships.add(new Ship(size));
 
+        if (player==1)
+        {
+            ArrayList<Integer>curentShipParams=new ArrayList<>();
+            curentShipParams.add(size);
+            curentShipParams.add(move.positionX);
+            curentShipParams.add(move.positionY);
+            curentShipParams.add(aline);
+            ((PlayerLocal)currentPlayer).shipsCoordsAndAlignment.add(curentShipParams);
+        }
         //nadanie statku pul
         for (int i = 0; i < size; i++) {
             Log.i("debug", "nadawanie pul");

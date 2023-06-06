@@ -26,13 +26,17 @@ import android.widget.TextView;
 import com.battleships.model.client.Game;
 import com.battleships.model.client.Move;
 import com.battleships.model.client.board.Field;
+import com.battleships.model.client.players.PlayerLocal;
 import com.google.android.material.snackbar.Snackbar;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -95,18 +99,36 @@ public class SetShipsActivity extends AppCompatActivity {
 
                     if (game_this.getType() == 1) {
 
-                      if( joinGame())
-                        Log.i("loby joined", "onClick: ");
-                      else
-                          Log.i("not joined", "onClick: ");
-                        while(true) {
-                           boolean gameFound=gameFound();
-                           if (gameFound==true)
-                               break;
+                        if (joinGame())
+                            Log.i("loby joined", "onClick: ");
+                        else
+                            Log.i("not joined", "onClick: ");
+                        while (true) {
+                            boolean gameFound = gameFound();
+                            if (gameFound == true)
+                                break;
+                        }
+                        if (gameFound() == true) {
+                            try {
+                                if (!gameSendMap()) {
+                                    return;
+                                }
+                                else{
+
+                                    while (true) {
+                                        boolean gameStarted = getGameStateForIfStarted();
+                                        if (gameStarted == true)
+                                            break;
+                                    }
+                                    getEnemyBoard();
+                                }
+                            } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            }
                         }
                     }
 
-                   goToGameActivity(game_this);
+                    goToGameActivity(game_this);
                 }
             }
         });
@@ -145,10 +167,225 @@ public class SetShipsActivity extends AppCompatActivity {
                 //czyszczenie planszy
                 drawBoardPlacing();
                 updateCountShips();
+                //
             }
 
         });
     }
+
+
+    private Boolean getGameStateForIfStarted()
+    {
+        Connection conn = new Connection();
+
+
+        Map<String,String> map= new HashMap<String,String>(){{
+            put("uid",String.valueOf(game_this.getPlayer1().getId()));
+        }};
+
+        AtomicBoolean gameStarted = new AtomicBoolean(false);
+        Object lock = new Object();
+
+        new Thread(() -> {
+            try {
+                TimeUnit.SECONDS.sleep(3);
+                String response = conn.get(Endpoints.GAME_STATE.getEndpoint(),map);
+                Log.i("the response", response);
+                JSONObject json = Connection.stringToJson(response);
+
+
+                if (!json.has("isStarted")) {
+                    Log.i("status", response);
+                } else {
+                    if((boolean)json.get("isStarted"))
+                         gameStarted.set(true);
+                }
+
+
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+     return gameStarted.get();
+    }
+    private void setEnemyFromState(JSONObject json) throws JSONException {
+        ArrayList<Integer>shipAtrib = null;
+        JSONArray jsonArr=json.getJSONArray("ships");
+        JSONObject jsonInterior;
+        JSONArray jsonArrInterior;
+
+        Boolean pom1;
+
+        for (int n=0;n<jsonArr.length();n++) {
+            Log.i("adding enemy ships atribs", "ships nr"+(n+1));
+            shipAtrib=new ArrayList<Integer>();
+            jsonInterior=(JSONObject)jsonArr.get(n);
+            shipAtrib.add(jsonInterior.getInt("size"));
+
+                 jsonArrInterior=(JSONArray) jsonInterior.get("fieldxy");
+                 shipAtrib.add(jsonArrInterior.getInt(0));
+                 shipAtrib.add(jsonArrInterior.getInt(1));
+
+            pom1=jsonInterior.getBoolean("vertical");
+            shipAtrib.add((pom1)?1:0);
+
+            game_this.getPlayer2().shipsCoordsAndAlignment.add(shipAtrib);
+            Log.i("addedenemy ships atribs", "ships nr"+(n+1));
+        }
+        try {
+            setEnemyShipsFromState();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void setEnemyShipsFromState() throws Exception {
+
+        if(game_this.getPlayer2().shipsCoordsAndAlignment.size()!=10)
+        {
+            Log.i("adding ships to fields", "statków mniej niz 10 ");
+            throw new RuntimeException();
+        }
+        Log.i("adding ships to fields", "statków jest  10 ");
+        for (ArrayList<Integer> a : game_this.getPlayer2().shipsCoordsAndAlignment)
+        {
+            Log.i("adding ships to fields", "ships created");
+            game_this.place_ship(new Move(a.get(1), a.get(2), 0), 2, a.get(3));
+        }
+
+    }
+
+
+    private boolean getEnemyBoard() throws JSONException {
+        Connection conn = new Connection();
+        Map<String,String> map= new HashMap<String,String>(){{
+        put("uid",String.valueOf(game_this.getPlayer1().getId()));
+        }};
+
+
+        Object lock = new Object();
+        new Thread(() -> {
+            try {
+                String response = conn.get(Endpoints.GAME_START.getEndpoint(),map);
+                Log.i("the response on geting state of enemy", response);
+                JSONObject json = Connection.stringToJson(response);
+
+
+                Log.i("the response", response);
+                if (json.has("status")) {
+                    Log.i("status", response);
+                } else {
+                    setEnemyFromState(json);
+                }
+
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
+    }
+
+    private Boolean gameSendMap() throws JSONException {
+        String reqBodyShips = createSetBody();
+
+        Connection conn = new Connection();
+        RequestBody body = conn.setGameBody(game_this.getPlayer1().getId(), reqBodyShips);
+        AtomicBoolean shipsSet = new AtomicBoolean(false);
+        Object lock = new Object();
+
+        new Thread(() -> {
+            try {
+                String response = conn.post(Endpoints.GAME_SET.getEndpoint(), body);
+                Log.i("the response", response);
+                // JSONObject json = Connection.stringToJson(response);
+
+                // Log.i("the response", response);
+                if (!response.equals("false")) {
+
+                    Log.i("status", response);
+                } else {
+
+                    shipsSet.set(true);
+                }
+
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        return shipsSet.get();
+    }
+
+    private String createSetBody() throws JSONException {
+        JSONObject jsonParent = new JSONObject();
+        JSONArray ships = new JSONArray();
+        JSONObject jsonInterior;
+        JSONArray shipxy;
+        for (ArrayList<Integer> a : ((PlayerLocal) game_this.getPlayer1()).shipsCoordsAndAlignment) {
+            Log.i("sendingStateCheck1", "size:" + a.get(0) + " \nx:" + a.get(1) + " y:" + a.get(2) + "\n vertical:" + ((a.get(3) == 0) ? "false" : "true"));
+            jsonInterior = new JSONObject();
+            shipxy = new JSONArray();
+            jsonInterior.put("size", a.get(0));
+            shipxy.put(a.get(1));
+            shipxy.put(a.get(2));
+            jsonInterior.put("fieldxy", shipxy);
+            jsonInterior.put("vertical", ((a.get(3) == 0) ? false : true));
+            ships.put(jsonInterior);
+
+
+        }
+        jsonParent.put("ships", ships);
+        String reqBoody = jsonParent.toString();
+        Log.i("sendingStateCheck2: request body ", reqBoody);
+        return reqBoody;
+    }
+
 
     private boolean joinGame() {
         Connection conn = new Connection();
@@ -160,9 +397,9 @@ public class SetShipsActivity extends AppCompatActivity {
             try {
                 String response = conn.post(Endpoints.GAME_JOIN.getEndpoint(), body);
                 Log.i("the response", response);
-               // JSONObject json = Connection.stringToJson(response);
+                // JSONObject json = Connection.stringToJson(response);
 
-               // Log.i("the response", response);
+                // Log.i("the response", response);
                 if (!response.equals("true")) {
 
                     Log.i("status", response);
@@ -192,6 +429,7 @@ public class SetShipsActivity extends AppCompatActivity {
 
         return lobbyJoined.get();
     }
+
     private boolean gameFound() {
         Connection conn2 = new Connection();
 
@@ -201,17 +439,16 @@ public class SetShipsActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 TimeUnit.SECONDS.sleep(5);
-                String response = conn2.post(Endpoints.GAME_QUEUE.getEndpoint(),body);
-              //  JSONObject json = Connection.stringToJson(response);
+                String response = conn2.post(Endpoints.GAME_QUEUE.getEndpoint(), body);
+                //  JSONObject json = Connection.stringToJson(response);
                 Log.i("queue response", response);
                 if (response.equals("false")) {
                     //String status = json.getString("status");
                     Log.i("no user of this id logged in", response);
                 } else {
-                    if (response.equals("true")){
+                    if (response.equals("true")) {
                         gameFound.set(true);
-                    }
-                    else {
+                    } else {
                         Log.i("game not found yet", "");
                     }
                 }

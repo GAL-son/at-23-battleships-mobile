@@ -84,7 +84,7 @@ public class Connection {
         CompletableFuture<String> future = new CompletableFuture<>();
 
         Request request = new Request.Builder()
-                .url(serverUrl + endpoint + "/?" + entry.getKey()+"="+entry.getValue())
+                .url(serverUrl + endpoint + "?" + entry.getKey()+"="+entry.getValue())
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -181,6 +181,18 @@ public class Connection {
         return new FormBody.Builder()
                 .add("uid", String.valueOf(uid))
                 .add("shipsJsonString",shipsJsonString)
+                .build();
+    }
+
+
+    /**
+     * Method creating body for game state request
+     * @param uid - player id
+     * @return request body
+     */
+    RequestBody getGameBody(int uid){
+        return new FormBody.Builder()
+                .add("uid", String.valueOf(uid))
                 .build();
     }
 
