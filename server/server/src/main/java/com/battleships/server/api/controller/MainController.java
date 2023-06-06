@@ -123,6 +123,25 @@ public class MainController {
     }
 
     /**
+     * Endpoint method used for changing user password. User must be logged in.
+     * @param login - <i>request param<i> - login of user changing password
+     * @param oldPassword - <i>request param<i> - old user password
+     * @param newPassword - <i>request param<i> - new user password
+     * @return Boolean value whether password was changed
+     */
+    @PostMapping("/api/changePassword")
+    public boolean changePassword(String login, String oldPassword, String newPassword) {
+        User user = userService.getActiveUser(login);
+
+        if(!user.getPassword().equals(oldPassword)) {
+            throw new InvalidPasswordException();
+        }
+
+        user.setPassword(newPassword);           
+        return userService.userRepository.save(user).getPassword().equals(newPassword);
+    }
+
+    /**
      * Endpoint method used for deleting an account
      * <ul>
      * <li>Method - <b>POST</p></li>
