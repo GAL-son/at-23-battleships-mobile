@@ -6,9 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.RequestBody;
 
 public class MainMenuActivity extends AppCompatActivity {
 
@@ -64,8 +72,39 @@ public class MainMenuActivity extends AppCompatActivity {
     private void logOut(){
         Context context = getApplicationContext();
         SharedPreferences sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        String login = sharedPreferences.getString("login","null");
+        String password = sharedPreferences.getString("password","null");
+
+        if(!login.equals("null")){
+            Connection connection = new Connection();
+            RequestBody body = connection.playerRequestBody(login, password);
+            Object lock = new Object();
+            new Thread(() -> {
+                try{
+                    String response = connection.post(Endpoints.LOGOUT.getEndpoint(),body);
+                    Log.i("isLoggedOut", response);
+
+                }catch (IOException e) {
+                    e.printStackTrace();
+                }finally {
+                    synchronized (lock) {
+                        lock.notify();
+                    }
+                }
+            }).start();
+
+            synchronized (lock) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         sharedPreferences.edit()
                 .remove("login")
+                .remove("password")
                 .remove("uid")
                 .apply();
     }

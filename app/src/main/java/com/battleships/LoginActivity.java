@@ -48,6 +48,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(isLogged){
                     SharedPreferences.Editor editor = sharedPreferences.edit();
                     editor.putString("login", login.getText().toString());
+                    editor.putString("password",password.getText().toString());
                     editor.apply();
 
                     goToMainMenu();
