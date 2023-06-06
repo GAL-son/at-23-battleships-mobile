@@ -112,7 +112,7 @@ Endpoint for getting ships of player's opponent. (**APP ONLY**)
 
 ### Pooling game state
 Endpoint method used for pooling current game state. 
-* **Method** - POST
+* **Method** - GET
 * **Path** - `/api/game/state`
 * **Request parameters**
     * Body
