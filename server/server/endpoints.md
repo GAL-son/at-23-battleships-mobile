@@ -40,6 +40,16 @@ Endpoint used for registration of new users
         * *email* - user email (`String`)(*Optional*)
 * **Returns** JSON formatted data of newly created user
 
+### Change user password
+Endpoint method used for changing user password. User must be logged in.
+* **Method** - POST
+* **Path** - `/api/changePassword`
+* **Request parameters** 
+    * Body
+        * *login* - user login (`String`)
+        * *oldPassword* - old user password (`String`) 
+        * *newPassword* -  new user password (`String`)
+* **Returns** Boolean value whether password was changed
 
 ### Delete user account
 Endpoint used for deleting an account
