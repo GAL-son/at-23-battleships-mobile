@@ -200,12 +200,12 @@ public class Game {
         if(player == 0) {
             if((moveResult = (p2Board[move.getX()][move.getY()] != null))) {
                 p2Board[move.getX()][move.getY()].hit();
-            }
+            } else 
             nextTurn();
         } else {
             if((moveResult = (p1Board[move.getX()][move.getY()] != null))) {
                 p1Board[move.getX()][move.getY()].hit();
-            }
+            } else
             nextTurn();
         }
 
