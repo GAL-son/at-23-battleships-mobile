@@ -85,6 +85,7 @@ public class MainController {
      */
     @PostMapping(path = "/api/logout")
     public Boolean logoutUser(@RequestParam String login, @RequestParam String password) {
+        
         return userService.logout(login, password);
     }
 

@@ -54,6 +54,13 @@ public class UserService {
         throw new NoUserException("User not logged in.");
     }
 
+    public User getActiveUser(String login) {
+        for (User u : activeUsers) {
+            if(u.getLogin().equals(login)) return u;
+        }
+        throw new NoUserException("User not logged in.");
+    }
+
     public User registerUser(String login, String passwd, Optional<String> email) throws Exception
     {   
         Optional<User> clone = userRepository.getUserByLogin(login);
