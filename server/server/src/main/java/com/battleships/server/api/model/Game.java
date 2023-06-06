@@ -16,6 +16,7 @@ public class Game {
 
     // Game data
     private int turn; // 0 - P1, 1 - P2
+    private int turnNum = 0;
     private int boardSize;
     private boolean gameStarted;
     private boolean gameFinished;
@@ -26,6 +27,7 @@ public class Game {
     private Ship[][] p1Board; 
     private int p1FieldsAlive;
     private String p1ShipSetup;
+    private float p1Score;
     
     // Player 2 data
     private User player2;
@@ -33,6 +35,7 @@ public class Game {
     private Ship[][] p2Board;
     private int p2FieldsAlive;
     private String p2ShipSetup;
+    private float p2Score;
 
     // Move History
     private List<Move> history;
@@ -73,6 +76,10 @@ public class Game {
         p1FieldsAlive = 0;
         p2FieldsAlive = 0;
 
+        // Set match score
+        p1Score = 0;
+        p2Score = 0;
+
         // Initiate move history
         history = new LinkedList<>();
     }
@@ -98,6 +105,14 @@ public class Game {
         return gameStarted;
     }
 
+    public float getP1Score() {
+        return p1Score;
+    }
+
+    public float getP2Score() {
+        return p2Score;
+    }
+
     public String getPlayerSetup(int uid) {
         int player = getPlayerFromPid(uid);
 
@@ -114,7 +129,7 @@ public class Game {
         if(player == 0) {
             p1ShipSetup = setup;
         } else {
-            p1ShipSetup = setup;
+            p2ShipSetup = setup;
         }
     }
 
@@ -184,16 +199,21 @@ public class Game {
         if(player == 0) {
             if((moveResult = (p2Board[move.getX()][move.getY()] != null))) {
                 p2Board[move.getX()][move.getY()].hit();
-                nextTurn();
             }
+            nextTurn();
         } else {
             if((moveResult = (p1Board[move.getX()][move.getY()] != null))) {
                 p1Board[move.getX()][move.getY()].hit();
-                nextTurn();
             }
+            nextTurn();
         }
+
+        turnNum++;
         
         /* DEBUG */ System.out.println("Move: " + move.toJsonObject() + moveResult);
+
+        gameFinished = isGameOver();
+
         return moveResult;
     }
 
@@ -249,6 +269,11 @@ public class Game {
     public void nextTurn()
     {
         turn = (++turn)%2;
+    }
+
+    public float getPlayerScore(int uid) {
+        if(getPlayerFromPid(uid) == 0) return p1Score;
+        else return p2Score;
     }
 
     /* DEBUG */ public void printP1Board()

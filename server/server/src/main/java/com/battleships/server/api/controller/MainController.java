@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -249,7 +248,6 @@ public class MainController {
             try {
                 game.setShip(uid, shipSize, fields);
             } catch (Exception e) {
-                // TODO Auto-generated catch block
                 // TODO Create invalid ship exception
                 e.printStackTrace();
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid ship", e);
@@ -308,6 +306,10 @@ public class MainController {
      *      "score":0,
      *      "login":"test13"
      *      }
+     *  "lastMove":{
+     *      "uid": 1,
+     *      "field": [0, 0]
+     *      }
      *  }
      * <pre>
      */
@@ -317,6 +319,13 @@ public class MainController {
         Game game = gameService.getPlayerGame(user);
 
         if(game == null) throw new GameNotFoundExeption("Game doesent exist");
+
+        if(game.isGameOver()) {
+            float score = game.getPlayerScore(uid);
+            user.setGamerScore(score);
+            userService.userRepository.save(user);
+            gameService.endGame(user);
+        }
 
         // Send gamestate as String
         return game.getGameStateUpdate(uid).toString();
@@ -351,6 +360,7 @@ public class MainController {
         userService.userRepository.save(u);
         
         return u.getGamerScore();
-    }   
+    }
+    
 
 }
