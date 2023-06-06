@@ -115,7 +115,6 @@ public class GameService {
         playersInGame.remove(user);
 
         if(!playersInGame.containsValue(game)) {
-            // TODO: Save Game to database
             activeGames.remove(game);
         }
     }

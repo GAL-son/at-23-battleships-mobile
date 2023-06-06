@@ -113,8 +113,6 @@ public class Game {
         return p2Score;
     }
 
-
-
     public String getPlayerSetup(int uid) {
         int player = getPlayerFromPid(uid);
 
@@ -131,7 +129,7 @@ public class Game {
         if(player == 0) {
             p1ShipSetup = setup;
         } else {
-            p1ShipSetup = setup;
+            p2ShipSetup = setup;
         }
     }
 
