@@ -404,20 +404,26 @@ public class EnemyBoardFragment extends Fragment {
                         ImageView pom;
                         //   if (game.getTurn() == 0)// intergracja z serwerem zmieni sens tej instrukcji, nazrazie zawieszona dla testów
                         //    {
-                        try {
 
-                            if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && game.getState() < 2 && game.getTurn()%2==0) {
-                                hitingProcedure(new Move(posId[0], posId[1], 0), 1);
-                                drawBoardGameLoopEnemy(rootView);
-                            } else {
-                                if(game.getState() ==2) {
-                                    Log.i("", "game alredy ended");
-                                    turn.setText("game ended");
+                        if(game.getType()==0) {
+                            try {
+
+                                if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && game.getState() < 2 && game.getTurn() % 2 == 0) {
+                                    hitingProcedure(new Move(posId[0], posId[1], 0), 1);
+                                    drawBoardGameLoopEnemy(rootView);
+                                } else {
+                                    if (game.getState() == 2) {
+                                        Log.i("", "game alredy ended");
+                                        turn.setText("game ended");
+                                    }
                                 }
+                            } catch (Exception e) {
+                                Log.i("hiting", "field not hit");
+                                throw new RuntimeException(e);
                             }
-                        } catch (Exception e) {
-                            Log.i("hiting", "field not hit");
-                            throw new RuntimeException(e);
+                        } else if (game.getType()==1) {
+
+
                         }
 
                         //  }//part of turn based shinanigans

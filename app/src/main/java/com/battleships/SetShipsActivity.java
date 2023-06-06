@@ -99,30 +99,37 @@ public class SetShipsActivity extends AppCompatActivity {
 
                     if (game_this.getType() == 1) {
 
-                        if (joinGame())
+                        if (joinGame()) {
+                            Log.i("MultiplayerTree", "join");
                             Log.i("loby joined", "onClick: ");
-                        else
+                        } else
                             Log.i("not joined", "onClick: ");
                         while (true) {
                             boolean gameFound = gameFound();
-                            if (gameFound == true)
+                            Log.i("MultiplayerTree", "game  not yetfound");
+                            if (gameFound == true) {
+                                Log.i("MultiplayerTree", "game found");
                                 break;
+                            }
                         }
                         if (gameFound() == true) {
                             try {
                                 if (!gameSendMap()) {
+                                    Log.i("MultiplayerTree", "map sent,but failed");
                                     return;
-                                }
-                                else{
-
+                                } else {
+                                    Log.i("MultiplayerTree", "map sent");
                                     while (true) {
                                         boolean gameStarted = getGameStateForIfStarted();
                                         if (gameStarted == true)
                                             break;
                                     }
+                                    TimeUnit.SECONDS.sleep(3);
                                     getEnemyBoard();
                                 }
                             } catch (JSONException e) {
+                                throw new RuntimeException(e);
+                            } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
                         }
@@ -174,13 +181,12 @@ public class SetShipsActivity extends AppCompatActivity {
     }
 
 
-    private Boolean getGameStateForIfStarted()
-    {
+    private Boolean getGameStateForIfStarted() {
         Connection conn = new Connection();
 
 
-        Map<String,String> map= new HashMap<String,String>(){{
-            put("uid",String.valueOf(game_this.getPlayer1().getId()));
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("uid", String.valueOf(game_this.getPlayer1().getId()));
         }};
 
         AtomicBoolean gameStarted = new AtomicBoolean(false);
@@ -189,18 +195,17 @@ public class SetShipsActivity extends AppCompatActivity {
         new Thread(() -> {
             try {
                 TimeUnit.SECONDS.sleep(3);
-                String response = conn.get(Endpoints.GAME_STATE.getEndpoint(),map);
-                Log.i("the response", response);
+                String response = conn.get(Endpoints.GAME_STATE.getEndpoint(), map);
+                Log.i("TheResponseGameState", response);
                 JSONObject json = Connection.stringToJson(response);
 
 
                 if (!json.has("isStarted")) {
                     Log.i("status", response);
                 } else {
-                    if((boolean)json.get("isStarted"))
-                         gameStarted.set(true);
+                    if ((boolean) json.get("isStarted"))
+                        gameStarted.set(true);
                 }
-
 
 
             } catch (JSONException e) {
@@ -223,31 +228,32 @@ public class SetShipsActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-     return gameStarted.get();
+        return gameStarted.get();
     }
+
     private void setEnemyFromState(JSONObject json) throws JSONException {
-        ArrayList<Integer>shipAtrib = null;
-        JSONArray jsonArr=json.getJSONArray("ships");
+        ArrayList<Integer> shipAtrib = null;
+        JSONArray jsonArr = json.getJSONArray("ships");
         JSONObject jsonInterior;
         JSONArray jsonArrInterior;
 
         Boolean pom1;
 
-        for (int n=0;n<jsonArr.length();n++) {
-            Log.i("adding enemy ships atribs", "ships nr"+(n+1));
-            shipAtrib=new ArrayList<Integer>();
-            jsonInterior=(JSONObject)jsonArr.get(n);
+        for (int n = 0; n < jsonArr.length(); n++) {
+            Log.i("adding enemy ships atribs", "ships nr" + (n + 1));
+            shipAtrib = new ArrayList<Integer>();
+            jsonInterior = (JSONObject) jsonArr.get(n);
             shipAtrib.add(jsonInterior.getInt("size"));
 
-                 jsonArrInterior=(JSONArray) jsonInterior.get("fieldxy");
-                 shipAtrib.add(jsonArrInterior.getInt(0));
-                 shipAtrib.add(jsonArrInterior.getInt(1));
+            jsonArrInterior = (JSONArray) jsonInterior.get("fieldxy");
+            shipAtrib.add(jsonArrInterior.getInt(0));
+            shipAtrib.add(jsonArrInterior.getInt(1));
 
-            pom1=jsonInterior.getBoolean("vertical");
-            shipAtrib.add((pom1)?1:0);
+            pom1 = jsonInterior.getBoolean("vertical");
+            shipAtrib.add((pom1) ? 1 : 0);
 
             game_this.getPlayer2().shipsCoordsAndAlignment.add(shipAtrib);
-            Log.i("addedenemy ships atribs", "ships nr"+(n+1));
+            Log.i("addedenemy ships atribs", "ships nr" + (n + 1));
         }
         try {
             setEnemyShipsFromState();
@@ -258,14 +264,12 @@ public class SetShipsActivity extends AppCompatActivity {
 
     private void setEnemyShipsFromState() throws Exception {
 
-        if(game_this.getPlayer2().shipsCoordsAndAlignment.size()!=10)
-        {
+        if (game_this.getPlayer2().shipsCoordsAndAlignment.size() != 10) {
             Log.i("adding ships to fields", "statków mniej niz 10 ");
             throw new RuntimeException();
         }
         Log.i("adding ships to fields", "statków jest  10 ");
-        for (ArrayList<Integer> a : game_this.getPlayer2().shipsCoordsAndAlignment)
-        {
+        for (ArrayList<Integer> a : game_this.getPlayer2().shipsCoordsAndAlignment) {
             Log.i("adding ships to fields", "ships created");
             game_this.place_ship(new Move(a.get(1), a.get(2), 0), 2, a.get(3));
         }
@@ -275,15 +279,15 @@ public class SetShipsActivity extends AppCompatActivity {
 
     private boolean getEnemyBoard() throws JSONException {
         Connection conn = new Connection();
-        Map<String,String> map= new HashMap<String,String>(){{
-        put("uid",String.valueOf(game_this.getPlayer1().getId()));
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("uid", String.valueOf(game_this.getPlayer1().getId()));
         }};
 
 
         Object lock = new Object();
         new Thread(() -> {
             try {
-                String response = conn.get(Endpoints.GAME_START.getEndpoint(),map);
+                String response = conn.get(Endpoints.GAME_START.getEndpoint(), map);
                 Log.i("the response on geting state of enemy", response);
                 JSONObject json = Connection.stringToJson(response);
 

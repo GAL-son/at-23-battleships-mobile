@@ -112,7 +112,7 @@ public class Game {
         int player = getPlayerFromPid(uid);
 
         if(player == 0) {
-            p1ShipSetup = setup;
+            p2ShipSetup = setup;
         } else {
             p1ShipSetup = setup;
         }

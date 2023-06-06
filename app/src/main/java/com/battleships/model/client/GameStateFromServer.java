@@ -13,12 +13,38 @@ import java.util.Map;
 
 public class GameStateFromServer {
     private int turnid;
-    private  int gid;
+    private int gid;
 
     private int oponentScore;
     private String oponentLogin;
     private int playerScore;
     private String playerLogin;
+    private int lastx;
+    private int lasty;
+
+    public void setPlayerLogin(String playerLogin) {
+        this.playerLogin = playerLogin;
+    }
+
+    public void setLastx(int lastx) {
+        this.lastx = lastx;
+    }
+
+    public void setLasty(int lasty) {
+        this.lasty = lasty;
+    }
+
+    public String getPlayerLogin() {
+        return playerLogin;
+    }
+
+    public int getLastx() {
+        return lastx;
+    }
+
+    public int getLasty() {
+        return lasty;
+    }
 
     private boolean isStarted;
     private boolean isFinished;
@@ -104,24 +130,24 @@ public class GameStateFromServer {
     public GameStateFromServer() {
 
     }
-    static public  GameStateFromServer getState(JSONObject state) throws JSONException {
 
-        GameStateFromServer tmp1=new GameStateFromServer();
+    static public GameStateFromServer getState(JSONObject state) throws JSONException {
 
-        tmp1.turnid=state.getInt("turnId");
-        tmp1.gid=state.getInt("gid");
-        JSONObject enemy=(JSONObject) state.get("opponent");
-        JSONObject you=(JSONObject) state.get("opponent");
+        GameStateFromServer tmp1 = new GameStateFromServer();
 
-        tmp1.oponentLogin=enemy.getString("login");
-        tmp1.oponentScore= enemy.getInt("score");
+        tmp1.turnid = state.getInt("turnId");
+        tmp1.gid = state.getInt("gid");
+        JSONObject enemy = (JSONObject) state.get("opponent");
+        JSONObject you = (JSONObject) state.get("opponent");
 
-        tmp1.playerLogin=you.getString("login");
-        tmp1.playerScore=you.getInt("score");
+        tmp1.oponentLogin = enemy.getString("login");
+        tmp1.oponentScore = enemy.getInt("score");
+
+        tmp1.playerLogin = you.getString("login");
+        tmp1.playerScore = you.getInt("score");
 
         return tmp1;
     }
-
 
 
 }
