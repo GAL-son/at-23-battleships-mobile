@@ -40,6 +40,18 @@ Endpoint used for registration of new users
         * *email* - user email (`String`)(*Optional*)
 * **Returns** JSON formatted data of newly created user
 
+
+### Delete user account
+Endpoint used for deleting an account
+Endpoint used for registration of new users
+* **Method** - POST
+* **Path** - `/api/delete`
+* **Request parameters** 
+    * Body
+        * *login* - user login (`String`)
+        * *password* - user password (`String`) 
+* **Returns** Boolean value whether user was deleted or not
+
 ### User ranking
 Endpoint used for geting player ranking
 * **Method** - GET

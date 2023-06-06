@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.battleships.server.api.Exceptions.GameNotFoundExeption;
+import com.battleships.server.api.Exceptions.InvalidPasswordException;
 import com.battleships.server.api.Exceptions.NoUserException;
 import com.battleships.server.api.model.Field;
 import com.battleships.server.api.model.Game;
@@ -119,6 +120,30 @@ public class MainController {
             e.printStackTrace();
         }
         return user;
+    }
+
+    /**
+     * Endpoint method used for deleting an account
+     * <ul>
+     * <li>Method - <b>POST</p></li>
+     * <li>Path - {@code /api/delete}</li>
+     * </ul>
+     * @param login - <i>request param<i> - login of deleted user
+     * @param password - <i>request param<i> - password of deleted user
+     * @return Boolean value whether user was deleted or not
+     */
+    @PostMapping("/api/delete")
+    public boolean deleteAccount(@RequestParam String login, @RequestParam String password) {
+        User user = userService.getActiveUser(login);
+
+        if(!user.getPassword().equals(password)) {
+            throw new InvalidPasswordException("INVALID PASSWORD");
+        }
+
+        userService.logout(login, password);
+        userService.userRepository.delete(user);
+        
+        return (userService.userRepository.findById(user.getUid()).isEmpty());
     }
 
     // TODO: Decide if nesecary
