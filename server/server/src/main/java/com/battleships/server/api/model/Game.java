@@ -113,6 +113,10 @@ public class Game {
         return p2Score;
     }
 
+    public int getTurnNum() {
+        return turnNum;
+    }
+
     // WHEN CONFLICT TAKE THIS
     public String getPlayerSetup(int uid) {
         int player = getPlayerFromPid(uid);
@@ -200,11 +204,13 @@ public class Game {
         if(player == 0) {
             if((moveResult = (p2Board[move.getX()][move.getY()] != null))) {
                 p2Board[move.getX()][move.getY()].hit();
+                p1Score += 5;
             } else 
             nextTurn();
         } else {
             if((moveResult = (p1Board[move.getX()][move.getY()] != null))) {
                 p1Board[move.getX()][move.getY()].hit();
+                p2Score += 5;
             } else
             nextTurn();
         }
@@ -275,6 +281,14 @@ public class Game {
     public float getPlayerScore(int uid) {
         if(getPlayerFromPid(uid) == 0) return p1Score;
         else return p2Score;
+    }
+
+    public int getWinnerUid() {
+        if(!gameFinished)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GAME NOT FINISHED");
+
+        if(p1FieldsAlive <= 0) return player2.getUid();
+        else return player1.getUid();
     }
 
     /* DEBUG */ public void printP1Board()

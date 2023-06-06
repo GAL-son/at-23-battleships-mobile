@@ -367,7 +367,17 @@ public class MainController {
         if(game == null) throw new GameNotFoundExeption("Game doesent exist");
 
         if(game.isGameOver()) {
-            float score = game.getPlayerScore(uid);
+            // Update GamerScore
+            float score = user.getGamerScore() + game.getPlayerScore(uid);
+            if(game.getWinnerUid() == user.getUid()) {
+                score += 50;
+
+                for(int i = game.getTurnNum(); i <= 200; i++)
+                {
+                    score += 0.1;
+                }
+            }
+
             user.setGamerScore(score);
             userService.userRepository.save(user);
             gameService.endGame(user);
