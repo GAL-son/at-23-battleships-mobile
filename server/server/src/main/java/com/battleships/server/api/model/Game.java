@@ -113,6 +113,7 @@ public class Game {
         return p2Score;
     }
 
+    // WHEN CONFLICT TAKE THIS
     public String getPlayerSetup(int uid) {
         int player = getPlayerFromPid(uid);
 

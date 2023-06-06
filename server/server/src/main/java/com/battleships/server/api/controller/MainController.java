@@ -278,7 +278,8 @@ public class MainController {
 
         if(game == null) throw new GameNotFoundExeption("Game doesent exist");
 
-        if(game.isGameStarted()) return game.getPlayerSetup(uid);
+        // WHEN CONFLICT TAKE THIS
+        if(game.isGameStarted()) return game.getPlayerSetup(game.getOpponentPid(uid));
         else throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GAME NOT STARTED");
     }
 
