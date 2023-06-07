@@ -88,4 +88,12 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainMenuActivity.class);
         startActivity(intent);
     }
+
+    private void deleteAccount(){
+
+    }
+
+    private void changePassword(){
+
+    }
 }
