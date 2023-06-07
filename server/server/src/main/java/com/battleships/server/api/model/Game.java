@@ -113,6 +113,10 @@ public class Game {
         return p2Score;
     }
 
+    public int getTurnNum() {
+        return turnNum;
+    }
+
     // WHEN CONFLICT TAKE THIS
     public String getPlayerSetup(int uid) {
         int player = getPlayerFromPid(uid);
@@ -198,14 +202,28 @@ public class Game {
         history.add(move);
 
         if(player == 0) {
-            if((moveResult = (p2Board[move.getX()][move.getY()] != null))) {
-                p2Board[move.getX()][move.getY()].hit();
-            }
+            Ship ship = p2Board[move.getX()][move.getY()] ;
+            if((moveResult = (ship != null))) {
+                boolean isSunk = ship.hit();
+                p1Score += 1;
+                if(isSunk) 
+                {
+                    p2FieldsAlive--;
+                    p1Score += 5;
+                }
+            } else 
             nextTurn();
         } else {
-            if((moveResult = (p1Board[move.getX()][move.getY()] != null))) {
-                p1Board[move.getX()][move.getY()].hit();
-            }
+            Ship ship = p1Board[move.getX()][move.getY()];
+            if((moveResult = (ship != null))) {
+                boolean isSunk = ship.hit();
+                p2Score += 1;
+                if(isSunk) 
+                {
+                    p1FieldsAlive--;
+                    p2Score += 5;
+                }
+            } else
             nextTurn();
         }
 
@@ -219,7 +237,7 @@ public class Game {
     }
 
     public boolean isGameOver() {
-        return (gameStarted && (p1FieldsAlive == 0 || p2FieldsAlive == 0));
+        return (gameStarted && (p1FieldsAlive <= 0 || p2FieldsAlive <= 0));
     }
 
     public JSONObject getGameStateUpdate(int pid) {
@@ -275,6 +293,25 @@ public class Game {
     public float getPlayerScore(int uid) {
         if(getPlayerFromPid(uid) == 0) return p1Score;
         else return p2Score;
+    }
+
+    public int getWinnerUid() {
+        if(!gameFinished)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "GAME NOT FINISHED");
+
+        if(p1FieldsAlive <= 0) return player2.getUid();
+        else return player1.getUid();
+    }
+
+    public void giveUp(int uid) {
+        int player = getPlayerFromPid(uid);
+
+        if(player == 0) {
+            p1FieldsAlive = 0;
+        } else {
+            p2FieldsAlive = 0;
+        }
+
     }
 
     /* DEBUG */ public void printP1Board()

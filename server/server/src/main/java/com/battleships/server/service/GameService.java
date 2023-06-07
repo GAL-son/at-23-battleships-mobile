@@ -111,7 +111,7 @@ public class GameService {
     }
 
     public void endGame(User user) {
-        Game game = playersInGame.get(user);
+        Game game = playersInGame.get(user);        
         playersInGame.remove(user);
 
         if(!playersInGame.containsValue(game)) {

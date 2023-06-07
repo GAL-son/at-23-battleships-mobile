@@ -11,6 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
@@ -367,7 +368,17 @@ public class MainController {
         if(game == null) throw new GameNotFoundExeption("Game doesent exist");
 
         if(game.isGameOver()) {
-            float score = game.getPlayerScore(uid);
+            // Update GamerScore
+            float score = user.getGamerScore() + game.getPlayerScore(uid);
+            if(game.getWinnerUid() == user.getUid()) {
+                score += 50;
+
+                for(int i = game.getTurnNum(); i <= 200; i++)
+                {
+                    score += 0.1;
+                }
+            }
+
             user.setGamerScore(score);
             userService.userRepository.save(user);
             gameService.endGame(user);
@@ -396,6 +407,31 @@ public class MainController {
         Move move = new Move(uid, x, y);
         return game.makeMove(move);
     }   
+
+    /**
+     * Endpoint method used for leaving the game
+     * @param uid - <i>request param</i> - id of user that is making a move 
+     * @return boolean value whether the game was left
+     */
+    @PutMapping(path = "/api/game/leave")
+    public boolean leaveGame(int uid) {
+        User user = userService.getActiveUser(uid);
+        Game game = gameService.getPlayerGame(user);
+
+        if(game == null) throw new GameNotFoundExeption("Game doesent exist");
+
+        game.giveUp(uid);
+        if(game.isGameOver()) {
+            // Update GamerScore
+            float score = user.getGamerScore() - 5;
+
+            user.setGamerScore(score);
+            userService.userRepository.save(user);
+            gameService.endGame(user);
+        }
+        
+        return true;
+    }
 
     //TODO: Delete this later - method for testing
     @PostMapping(value="path")
