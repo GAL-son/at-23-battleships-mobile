@@ -211,7 +211,7 @@ public class Game {
                     p2FieldsAlive--;
                     p1Score += 5;
                 }
-            } else 
+            }
             nextTurn();
         } else {
             Ship ship = p1Board[move.getX()][move.getY()];
@@ -223,13 +223,15 @@ public class Game {
                     p1FieldsAlive--;
                     p2Score += 5;
                 }
-            } else
+            }
             nextTurn();
         }
 
         turnNum++;
-        
+
         /* DEBUG */ System.out.println("Move: " + move.toJsonObject() + moveResult);
+        /* DEBUG */ System.out.println("SHIPS ALIVE, P-" + player1.getUid() + ":" + p1FieldsAlive);
+        /* DEBUG */ System.out.println("SHIPS ALIVE, P-" + player2.getUid() + ":" + p2FieldsAlive);
 
         gameFinished = isGameOver();
 
