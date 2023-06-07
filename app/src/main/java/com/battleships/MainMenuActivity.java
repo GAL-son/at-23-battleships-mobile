@@ -32,6 +32,7 @@ public class MainMenuActivity extends AppCompatActivity {
         Button playMulti = findViewById(R.id.buttonPlayAsGuest);
         Button logOutButton = findViewById(R.id.buttonLogOut);
         Button buttonRankings = findViewById(R.id.buttonRankings);
+        Button buttonSettings = findViewById(R.id.buttonSettings);
 
         playSingle.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,6 +65,13 @@ public class MainMenuActivity extends AppCompatActivity {
                 goToRankings();
             }
         });
+
+        buttonSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToSettings();
+            }
+        });
     }
 
     private void goToSettingShips(int type) {
@@ -79,6 +87,11 @@ public class MainMenuActivity extends AppCompatActivity {
 
     private void goToRankings(){
         Intent intent = new Intent(this, RankingActivity.class);
+        startActivity(intent);
+    }
+
+    private void goToSettings(){
+        Intent intent = new Intent(this, SettingsActivity.class);
         startActivity(intent);
     }
 

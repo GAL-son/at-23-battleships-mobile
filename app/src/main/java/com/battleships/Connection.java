@@ -225,4 +225,19 @@ public class Connection {
                 .build();
     }
 
+    /**
+     *
+     * @param login - player login
+     * @param oldPassword - player old password
+     * @param newPassword - player new password
+     * @return request body
+     */
+    RequestBody changePassword(String login, String oldPassword, String newPassword){
+        return new FormBody.Builder()
+                .add("login", login)
+                .add("oldPassword", oldPassword)
+                .add("newPassword", newPassword)
+                .build();
+    }
+
 }

@@ -6,6 +6,8 @@ public enum Endpoints {
         RANKING("/api/ranking"), //GET
         SERVER("/api/server"), //GET
         LOGOUT("/api/logout"), //POST
+        DELETE_ACCOUNT("/api/delete"),//POST
+        CHANGE_PASSWORD("/api/changePassword"),//POST
         GAME_JOIN("/api/game/join"), //POST
         GAME_QUEUE("/api/game/queue"), //POST
         GAME_SET("/api/game/set"), //POST
