@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import okhttp3.RequestBody;
+
 public class SettingsActivity extends AppCompatActivity {
 
     @Override
