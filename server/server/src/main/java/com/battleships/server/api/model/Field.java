@@ -1,7 +1,6 @@
 package com.battleships.server.api.model;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 public class Field {
     public Field(int x, int y) {
@@ -17,7 +16,8 @@ public class Field {
     public JSONArray toJsonArray()
     {
         JSONArray xy = new JSONArray();
-        xy.put(x, y);
+        xy.put(x);
+        xy.put(y);
         return xy; 
     }
 

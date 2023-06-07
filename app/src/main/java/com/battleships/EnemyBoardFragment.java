@@ -297,38 +297,52 @@ public class EnemyBoardFragment extends Fragment {
             pom2 += s.getHealth();
         }
         Log.i("countHP", "countHP: " + "hp p1= " + pom1 + " p2 = " + pom2);
-        if (pom1 == 0) {
-            game.winner = game.getPlayer2().getId();
-            GameEndProcedure(game.winner);
-        }
-        if (pom2 == 0) {
-            game.winner = game.getPlayer1().getId();
-            GameEndProcedure(game.winner);
+        if(game.getType()==0) {
+            if (pom1 == 0) {
+                game.winner = game.getPlayer2().getId();
+                GameEndProcedure(game.winner);
+            }
+            if (pom2 == 0) {
+                game.winner = game.getPlayer1().getId();
+                GameEndProcedure(game.winner);
+            }
+        } else if (game.getType()==1) {
+
+            if (game.gameStateFromServer.isFinished()==true)
+            {
+                if (pom1 == 0) {
+                    game.winner = game.getPlayer2().getId();
+                    GameEndProcedure(game.winner);
+                }
+                if (pom2 == 0) {
+                    game.winner = game.getPlayer1().getId();
+                    GameEndProcedure(game.winner);
+                }
+            }
+
         }
     }
 
 
-    private void shootOnServer(int x , int y )
-    {
+    private void shootOnServer(int x, int y) {
         Connection connection = new Connection();
 
-        RequestBody body=connection.moveBody(game.getPlayer1().getId(),x,y);
+        RequestBody body = connection.moveBody(game.getPlayer1().getId(), x, y);
         AtomicBoolean didHit = new AtomicBoolean(false);
         Object lock = new Object();
         new Thread(() -> {
             try {
-                String response = connection.post(Endpoints.GAME_MOVE.getEndpoint(),body);
+                String response = connection.post(Endpoints.GAME_MOVE.getEndpoint(), body);
                 Log.i("TheResponseOfMove", response);
-                JSONObject json = Connection.stringToJson(response);
+
 
                 Log.i("the response", response);
-                if (json.has("status")) {
+                if (response.equals("false")) {
                     Log.i("status", response);
                 } else {
-                        if(response.equals("true"))
-                        {
-                            didHit.set(true);
-                        }
+                    if (response.equals("true")) {
+                        didHit.set(true);
+                    }
 
 
                 }
@@ -350,6 +364,7 @@ public class EnemyBoardFragment extends Fragment {
 
 
     }
+
     private void GameEndProcedure(int winner) {
         game.setState(2);
         if (game.winner == game.getPlayer1().getId())
@@ -442,7 +457,8 @@ public class EnemyBoardFragment extends Fragment {
         textViewYourBoard.setTextSize(30);
         textViewYourBoard.setGravity(Gravity.CENTER_HORIZONTAL);
         tableLayout.addView(textViewYourBoard);
-        setStateFromSever();
+        if (game.getType() == 1)
+            setStateFromSever();
         for (int i = 0; i < 10; i++) {
             TableRow tableRow = new TableRow(getContext());
             tableRow.setLayoutParams(new TableLayout.LayoutParams(
@@ -510,12 +526,20 @@ public class EnemyBoardFragment extends Fragment {
                             setStateFromSever();
                             if (game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()) {//czy twa tura
                                 try {
-                                    if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && !game.gameStateFromServer.isFinished()) {//czy gra ni4 skonczona i pole nie strzeone
+                                    if (game.gameStateFromServer.getLastShootingUserID() == game.getPlayer2().getId()) {
+                                        shootOnServer(game.gameStateFromServer.getLastx(), game.gameStateFromServer.getLastx());
                                         hitingProcedure(new Move(posId[0], posId[1], 0), 1);
-                                        shootOnServer(posId[0],posId[1]);
                                         setStateFromSever();
-                                        Log.i("InGameStateDownloadTest",game.gameStateFromServer.toString());
                                         drawBoardGameLoopEnemy(rootView);
+                                    }
+                                    if (((Field) (game.getPlayer2().getPlayerBard().fields.get(posId[0]).get(posId[1]))).getWasHit() != true && !game.gameStateFromServer.isFinished()) {//czy gra ni4 skonczona i pole nie strzeone
+                                        shootOnServer(posId[0], posId[1]);
+                                        hitingProcedure(new Move(posId[0], posId[1], 0), 1);
+                                        setStateFromSever();
+                                        Log.i("InGameStateDownloadTest", game.gameStateFromServer.toString());
+                                        drawBoardGameLoopEnemy(rootView);
+
+
                                     } else {
                                         if (game.getState() == 2) {
                                             Log.i("", "game alredy ended");

@@ -9,8 +9,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -50,16 +52,17 @@ public class Connection {
      * @param endpoint -
      * @return String representation of json object/array
      */
-    String get(String endpoint){
+    protected String get(String endpoint) throws IOException, SocketTimeoutException {
         CompletableFuture<String> future = new CompletableFuture<>();
         Request request = new Request.Builder()
-                .url(serverUrl+endpoint)
+                .url(serverUrl + endpoint)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(@NonNull Call call, @NonNull IOException e) {
                 e.printStackTrace();
+                future.completeExceptionally(e);
             }
 
             @Override
@@ -70,8 +73,19 @@ public class Connection {
                 }
             }
         });
-        return future.join();
+
+        try {
+            return future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            Throwable cause = e.getCause();
+            if (cause instanceof SocketTimeoutException) {
+                throw (SocketTimeoutException) cause;
+            } else {
+                throw new IOException("Request failed", e);
+            }
+        }
     }
+
 
     /**
      * Method used for GET requests with parameters (/game/start request)

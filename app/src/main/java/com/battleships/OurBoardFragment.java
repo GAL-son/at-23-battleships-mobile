@@ -94,13 +94,29 @@ public class OurBoardFragment extends Fragment {
             pom2 += s.getHealth();
         }
         Log.i("countHP", "countHP: " + "hp p1= " + pom1 + " p2 = " + pom2);
-        if (pom1 == 0) {
-            game.winner=game.getPlayer2().getId();
-            GameEndProcedure(game.winner);
-        }
-        if (pom2 == 0) {
-            game.winner=game.getPlayer1().getId();
-            GameEndProcedure(game.winner);
+        if(game.getType()==0) {
+            if (pom1 == 0) {
+                game.winner = game.getPlayer2().getId();
+                GameEndProcedure(game.winner);
+            }
+            if (pom2 == 0) {
+                game.winner = game.getPlayer1().getId();
+                GameEndProcedure(game.winner);
+            }
+        } else if (game.getType()==1) {
+
+            if (game.gameStateFromServer.isFinished()==true)
+            {
+                if (pom1 == 0) {
+                    game.winner = game.getPlayer2().getId();
+                    GameEndProcedure(game.winner);
+                }
+                if (pom2 == 0) {
+                    game.winner = game.getPlayer1().getId();
+                    GameEndProcedure(game.winner);
+                }
+            }
+
         }
     }
 
@@ -394,12 +410,22 @@ public class OurBoardFragment extends Fragment {
         {
             //gra jest w trybi muliplayer
             setStateFromSever();
+            if (game.gameStateFromServer.getLastx()!=null&&game.gameStateFromServer.getTurnid()==game.getPlayer1().getId())
+            {
+                try {
+                    hitingProcedure(new Move(game.gameStateFromServer.getLastx(), game.gameStateFromServer.getLasty(), 0), 2);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+
+            }
             Log.i("GameStateFromServer", game.gameStateFromServer.toString());
         }
 
 
         //pierwsze wyrysowanie
         drawBoardGameLoopYour(rootView);
+        countHP();
 
 
         return rootView;

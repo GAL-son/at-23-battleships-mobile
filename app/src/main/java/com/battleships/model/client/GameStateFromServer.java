@@ -20,14 +20,16 @@ public class GameStateFromServer {
     private String oponentLogin;
     private int playerScore;
     private String playerLogin;
-    private int lastx;
-    private int lasty;
+    private Integer lastx=null;
+    private Integer lasty=null;
+
+    private int lastShootingUserID;
 
     public int getLastShootingUserID() {
         return lastShootingUserID;
     }
 
-    private int lastShootingUserID;
+
 
     public void setPlayerLogin(String playerLogin) {
         this.playerLogin = playerLogin;
@@ -45,11 +47,11 @@ public class GameStateFromServer {
         return playerLogin;
     }
 
-    public int getLastx() {
+    public Integer getLastx() {
         return lastx;
     }
 
-    public int getLasty() {
+    public Integer getLasty() {
         return lasty;
     }
 

@@ -9,11 +9,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class RankingActivity extends AppCompatActivity {
@@ -76,9 +78,10 @@ public class RankingActivity extends AppCompatActivity {
                     }
                     return score2.compareTo(score1);
                 });
-            } catch (JSONException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
-            }finally {
+                Toast.makeText( RankingActivity.this, "Server is currently unavailable", Toast.LENGTH_SHORT).show();
+            } finally {
                 synchronized (lock) {
                     lock.notify();
                 }

@@ -534,8 +534,8 @@ public class SetShipsActivity extends AppCompatActivity {
         while (game_this.getPlayer2().shipsSizes.size() > 0) {
             x = random.nextInt(10);
             y = random.nextInt(10);
-            align = random.nextInt(1);
-            game_this.place_ship(new Move(x, y, 0), 2, align);
+            align = random.nextInt(10);
+            game_this.place_ship(new Move(x, y, 0), 2, align%2);
         }
     }
 
