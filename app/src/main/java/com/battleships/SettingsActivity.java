@@ -2,9 +2,11 @@ package com.battleships;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -21,7 +23,28 @@ public class SettingsActivity extends AppCompatActivity {
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Dialog dialog = new Dialog(SettingsActivity.this);
+                dialog.setContentView(R.layout.dialog_reset_password);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.setCancelable(false);
 
+                Button buttonConfirmChangePassword = dialog.findViewById(R.id.buttonConfirmChangePassword);
+                Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
+
+                dialog.show();
+                buttonConfirmChangePassword.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Todo
+                    }
+                });
+
+                buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 
