@@ -51,7 +51,28 @@ public class SettingsActivity extends AppCompatActivity {
         buttonDeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Dialog dialog = new Dialog(SettingsActivity.this);
+                dialog.setContentView(R.layout.dialog_delete_account);
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                dialog.setCancelable(false);
 
+                Button buttonConfirmDelete = dialog.findViewById(R.id.buttonConfirmDelete);
+                Button buttonCancel = dialog.findViewById(R.id.buttonCancel);
+
+                dialog.show();
+                buttonConfirmDelete.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //Todo
+                    }
+                });
+
+                buttonCancel.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
             }
         });
 
