@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.MediaController;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -37,6 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
         Button buttonChangePassword = findViewById(R.id.buttonChangePassword);
         Button buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
         Button buttonGoBack = findViewById(R.id.buttonGoBack);
+
 
         buttonChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
