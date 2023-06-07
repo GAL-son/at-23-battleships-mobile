@@ -203,33 +203,39 @@ public class Game {
 
         if(player == 0) {
             Ship ship = p2Board[move.getX()][move.getY()] ;
-            if((moveResult = (ship != null))) {
-                boolean isSunk = ship.hit();
+            if(moveResult = (ship != null)) {
+                /* DEBUG */ System.out.println("P1 SHIP HIT");
+                ship.hit();
                 p1Score += 1;
-                if(isSunk) 
-                {
-                    p2FieldsAlive--;
+                p2FieldsAlive--;
+                if(ship.isSunk()) {
+                    /* DEBUG */ System.out.println("P2 SHIP SUNK");
                     p1Score += 5;
                 }
-            } else 
+            } // else 
             nextTurn();
         } else {
             Ship ship = p1Board[move.getX()][move.getY()];
-            if((moveResult = (ship != null))) {
-                boolean isSunk = ship.hit();
+            if(moveResult = (ship != null)) {
+                /* DEBUG */ System.out.println("P2 SHIP HIT");
+                ship.hit();
+                p1FieldsAlive--;
                 p2Score += 1;
-                if(isSunk) 
-                {
-                    p1FieldsAlive--;
+                if(ship.isSunk()) {
+                    /* DEBUG */ System.out.println("P1 SHIP SUNK");
+                    
                     p2Score += 5;
                 }
-            } else
+            } // else
             nextTurn();
         }
 
         turnNum++;
         
         /* DEBUG */ System.out.println("Move: " + move.toJsonObject() + moveResult);
+        /* DEBUG */ System.out.println("SHIPS ALIVE, P-" + player1.getUid() + ":" + p1FieldsAlive);
+        /* DEBUG */ System.out.println("SHIPS ALIVE, P-" + player2.getUid() + ":" + p2FieldsAlive);
+
 
         gameFinished = isGameOver();
 

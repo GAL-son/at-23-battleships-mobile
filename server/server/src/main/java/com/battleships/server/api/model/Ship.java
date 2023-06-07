@@ -4,17 +4,23 @@ public class Ship
 {
     public int size;
     public int hp;
-    public boolean isSunk;
+    public boolean sunk;
 
-    Ship(int size) {
+    public Ship(int size) {
         this.size = size;
         this.hp = size;
-        this.isSunk = false;
+        this.sunk = false;
     }
 
-    Boolean hit()
+    public void hit()
     {
         hp--;
-        return hp <= 0;
+        if(hp <= 0) {
+            sunk = true;
+        }
+    }
+
+    public boolean isSunk() {
+        return sunk;
     }
 }
