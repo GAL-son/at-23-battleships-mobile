@@ -104,14 +104,18 @@ public class OurBoardFragment extends Fragment {
                 GameEndProcedure(game.winner);
             }
         } else if (game.getType()==1) {
+            Log.i("hpPoliczoneWmulti", "countHP: "+"p1:"+pom1+" p2:"+pom2+ "czy gra skonczona?: "+game.gameStateFromServer.isFinished());
 
-            if (game.gameStateFromServer.isFinished()==true)
+
+          //  if (game.gameStateFromServer.isFinished()==true)
             {
-                if (pom1 == 0) {
+
+                Log.i("gameIsFinishedOnSerwe", "countHP: "+"p1:"+pom1+" p2:"+pom2);
+                if (pom1 ==0) {
                     game.winner = game.getPlayer2().getId();
                     GameEndProcedure(game.winner);
                 }
-                if (pom2 == 0) {
+                if (pom2 ==0) {
                     game.winner = game.getPlayer1().getId();
                     GameEndProcedure(game.winner);
                 }
@@ -134,6 +138,13 @@ public class OurBoardFragment extends Fragment {
     }
     private void hitingProcedure(Move move, int player) {
 
+
+        if (game.getType() == 1) {
+            if (player == 1)
+                game.getPlayer1().setMoove_token(false);
+            if (player == 2)
+                game.getPlayer1().setMoove_token(true);
+        }
         countHP();
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         game.hitField(move, player);
@@ -325,6 +336,8 @@ public class OurBoardFragment extends Fragment {
         textViewYourBoard.setGravity(Gravity.CENTER_HORIZONTAL);
         tableLayout.addView(textViewYourBoard);
 
+
+
         for (int i = 0; i < 10; i++) {
             TableRow tableRow = new TableRow(getContext());
             tableRow.setLayoutParams(new TableLayout.LayoutParams(
@@ -410,12 +423,19 @@ public class OurBoardFragment extends Fragment {
         {
             //gra jest w trybi muliplayer
             setStateFromSever();
-            if (game.gameStateFromServer.getLastx()!=null&&game.gameStateFromServer.getTurnid()==game.getPlayer1().getId())
+
+            if (game.gameStateFromServer.getLastx()!=null&&game.gameStateFromServer.getTurnid()==game.getPlayer1().getId()&&game.gameStateFromServer.getLastx()!=null)
             {
-                try {
-                    hitingProcedure(new Move(game.gameStateFromServer.getLastx(), game.gameStateFromServer.getLasty(), 0), 2);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
+                int pom1,pom2;
+                pom1=game.gameStateFromServer.getLastx();
+                pom2=game.gameStateFromServer.getLasty();
+                if(!((Field)game.getPlayer1().getPlayerBard().fields.get(pom1).get(pom2)).getWasHit()) {
+                    try {
+
+                        hitingProcedure(new Move(game.gameStateFromServer.getLastx(), game.gameStateFromServer.getLasty(), 0), 2);
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
 
             }
@@ -426,6 +446,13 @@ public class OurBoardFragment extends Fragment {
         //pierwsze wyrysowanie
         drawBoardGameLoopYour(rootView);
         countHP();
+        if(game.getTurn()==0)
+        {
+            if (game.getPlayer1().getId()==game.gameStateFromServer.getTurnid());
+            {
+                game.getPlayer1().setMoove_token(true);
+            }
+        }
 
 
         return rootView;

@@ -264,6 +264,13 @@ public class EnemyBoardFragment extends Fragment {
             TextView turn = activity.findViewById(R.id.textViewTurn);
             ;
         }
+        if (game.getType() == 1) {
+            if (player == 1)
+                game.getPlayer1().setMoove_token(false);
+            if (player == 2)
+                game.getPlayer1().setMoove_token(true);
+        }
+
         countHP();
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
         game.hitField(move, player);
@@ -297,7 +304,7 @@ public class EnemyBoardFragment extends Fragment {
             pom2 += s.getHealth();
         }
         Log.i("countHP", "countHP: " + "hp p1= " + pom1 + " p2 = " + pom2);
-        if(game.getType()==0) {
+        if (game.getType() == 0) {
             if (pom1 == 0) {
                 game.winner = game.getPlayer2().getId();
                 GameEndProcedure(game.winner);
@@ -306,10 +313,14 @@ public class EnemyBoardFragment extends Fragment {
                 game.winner = game.getPlayer1().getId();
                 GameEndProcedure(game.winner);
             }
-        } else if (game.getType()==1) {
+        } else if (game.getType() == 1) {
+            Log.i("hpPoliczoneWmulti", "countHP: " + "p1:" + pom1 + " p2:" + pom2 + "czy gra skonczona?: " + game.gameStateFromServer.isFinished());
 
-            if (game.gameStateFromServer.isFinished()==true)
+
+            //  if (game.gameStateFromServer.isFinished()==true)
             {
+
+                Log.i("gameIsFinishedOnSerwe", "countHP: " + "p1:" + pom1 + " p2:" + pom2);
                 if (pom1 == 0) {
                     game.winner = game.getPlayer2().getId();
                     GameEndProcedure(game.winner);
@@ -524,7 +535,7 @@ public class EnemyBoardFragment extends Fragment {
                             }
                         } else if (game.getType() == 1) {//czy multi
                             setStateFromSever();
-                            if (game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()) {//czy twa tura
+                            if (game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()&&game.getPlayer1().isMoove_token()) {//czy twa tura
                                 try {
                                     if (game.gameStateFromServer.getLastShootingUserID() == game.getPlayer2().getId()) {
                                         shootOnServer(game.gameStateFromServer.getLastx(), game.gameStateFromServer.getLastx());

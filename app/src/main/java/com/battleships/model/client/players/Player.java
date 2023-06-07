@@ -13,6 +13,17 @@ abstract public class Player implements Serializable {
 
     int id;
     Board playerBoard= new Board();
+
+    private boolean moove_token= false;
+
+    public boolean isMoove_token() {
+        return moove_token;
+    }
+
+    public void setMoove_token(boolean moove_token) {
+        this.moove_token = moove_token;
+    }
+
     public  ArrayList<ArrayList<Integer>> shipsCoordsAndAlignment=new ArrayList<ArrayList<Integer>>();
 
 
