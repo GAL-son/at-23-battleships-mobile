@@ -67,7 +67,7 @@ public class UserService {
 
         if(clone.isPresent()) {
             // TODO: Create Exeption for this
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Login already used");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Login already used");
         }
 
         User user = new User();
