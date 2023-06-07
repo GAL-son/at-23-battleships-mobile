@@ -3,20 +3,36 @@ package com.battleships;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 
 import okhttp3.RequestBody;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+
+        Context context = getApplicationContext();
+        sharedPreferences = context.getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        String loginsp = sharedPreferences.getString("login", "null");
+        String passwordsp = sharedPreferences.getString("password","null");
 
         Button buttonChangePassword = findViewById(R.id.buttonChangePassword);
         Button buttonDeleteAccount = findViewById(R.id.buttonDeleteAccount);
@@ -37,7 +53,22 @@ public class SettingsActivity extends AppCompatActivity {
                 buttonConfirmChangePassword.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Todo
+                        EditText oldPassword = dialog.findViewById(R.id.editTextOldPassword);
+                        EditText newPassword = dialog.findViewById(R.id.editTextNewPassword);
+
+                        if(passwordsp.equals(oldPassword.getText().toString())){
+                            changePassword(loginsp,oldPassword.getText().toString(), newPassword.getText().toString());
+                            dialog.dismiss();
+
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.putString("password",newPassword.getText().toString());
+                            editor.apply();
+                            Toast.makeText( SettingsActivity.this, "Password changed", Toast.LENGTH_SHORT).show();
+                        }else{
+                            dialog.dismiss();
+                            Toast.makeText( SettingsActivity.this, "Incorrect old password", Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 });
 
@@ -65,7 +96,20 @@ public class SettingsActivity extends AppCompatActivity {
                 buttonConfirmDelete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Todo
+                        String password = sharedPreferences.getString("password", "null");
+                        EditText confirmPassword = dialog.findViewById(R.id.editTextConfirmPassword);
+                        if(password.equals(confirmPassword.getText().toString())){
+                            deleteAccount(loginsp,password);
+                            dialog.dismiss();
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+                            editor.clear();
+                            editor.apply();
+                            goToStartScreen();
+                            Toast.makeText( SettingsActivity.this, "Your account has been deleted", Toast.LENGTH_SHORT).show();
+                        }else{
+                            dialog.dismiss();
+                            Toast.makeText( SettingsActivity.this, "Incorrect password", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
 
@@ -91,11 +135,64 @@ public class SettingsActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void deleteAccount(){
-
+    private void goToStartScreen(){
+        Intent intent = new Intent(this, StartScreenActivity.class);
+        startActivity(intent);
     }
 
-    private void changePassword(){
+    private void deleteAccount(String login, String password){
 
+        Connection connection = new Connection();
+        RequestBody body = connection.playerRequestBody(login, password);
+        Object lock = new Object();
+        new Thread(() -> {
+            try{
+                String response = connection.post(Endpoints.DELETE_ACCOUNT.getEndpoint(),body);
+                Log.i("isDeleted", response);
+
+            }catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void changePassword(String login, String oldPassword, String newPassword){
+
+        Connection connection = new Connection();
+        RequestBody body = connection.changePassword(login, oldPassword, newPassword);
+        Object lock = new Object();
+        new Thread(() -> {
+            try{
+                String response = connection.post(Endpoints.CHANGE_PASSWORD.getEndpoint(),body);
+                Log.i("isChanged", response);
+
+            }catch (IOException e) {
+                e.printStackTrace();
+            }finally {
+                synchronized (lock) {
+                    lock.notify();
+                }
+            }
+        }).start();
+
+        synchronized (lock) {
+            try {
+                lock.wait();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
