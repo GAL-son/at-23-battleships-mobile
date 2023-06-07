@@ -168,3 +168,12 @@ Endpoint used for making a move when game is started
         * *x* - x position of move (0-9)
         * *y* - y position of move (0-9)
 * **Returns** boolean value whether move (shot) was succesfull or not (enemy ship was hit)
+
+### Leaving a game
+Endpoint method used for leaving the game
+* **Method** - POST
+* **Path** - `/api/game/leave`
+* **Request parameters**
+    * Body
+        * *uid* - id of user leaving the game
+* **Returns** boolean value whether the game was left
