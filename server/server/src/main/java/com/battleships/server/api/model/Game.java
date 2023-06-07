@@ -202,15 +202,27 @@ public class Game {
         history.add(move);
 
         if(player == 0) {
-            if((moveResult = (p2Board[move.getX()][move.getY()] != null))) {
-                p2Board[move.getX()][move.getY()].hit();
-                p1Score += 5;
+            Ship ship = p2Board[move.getX()][move.getY()] ;
+            if((moveResult = (ship != null))) {
+                boolean isSunk = ship.hit();
+                p1Score += 1;
+                if(isSunk) 
+                {
+                    p2FieldsAlive--;
+                    p1Score += 5;
+                }
             } else 
             nextTurn();
         } else {
-            if((moveResult = (p1Board[move.getX()][move.getY()] != null))) {
-                p1Board[move.getX()][move.getY()].hit();
-                p2Score += 5;
+            Ship ship = p1Board[move.getX()][move.getY()];
+            if((moveResult = (ship != null))) {
+                boolean isSunk = ship.hit();
+                p2Score += 1;
+                if(isSunk) 
+                {
+                    p1FieldsAlive--;
+                    p2Score += 5;
+                }
             } else
             nextTurn();
         }
@@ -225,7 +237,7 @@ public class Game {
     }
 
     public boolean isGameOver() {
-        return (gameStarted && (p1FieldsAlive == 0 || p2FieldsAlive == 0));
+        return (gameStarted && (p1FieldsAlive <= 0 || p2FieldsAlive <= 0));
     }
 
     public JSONObject getGameStateUpdate(int pid) {
