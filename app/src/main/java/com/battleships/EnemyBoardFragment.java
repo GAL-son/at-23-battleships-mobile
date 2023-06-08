@@ -179,9 +179,14 @@ public class EnemyBoardFragment extends Fragment {
 
 
         TextView turn = getActivity().findViewById(R.id.textViewTurn);
-        if (game.getState() != 2)
-            turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? " your turn" : " enemy turn"));
-        else {
+        if (game.getState() != 2) {
+            if (game.getType() == 0) {
+                turn.setText("Turn:" + game.getTurnFull() + ((game.getTurn() == 0) ? " your turn" : " enemy turn"));
+            }
+            if (game.getType() == 1) {
+                turn.setText("Turn:" + game.getTurnFull() + ((game.gameStateFromServer.getTurnid() == game.getPlayer1().getId()) ? " your turn" : " enemy turn"));
+            }
+        }else {
             Dialog dialog = new Dialog(getActivity());
             dialog.setContentView(R.layout.dialog_game_won);
             dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);

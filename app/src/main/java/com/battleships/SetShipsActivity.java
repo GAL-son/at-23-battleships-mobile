@@ -5,12 +5,14 @@ import static com.battleships.GameActivity.getFieldId;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipDescription;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
@@ -95,9 +97,18 @@ public class SetShipsActivity extends AppCompatActivity {
         readyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 if (game_this.getPlayer1().shipsSizes.isEmpty()) {
 
                     if (game_this.getType() == 1) {
+
+                        new Handler().post(new Runnable() {
+                            @Override
+                            public void run() {
+                                showLoading();
+                            }
+                        });
 
                         if (joinGame()) {
                             Log.i("MultiplayerTree", "join");
@@ -132,7 +143,14 @@ public class SetShipsActivity extends AppCompatActivity {
                             } catch (InterruptedException e) {
                                 throw new RuntimeException(e);
                             }
+
                         }
+
+
+
+
+
+
                     }
 
                     goToGameActivity(game_this);
@@ -180,6 +198,19 @@ public class SetShipsActivity extends AppCompatActivity {
         });
     }
 
+    private  void showLoading()
+    {
+        Log.i("loadingScrean","started");
+        Dialog dialog = new Dialog(SetShipsActivity.this);
+        dialog.setContentView(R.layout.dialog_waiting_for_match);
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false);
+        dialog.show();
+        Log.i("loadingScrean","shown");
+
+
+
+    }
 
     private Boolean getGameStateForIfStarted() {
         Connection conn = new Connection();
